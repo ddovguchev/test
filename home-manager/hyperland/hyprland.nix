@@ -17,7 +17,6 @@
         "$mod, F, exec, firefox"
         "$mod, T, exec, kitty"
         "$mod, Q, killactive"
-        "$mod, B, exec, pkill -x ags 2>/dev/null; sleep 0.3; ~/.local/bin/ags-run &"
       ];
       "exec-once" = [ "~/.local/bin/ags-run" ];
       windowrulev2 = [
