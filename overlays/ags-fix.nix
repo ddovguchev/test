@@ -2,17 +2,23 @@
 final: prev:
 let
   ags = prev.ags_1 or prev.ags;
-  # В Nix '' один ' пишется как ''
+  # Патчим без regex, подставляя путь $out/lib (так подставляет meson в .in)
   patchScript = ''
     f="$out/bin/.ags-wrapped"
-    [ -f "$f" ] || exit 0
-    # Сохраняем путь между кавычками в \1
-    sed -i 's|GIR\.Repository\.prepend_search_path(''\([^'']*\)'');|(function(){const _r=GIR.Repository.dup_default();_r.prepend_search_path(''\1'');|' "$f"
-    sed -i 's|GIR\.Repository\.prepend_library_path(''\([^'']*\)'');|_r.prepend_library_path(''\1'');})();|' "$f"
+    lib="$out/lib"
+    if [ -f "$f" ]; then
+      substituteInPlace "$f" \
+        --replace "GIR.Repository.prepend_search_path(''$lib'');" \
+        "(function(){const _r=GIR.Repository.dup_default();_r.prepend_search_path(''$lib'');"
+      substituteInPlace "$f" \
+        --replace "GIR.Repository.prepend_library_path(''$lib'');" \
+        "_r.prepend_library_path(''$lib'');})();"
+    fi
   '';
 in
 prev.lib.optionalAttrs (prev ? ags_1 || prev ? ags) {
   ags_1 = ags.overrideAttrs (old: {
+    nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ prev.buildPackages.patch ];
     postInstall = (old.postInstall or "") + patchScript;
   });
 }
