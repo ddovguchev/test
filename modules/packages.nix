@@ -8,6 +8,7 @@
     wget
     unzip
     vim
+    nodejs_22
     
     # Kubernetes & Container tools
     kubectl
