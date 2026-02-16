@@ -10,7 +10,7 @@
       "networkmanager"  # network management
       "docker"     # docker access (if docker is enabled)
     ];
-    shell = pkgs.bash;
+    shell = pkgs.zsh;
     # Uncomment to add SSH keys:
     # openssh.authorizedKeys.keys = [
     #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA..."
