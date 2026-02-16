@@ -4,10 +4,10 @@
 }
 
 window#bar {
-  background-color: rgba(16, 20, 24, 0.95);
-  border-bottom: 1px solid rgba(224, 226, 232, 0.15);
-  padding: 4px 12px;
-  min-height: 28px;
+  background-color: #101418;
+  border-bottom: 1px solid rgba(224, 226, 232, 0.2);
+  padding: 6px 16px;
+  min-height: 32px;
 }
 
 .bar-left,

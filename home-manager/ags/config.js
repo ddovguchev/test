@@ -1,10 +1,12 @@
 "use strict";
 
+import GLib from "gi://GLib";
 import App from "resource:///com/github/Aylur/ags/app.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 const { exec } = Utils;
+const CONFIG_DIR = GLib.get_user_config_dir() + "/ags";
 
 // Workspace buttons (1–5), poll active workspace from hyprctl
 const WorkspaceButtons = () => {
@@ -63,6 +65,7 @@ const Bar = () =>
     name: "bar",
     anchor: ["top", "left", "right"],
     exclusivity: "exclusive",
+    visible: true,
     child: Widget.CenterBox({
       start_widget: Widget.Box({
         class_name: "bar-left",
@@ -78,6 +81,6 @@ const Bar = () =>
   });
 
 App.config({
-  style: App.configDir + "/style.css",
+  style: CONFIG_DIR + "/style.css",
   windows: [Bar()],
 });
