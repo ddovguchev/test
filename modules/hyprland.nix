@@ -28,5 +28,5 @@
   };
   
   # Explicitly disable X11 services (Wayland-only setup)
-  services.xserver.enable = lib.mkDefault false;
+  services.xserver.enable = false;
 }

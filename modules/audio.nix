@@ -1,9 +1,10 @@
 { config, pkgs, lib, ... }:
 {
   # PipeWire for audio (modern replacement for PulseAudio/ALSA)
+  # When PipeWire is enabled, PulseAudio is automatically disabled
   services.pipewire = {
     enable = lib.mkDefault true;
-    # PulseAudio compatibility layer
+    # PulseAudio compatibility layer (provides pulseaudio API)
     pulse.enable = lib.mkDefault true;
     # ALSA support
     alsa.enable = lib.mkDefault true;
@@ -14,6 +15,6 @@
   # RealtimeKit for low-latency audio
   security.rtkit.enable = lib.mkDefault true;
   
-  # Optional: Disable PulseAudio (if using PipeWire)
-  hardware.pulseaudio.enable = lib.mkDefault false;
+  # PulseAudio is automatically disabled when PipeWire is enabled
+  # No need to explicitly set services.pulseaudio.enable = false
 }
