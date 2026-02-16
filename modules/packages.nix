@@ -29,8 +29,6 @@
     # Desktop & GUI
     firefox
     spotify
-    ags
-    astal.gjs   # для AGS: astal/gtk3 и зависимости в package.json
   ];
 
   # Enable Docker service

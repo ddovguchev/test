@@ -20,10 +20,8 @@
         "$mod, T, exec, kitty"
         "$mod, Q, killactive"
       ];
-      # Задержка, чтобы Wayland был готов; вывод в лог для отладки
-      "exec-once" = [
-        "bash -c 'sleep 2; ${home}/.local/bin/ags-run >> /tmp/ags-exec.log 2>&1 &'"
-      ];
+      # AGS панель (официальный модуль ставит ags в profile, PATH подхватывается)
+      "exec-once" = [ "bash -c 'sleep 2; ags run &'" ];
       windowrulev2 = [
         "pin,class:^(com\\.github\\.Aylur\\.ags)$"
         "float,class:^(com\\.github\\.Aylur\\.ags)$"
