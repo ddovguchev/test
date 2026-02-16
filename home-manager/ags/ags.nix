@@ -1,7 +1,9 @@
 # AGS — официальный home-manager модуль (docs: https://aylur.github.io/ags/guide/nix.html)
 { config, pkgs, inputs, ... }:
 let
-  # Обёртка: «ags run» → «ags run --gtk 3» (конфиг на astal/gtk3)
+  agsConfigDir = ./config;
+  # Официальный модуль кладёт astal в ~/.local/share/ags — package.json должен указывать туда
+  astalPath = "file:${config.home.homeDirectory}/.local/share/ags";
   agsBin = "${config.programs.ags.finalPackage}/bin/ags";
   agsWrapper = pkgs.writeShellScript "ags" ''
     if [ "''${1:-}" = "run" ]; then
@@ -20,11 +22,23 @@ in
 
   programs.ags = {
     enable = true;
-    configDir = ./config;
+    configDir = null;
     extraPackages = with pkgs; [
       inputs.astal.packages.${pkgs.system}.notifd
       inputs.astal.packages.${pkgs.system}.wireplumber
     ];
+  };
+
+  # Конфиг по файлам, чтобы package.json указывал на ~/.local/share/ags (модуль туда ставит astal)
+  xdg.configFile."ags/app.ts".source = "${agsConfigDir}/app.ts";
+  xdg.configFile."ags/style.scss".source = "${agsConfigDir}/style.scss";
+  xdg.configFile."ags/tsconfig.json".source = "${agsConfigDir}/tsconfig.json";
+  xdg.configFile."ags/env.d.ts".source = "${agsConfigDir}/env.d.ts";
+  xdg.configFile."ags/.gitignore".source = "${agsConfigDir}/.gitignore";
+  xdg.configFile."ags/widget/Bar.tsx".source = "${agsConfigDir}/widget/Bar.tsx";
+  xdg.configFile."ags/package.json".text = builtins.toJSON {
+    name = "astal-shell";
+    dependencies = { astal = astalPath; };
   };
 
   home.sessionPath = [ "${config.home.homeDirectory}/.local/bin" ];
