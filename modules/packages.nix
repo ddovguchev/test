@@ -27,7 +27,7 @@
     # Desktop & GUI
     firefox
     spotify
-    ags
+    ags_1
   ];
 
   # Enable Docker service
