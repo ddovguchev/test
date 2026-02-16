@@ -16,12 +16,8 @@ prev.lib.optionalAttrs (prev ? ags_1 || prev ? ags) {
       ${prev.bash}/bin/bash ${patchPostInstall}
     '';
     postInstall = (old.postInstall or "") + ''
-      w="$out/bin/.ags-wrapped"
-      if [ -e "$w" ]; then
-        target="$(readlink -f "$w" 2>/dev/null || true)"
-        [ -n "$target" ] && [ -f "$target" ] && w="$target"
-        ${patchWrapped} "$w" || true
-      fi
+      f="$out/share/com.github.Aylur.ags/com.github.Aylur.ags"
+      [ -f "$f" ] && ${patchWrapped} "$f" || true
     '';
   });
 }
