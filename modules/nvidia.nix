@@ -1,6 +1,9 @@
 { config, pkgs, lib, ... }:
 {
-  # NVIDIA drivers for Wayland (no X11 needed)
+  # На NixOS драйвер поднимается только через X server (enable + videoDrivers)
+  services.xserver.enable = true;
+  services.xserver.videoDrivers = [ "nvidia" ];
+
   hardware.nvidia = {
     modesetting.enable = lib.mkDefault true;
     open = lib.mkDefault true;

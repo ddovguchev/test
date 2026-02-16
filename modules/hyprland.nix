@@ -25,5 +25,4 @@
     ];
   };
 
-  services.xserver.enable = false;
 }
