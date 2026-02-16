@@ -2,7 +2,9 @@
 {
   wayland.windowManager.hyprland = {
     enable = true;
-    settings = {
+    settings = let
+      home = config.home.homeDirectory;
+    in {
       "$mod" = "SUPER";
       # Monitor configuration: name, resolution@refresh, position, scale
       # Scale must divide resolution evenly (2560/scale and 1080/scale must be integers)
@@ -18,7 +20,7 @@
         "$mod, T, exec, kitty"
         "$mod, Q, killactive"
       ];
-      "exec-once" = [ "~/.local/bin/ags-run" ];
+      "exec-once" = [ "${home}/.local/bin/ags-run" ];
       windowrulev2 = [
         "pin,class:^(com\\.github\\.Aylur\\.ags)$"
         "float,class:^(com\\.github\\.Aylur\\.ags)$"
