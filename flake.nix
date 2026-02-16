@@ -33,7 +33,7 @@
         ./modules/audio.nix
         ./modules/packages.nix
         home-manager.nixosModules.home-manager
-        { nixpkgs.overlays = [ (import ./overlays/ags-fix.nix) ]; }
+
         ({ config, pkgs, ... }: {
 
           system.stateVersion = "25.11";
