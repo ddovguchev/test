@@ -29,6 +29,12 @@
     # Desktop & GUI
     firefox
     spotify
+    ags
+    astal.gjs
+    astal.astal3
+    astal.io
+    astal.wireplumber
+    astal.notifd
   ];
 
   # Enable Docker service

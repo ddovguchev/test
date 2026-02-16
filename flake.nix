@@ -8,12 +8,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    astal.url = "github:aylur/astal";
-    ags = {
-      url = "github:aylur/ags";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.astal.follows = "astal";
-    };
   };
 
   outputs = { self, nixpkgs, home-manager, flake-utils, ... }:
@@ -27,7 +21,6 @@
   {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       inherit system;
-      specialArgs = { inherit self; };
 
       modules = [
         ./hardware-configuration.nix
@@ -51,9 +44,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "bak";
-          home-manager.extraSpecialArgs = { inputs = self.inputs; };
-
-          home-manager.users.hikari = { pkgs, config, inputs, ... }: {
+          home-manager.users.hikari = { pkgs, ... }: {
             home.stateVersion = "25.11";
             programs.home-manager.enable = true;
             imports = [ 
