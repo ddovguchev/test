@@ -20,8 +20,8 @@
         "$mod, T, exec, kitty"
         "$mod, Q, killactive"
       ];
-      # AGS панель (официальный модуль ставит ags в profile, PATH подхватывается)
-      "exec-once" = [ "bash -c 'sleep 2; ags run &'" ];
+      # AGS панель (gtk3, конфиг в ~/.config/ags)
+      "exec-once" = [ "bash -c 'sleep 2; ${home}/.local/bin/ags-run &'" ];
       windowrulev2 = [
         "pin,class:^(com\\.github\\.Aylur\\.ags)$"
         "float,class:^(com\\.github\\.Aylur\\.ags)$"
