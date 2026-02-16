@@ -2,6 +2,16 @@
 { config, pkgs, lib, ... }:
 let
   agsConfigDir = ./config;
+  # package.json с путём к astal.gjs из store (не хардкод — в closure попадёт нужный пакет)
+  astalGjsPath = "${pkgs.astal.gjs}/share/astal/gjs";
+  agsConfigWithDeps = pkgs.runCommand "ags-config" {
+    nativeBuildInputs = [ pkgs.rsync ];
+    astalPath = astalGjsPath;
+  } ''
+    mkdir -p $out
+    rsync -a --exclude='.git' ${agsConfigDir}/ $out/
+    echo '{"name":"astal-shell","dependencies":{"astal":"'"$astalPath"'"}}' > $out/package.json
+  '';
   astalPkgs = with pkgs; [
     astal.astal3
     astal.io
@@ -27,7 +37,7 @@ let
   '';
 in
 {
-  xdg.configFile."ags".source = agsConfigDir;
+  xdg.configFile."ags".source = agsConfigWithDeps;
 
   home.sessionPath = [ "$HOME/.local/bin" ];
 
