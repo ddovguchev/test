@@ -17,10 +17,17 @@ let
   '';
 
   agsBin = "${wrappedAgs}/bin/ags";
+  agsEnv = ''
+    export GI_TYPELIB_PATH="${typelibPath}"
+    export GSETTINGS_SCHEMA_DIR="${schemaPath}:''${GSETTINGS_SCHEMA_DIR:-}"
+    export XDG_DATA_DIRS="${dataDirs}:''${XDG_DATA_DIRS:-}"
+  '';
   agsWrapper = pkgs.writeShellScript "ags" ''
+    ${agsEnv}
     if [ "''${1:-}" = "run" ]; then shift; exec "${agsBin}" run "$@"; else exec "${agsBin}" "$@"; fi
   '';
   agsRun = pkgs.writeShellScript "ags-run" ''
+    ${agsEnv}
     cd "''${AGS_CONFIG:-${config.home.homeDirectory}/.config/ags}" && exec "${agsBin}" run "$@"
   '';
 in
