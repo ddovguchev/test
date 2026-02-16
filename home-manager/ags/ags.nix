@@ -2,15 +2,17 @@
 { config, pkgs, lib, ... }:
 let
   agsConfigDir = ./config;
-  # package.json с путём к astal.gjs из store (не хардкод — в closure попадёт нужный пакет)
   astalGjsPath = "${pkgs.astal.gjs}/share/astal/gjs";
+  packageJsonFile = pkgs.writeText "ags-package.json" (builtins.toJSON {
+    name = "astal-shell";
+    dependencies = { astal = astalGjsPath; };
+  });
   agsConfigWithDeps = pkgs.runCommand "ags-config" {
     nativeBuildInputs = [ pkgs.rsync ];
-    astalPath = astalGjsPath;
   } ''
     mkdir -p $out
     rsync -a --exclude='.git' --exclude='package.json' ${agsConfigDir}/ $out/
-    echo '{"name":"astal-shell","dependencies":{"astal":"'"$astalPath"'"}}' > $out/package.json
+    cp ${packageJsonFile} $out/package.json
   '';
   astalPkgs = with pkgs; [
     astal.astal3
