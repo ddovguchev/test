@@ -17,10 +17,9 @@
         "$mod, F, exec, firefox"
         "$mod, T, exec, kitty"
         "$mod, Q, killactive"
+        "$mod, B, exec, pkill -x ags 2>/dev/null; sleep 0.3; ags &"
       ];
-      # Запуск AGS с небольшой задержкой, чтобы Hyprland успел подняться
-      "exec-once" = [ "sleep 2 && ags" ];
-      # AGS bar: pin to all workspaces, keep on top, don't tile
+      "exec-once" = [ "ags" ];
       windowrulev2 = [
         "pin,class:^(com\\.github\\.Aylur\\.ags)$"
         "float,class:^(com\\.github\\.Aylur\\.ags)$"
