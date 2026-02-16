@@ -3,8 +3,6 @@
   # Enable Hyprland Wayland compositor (pure Wayland, no X11)
   programs.hyprland = {
     enable = lib.mkDefault true;
-    # NVIDIA-specific patches for better compatibility
-    enableNvidiaPatches = lib.mkDefault true;
     # XWayland for legacy X11 app compatibility (optional)
     # Disable if you don't need X11 apps at all
     xwayland.enable = lib.mkDefault true;
