@@ -18,7 +18,6 @@
         "$mod, T, exec, kitty"
         "$mod, Q, killactive"
       ];
-      # Start AGS bar on login
       "exec-once" = [ "ags" ];
     };
   };

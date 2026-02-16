@@ -34,6 +34,9 @@
         ./modules/packages.nix
         home-manager.nixosModules.home-manager
 
+        # Overlay: fix ags_1 for GIRepository 2.0 (prepend_search_path -> dup_default())
+        { nixpkgs.overlays = [ (import ./overlays/ags-fix.nix) ]; }
+
         ({ config, pkgs, ... }: {
 
           system.stateVersion = "25.11";
