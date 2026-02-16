@@ -9,7 +9,7 @@ let
     astalPath = astalGjsPath;
   } ''
     mkdir -p $out
-    rsync -a --exclude='.git' ${agsConfigDir}/ $out/
+    rsync -a --exclude='.git' --exclude='package.json' ${agsConfigDir}/ $out/
     echo '{"name":"astal-shell","dependencies":{"astal":"'"$astalPath"'"}}' > $out/package.json
   '';
   astalPkgs = with pkgs; [
