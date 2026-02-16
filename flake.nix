@@ -1,5 +1,5 @@
 {
-  description = "NixOS 25.11";
+  description = "NixOS 25.11 Configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
@@ -7,12 +7,18 @@
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, flake-utils, ... }:
   let
     system = "x86_64-linux";
-  in {
+    pkgs = import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
+    };
+  in
+  {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       inherit system;
 
@@ -49,5 +55,35 @@
         })
       ];
     };
-  };
+  } // flake-utils.lib.eachDefaultSystem (system: 
+    let
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+    in
+    {
+      # Formatter for nix files
+      formatter = pkgs.nixpkgs-fmt;
+
+      # Development shell
+      devShells.default = pkgs.mkShell {
+        buildInputs = with pkgs; [
+          nixpkgs-fmt
+          statix
+          deadnix
+          git
+        ];
+
+        shellHook = ''
+          echo "🔧 NixOS Configuration Development Environment"
+          echo "Available tools: nixpkgs-fmt, statix, deadnix"
+          echo ""
+          echo "Format all nix files: nix fmt"
+          echo "Check for issues: statix check ."
+          echo "Find unused code: deadnix ."
+        '';
+      };
+    }
+  );
 }

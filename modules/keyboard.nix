@@ -1,8 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
-  console.keyMap = "us";
-  services.xserver.xkb = {
-    layout = "us,ru";
-    options = "grp:alt_shift_toggle";
-  };
+  # Console keyboard layout (for TTY)
+  console.keyMap = lib.mkDefault "us";
+  
+  # Note: Keyboard layout for Wayland/Hyprland is configured in home-manager
+  # See: home-manager/hyperland/hyprland.nix
+  # Wayland compositors handle keyboard configuration directly
 }

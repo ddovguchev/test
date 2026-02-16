@@ -1,22 +1,41 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
+  # System packages organized by category
   environment.systemPackages = with pkgs; [
-    kubectl
-    k9s
-    ranger
-    docker
-    spotify
-    jetbrains.idea
-    fastfetch
-    htop
-    firefox
-    kitty
-    vscode
-    vim
+    # Development tools
     git
     curl
-    wget 
+    wget
     unzip
-    ags_1
+    vim
+    
+    # Kubernetes & Container tools
+    kubectl
+    k9s
+    docker
+    
+    # IDEs & Editors
+    jetbrains.idea
+    vscode
+    
+    # Terminal & Shell
+    kitty
+    ranger
+    fastfetch
+    htop
+    
+    # Desktop & GUI
+    firefox
+    spotify
+    ags_1  # Aylur's Gtk Shell (Wayland bar)
   ];
+
+  # Enable Docker service
+  virtualisation.docker.enable = lib.mkDefault true;
+  
+  # Enable Docker rootless (more secure)
+  virtualisation.docker.rootless = {
+    enable = lib.mkDefault false;
+    setSocketVariable = lib.mkDefault true;
+  };
 }
