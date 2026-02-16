@@ -26,7 +26,7 @@ let
 in
 {
   # Удалить старый ~/.config/ags если это симлинк в store (read-only), иначе home-manager не сможет записать файлы
-  home.activation.removeOldAgsLink = config.lib.hm.dag.entryBefore [ "linkGeneration" ] ''
+  home.activation.removeOldAgsLink = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
     if [ -L ${config.home.homeDirectory}/.config/ags ]; then
       rm -f ${config.home.homeDirectory}/.config/ags
     fi
