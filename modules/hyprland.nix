@@ -24,7 +24,6 @@
       xdg-desktop-portal-gtk
     ];
   };
-  
-  # Explicitly disable X11 services (Wayland-only setup)
+
   services.xserver.enable = false;
 }
