@@ -27,7 +27,7 @@
     # Desktop & GUI
     firefox
     spotify
-    ags_1   # Aylur's Gtk Shell (bar: time + workspaces). Overlay fixes GIRepository 2.0.
+    ags_1
   ];
 
   # Enable Docker service
