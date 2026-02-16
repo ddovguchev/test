@@ -10,8 +10,10 @@ let
     astal.notifd
   ];
   typelibPath = lib.makeSearchPath "lib/girepository-1.0" astalPkgs;
+  schemaPath = lib.makeSearchPath "share/glib-2.0/schemas" astalPkgs;
   agsRun = pkgs.writeShellScript "ags-run" ''
     export GI_TYPELIB_PATH="${typelibPath}"
+    export GSETTINGS_SCHEMA_DIR="${schemaPath}"
     cd "''${AGS_CONFIG:-$HOME/.config/ags}" && exec ${pkgs.ags}/bin/ags run "$@"
   '';
   # Обёртка ags: "ags run" идёт через ags-run (с typelibs), остальное — в настоящий ags.
@@ -41,5 +43,6 @@ in
   # Чтобы ags init и типы работали: GIR для ts-for-gir (если понадобится)
   home.sessionVariables = {
     GI_TYPELIB_PATH = typelibPath;
+    GSETTINGS_SCHEMA_DIR = schemaPath;
   };
 }
