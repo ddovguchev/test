@@ -9,6 +9,7 @@
     unzip
     vim
     nodejs_22
+    nodePackages.typescript
     
     # Kubernetes & Container tools
     kubectl
