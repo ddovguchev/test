@@ -13,7 +13,7 @@ prev.lib.optionalAttrs (prev ? ags_1 || prev ? ags) {
   ags_1 = ags.overrideAttrs (old: {
     nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ prev.buildPackages.gnused ];
     postPatch = (old.postPatch or "") + ''
-      ${patchPostInstall}
+      ${prev.bash}/bin/bash ${patchPostInstall}
     '';
     postInstall = (old.postInstall or "") + ''
       [ -f "$out/bin/.ags-wrapped" ] && ${patchWrapped} "$out/bin/.ags-wrapped" || true
