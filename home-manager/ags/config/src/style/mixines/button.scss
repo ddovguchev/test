@@ -1,0 +1,15 @@
+@import "./transition.scss";
+
+@mixin button {
+  all: unset;
+  background: transparentize($color00, 0.3);
+  color: $text;
+  padding: 8px 14px;
+  border-radius: $border-radius;
+
+  &:hover {
+    @include transition-color;
+    background-color: $color05;
+    color: $base;
+  }
+}
