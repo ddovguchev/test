@@ -18,10 +18,10 @@ let
 
   agsBin = "${wrappedAgs}/bin/ags";
   agsWrapper = pkgs.writeShellScript "ags" ''
-    if [ "''${1:-}" = "run" ]; then shift; exec "${agsBin}" run --gtk 3 "$@"; else exec "${agsBin}" "$@"; fi
+    if [ "''${1:-}" = "run" ]; then shift; exec "${agsBin}" run "$@"; else exec "${agsBin}" "$@"; fi
   '';
   agsRun = pkgs.writeShellScript "ags-run" ''
-    cd "''${AGS_CONFIG:-${config.home.homeDirectory}/.config/ags}" && exec "${agsBin}" run --gtk 3 "$@"
+    cd "''${AGS_CONFIG:-${config.home.homeDirectory}/.config/ags}" && exec "${agsBin}" run "$@"
   '';
 in
 {
