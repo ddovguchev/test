@@ -29,10 +29,6 @@
     firefox
     spotify
     ags
-    # Typelibs для ags run (Astal): без них "AstalWp not found"
-    astal.astal3
-    astal.io
-    astal.wireplumber
   ];
 
   # Enable Docker service
