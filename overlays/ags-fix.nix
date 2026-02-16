@@ -4,18 +4,19 @@
 final: prev:
 let
   ags = prev.ags_1 or prev.ags;
-  patchSh = prev.writeScript "patch-ags-wrapped.sh"
+  patchWrapped = prev.writeScript "patch-ags-wrapped.sh"
     (builtins.readFile (./. + "/patch-ags-wrapped.sh"));
+  patchPostInstall = prev.writeScript "patch-post-install.sh"
+    (builtins.readFile (./. + "/patch-post-install.sh"));
 in
 prev.lib.optionalAttrs (prev ? ags_1 || prev ? ags) {
   ags_1 = ags.overrideAttrs (old: {
     nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ prev.buildPackages.gnused ];
     postPatch = (old.postPatch or "") + ''
-      sed -i ''"'"'2i [ -n "''${NIX_BUILD_TOP:-}" ] \&\& _skip_tsc=1'"'"' post_install.sh
-      sed -i ''"'"'s|if \[\[ "\$5" == "false" \]\]; then|if [[ "\$5" == "false" ]] \|\| [[ -n "\${_skip_tsc:-}" ]]; then|'"'"' post_install.sh
+      ${patchPostInstall}
     '';
     postInstall = (old.postInstall or "") + ''
-      [ -f "$out/bin/.ags-wrapped" ] && ${patchSh} "$out/bin/.ags-wrapped" || true
+      [ -f "$out/bin/.ags-wrapped" ] && ${patchWrapped} "$out/bin/.ags-wrapped" || true
     '';
   });
 }
