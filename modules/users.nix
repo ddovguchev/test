@@ -1,5 +1,8 @@
 { config, pkgs, lib, ... }:
 {
+  # Required when users use zsh as shell (adds zsh to PATH etc.)
+  programs.zsh.enable = true;
+
   users.users.hikari = {
     isNormalUser = true;
     description = "Primary user";
