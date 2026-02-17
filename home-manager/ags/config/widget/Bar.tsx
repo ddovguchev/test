@@ -192,8 +192,19 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         setup={(self: any) => {
                             self.get_children?.().forEach((child: any) => self.remove(child))
                             apps.slice(0, 40).forEach((entry: any) => {
-                                const button = (Gtk as any).Button.new_with_label(entry.name)
+                                const button = (Gtk as any).Button.new()
                                 button.get_style_context()?.add_class("apps-menu-item")
+                                const row = (Gtk as any).Box.new(0, 8)
+                                const image = (Gtk as any).Image.new()
+                                const icon = entry.app.get_icon?.()
+                                if (icon) {
+                                    image.set_from_gicon?.(icon, (Gtk as any).IconSize.MENU)
+                                }
+                                const label = (Gtk as any).Label.new(entry.name)
+                                label.set_xalign?.(0)
+                                row.pack_start?.(image, false, false, 0)
+                                row.pack_start?.(label, true, true, 0)
+                                button.add(row)
                                 button.connect("clicked", () => {
                                     entry.app.launch([], null)
                                     closePanel()
