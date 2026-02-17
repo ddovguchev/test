@@ -1,7 +1,8 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 {
   fonts.fontconfig.enable = false;
   imports = [
+    inputs.spicetify-nix.homeManagerModules.default
     ./ags/ags.nix
     ./firefox/firefox.nix
     ./ags/wallpapers.nix

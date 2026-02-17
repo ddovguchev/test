@@ -7,8 +7,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = { self, nixpkgs, home-manager, flake-utils, ... }:
+  outputs = inputs@{ self, nixpkgs, home-manager, flake-utils, ... }:
   let
     system = "x86_64-linux";
     pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
@@ -34,6 +38,9 @@
           time.timeZone = "Europe/Minsk";
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs = {
+            inherit inputs;
+          };
           home-manager.backupFileExtension = "bak";
           home-manager.users.hikari = { pkgs, ... }: {
             home.stateVersion = "25.11";
