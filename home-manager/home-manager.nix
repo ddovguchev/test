@@ -4,7 +4,7 @@
   imports = [
     ./ags/ags.nix
     ./firefox.nix
-    ./wallpapers.nix
+    ./ags/wallpapers.nix
     ./kitty/kitty.nix
     ./hyperland/hyprland.nix
     ./ranger/ranger.nix

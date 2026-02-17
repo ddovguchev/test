@@ -1,8 +1,9 @@
 { lib, ... }:
 let
   candidates = [
-    ./wallpapers
-    ./wallpapper
+    ../wallpapers
+    ../wallpapper
+    ./config/assets/wallpapers
   ];
 
   wallpapersDir = lib.findFirst builtins.pathExists null candidates;

@@ -29,7 +29,7 @@
       ExtensionSettings = {
         "{8a65567e-d1bc-4494-a266-b3d300c106f8}" = {
           installation_mode = "force_installed";
-          install_url = "file://${./firefox/arcfox-patched-2.5.3.xpi}";
+          install_url = "https://addons.mozilla.org/firefox/downloads/file/4352827/arcfox-2.5.3.xpi";
         };
       };
     };
