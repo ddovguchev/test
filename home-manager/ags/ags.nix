@@ -32,17 +32,8 @@ let
     cp ${agsRunSh} $out/bin/ags-run
     chmod +x $out/bin/ags $out/bin/ags-run
   '';
-  home = config.home.homeDirectory;
 in
 {
-  home.file.".local/bin/ags" = {
-    source = "${agsScripts}/bin/ags";
-    executable = true;
-  };
-  home.file.".local/bin/ags-run" = {
-    source = "${agsScripts}/bin/ags-run";
-    executable = true;
-  };
   xdg.configFile."ags/app.ts".source = "${cfg}/app.ts";
   xdg.configFile."ags/style.scss".source = "${cfg}/style.scss";
   xdg.configFile."ags/tsconfig.json".source = "${cfg}/tsconfig.json";
@@ -54,7 +45,6 @@ in
     dependencies = { astal = astalGjs; };
   };
   xdg.configFile."ags/node_modules/astal".source = astalGjs;
-  home.sessionPath = [ "${home}/.local/bin" ];
   home.packages = [ agsScripts ];
   home.sessionVariables = {
     GI_TYPELIB_PATH = typelib;
