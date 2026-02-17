@@ -1,6 +1,5 @@
 { config, pkgs, ... }:
 {
-  services.hyprpaper.enable = true;
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
@@ -23,6 +22,9 @@
         kb_layout = "us,ru";
         kb_options = "grp:alt_shift_toggle";
       };
+      exec-once = [
+        "swww-daemon"
+      ];
       bind = [
         "$mod, F, exec, firefox"
         "$mod, T, exec, kitty"

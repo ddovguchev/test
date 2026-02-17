@@ -30,7 +30,6 @@ const apps = Gio.AppInfo
     .sort((a: any, b: any) => a.name.localeCompare(b.name))
 
 const supportedImageExt = [".jpg", ".jpeg", ".png", ".webp", ".bmp"]
-const supportedVideoExt = [".mp4", ".webm", ".mkv", ".mov"]
 
 function listPictureFiles() {
     const picturesDir = `${GLib.get_home_dir()}/Pictures`
@@ -48,10 +47,7 @@ function listPictureFiles() {
             if (info.get_file_type() !== Gio.FileType.REGULAR) continue
             const name = info.get_name()
             const lower = name.toLowerCase()
-            if (
-                supportedImageExt.some((ext) => lower.endsWith(ext))
-                || supportedVideoExt.some((ext) => lower.endsWith(ext))
-            ) {
+            if (supportedImageExt.some((ext) => lower.endsWith(ext))) {
                 files.push(`${picturesDir}/${name}`)
             }
         }
@@ -63,24 +59,38 @@ function listPictureFiles() {
 }
 
 function applyWallpaper(path: string) {
-    const lower = path.toLowerCase()
-    const isVideo = supportedVideoExt.some((ext) => lower.endsWith(ext))
+    const escapedImage = path.replaceAll("\"", "\\\"")
+    GLib.spawn_command_line_async("sh -lc 'pgrep -x swww-daemon >/dev/null || swww-daemon'")
+    GLib.spawn_command_line_async(
+        `swww img "${escapedImage}" --transition-type grow --transition-duration 1.0 --resize crop`
+    )
+}
 
-    const applyImagePath = (imagePath: string) => {
-        const escapedImage = imagePath.replaceAll("\"", "\\\"")
-        GLib.spawn_command_line_async("sh -lc 'pkill -x mpvpaper >/dev/null 2>&1 || true'")
-        GLib.spawn_command_line_async(`hyprctl hyprpaper preload "${escapedImage}"`)
-        GLib.spawn_command_line_async(`hyprctl hyprpaper wallpaper ",${escapedImage}"`)
+function iconFromDesktopFile(app: any) {
+    try {
+        const id = app.get_id?.()
+        if (!id) return null
+        const xdgData = GLib.getenv("XDG_DATA_DIRS") ?? "/usr/local/share:/usr/share"
+        const bases = xdgData.split(":")
+        const iconTheme = (Gtk as any).IconTheme.get_default?.()
+        for (const base of bases) {
+            const desktopPath = `${base}/applications/${id}`
+            if (!GLib.file_test(desktopPath, GLib.FileTest.EXISTS)) continue
+            const key = new GLib.KeyFile()
+            key.load_from_file(desktopPath, GLib.KeyFileFlags.NONE)
+            const iconValue = key.get_string("Desktop Entry", "Icon")
+            if (!iconValue) continue
+            if (iconValue.startsWith("/") && GLib.file_test(iconValue, GLib.FileTest.EXISTS)) {
+                const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(iconValue, 32, 32, true)
+                return (Gtk as any).Image.new_from_pixbuf(pixbuf)
+            }
+            const pixbuf = iconTheme?.load_icon?.(iconValue, 32, 0)
+            if (pixbuf) return (Gtk as any).Image.new_from_pixbuf(pixbuf)
+        }
+    } catch {
+        // continue with next icon source
     }
-
-    if (isVideo) {
-        const escapedVideo = path.replaceAll("\"", "\\\"")
-        GLib.spawn_command_line_async(
-            `sh -lc 'pkill -x mpvpaper >/dev/null 2>&1 || true; mpvpaper -o "no-audio --loop-file=inf --hwdec=auto-safe" "*" "${escapedVideo}" >/dev/null 2>&1 &'`
-        )
-        return
-    }
-    applyImagePath(path)
+    return null
 }
 
 function createAppImage(app: any) {
@@ -107,22 +117,9 @@ function createAppImage(app: any) {
     } catch {
         // continue with fallback icon
     }
+    const fromDesktop = iconFromDesktopFile(app)
+    if (fromDesktop) return fromDesktop
     return (Gtk as any).Image.new_from_icon_name("application-x-executable", (Gtk as any).IconSize.DIALOG)
-}
-
-function ensureVideoThumbnail(path: string) {
-    const base = path.split("/").pop() ?? "video"
-    const safe = base.replace(/[^a-zA-Z0-9._-]/g, "_")
-    const thumbPath = `/tmp/ags-thumb-${safe}.jpg`
-    if (GLib.file_test(thumbPath, GLib.FileTest.EXISTS)) {
-        return thumbPath
-    }
-    const escapedInput = path.replaceAll("\"", "\\\"")
-    const escapedOutput = thumbPath.replaceAll("\"", "\\\"")
-    GLib.spawn_command_line_sync(
-        `sh -lc 'if command -v ffmpegthumbnailer >/dev/null; then ffmpegthumbnailer -i "${escapedInput}" -o "${escapedOutput}" -s 440 >/dev/null 2>&1; elif command -v ffmpeg >/dev/null; then ffmpeg -y -ss 00:00:01 -i "${escapedInput}" -frames:v 1 -vf scale=440:-1 "${escapedOutput}" >/dev/null 2>&1; fi'`
-    )
-    return GLib.file_test(thumbPath, GLib.FileTest.EXISTS) ? thumbPath : null
 }
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
@@ -134,7 +131,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         const horizontalInset = 24
         const fullWidth = Math.max(600, monitorWidth - horizontalInset)
         if (mode === "apps") return { width: Math.round(monitorWidth * 0.6), height: 400 }
-        if (mode === "wallpaper") return { width: Math.round(monitorWidth * 0.4), height: 220 }
+        if (mode === "wallpaper") return { width: Math.round(monitorWidth * 0.4), height: 150 }
         if (mode === "notifications") return { width: Math.round(monitorWidth * 0.3), height: 180 }
         return { width: fullWidth, height: 36 }
     }
@@ -294,12 +291,16 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                 button.get_style_context?.()?.add_class("apps-tile")
 
                                 const content = (Gtk as any).Box.new((Gtk as any).Orientation.VERTICAL, 4)
+                                content.set_halign?.((Gtk as any).Align.CENTER)
+                                content.set_valign?.((Gtk as any).Align.CENTER)
                                 const image = createAppImage(entry.app)
                                 image.set_pixel_size?.(28)
 
                                 const label = (Gtk as any).Label.new(entry.name)
                                 label.set_max_width_chars?.(14)
                                 label.set_ellipsize?.(3)
+                                label.set_xalign?.(0.5)
+                                label.set_justify?.((Gtk as any).Justification.CENTER)
 
                                 content.pack_start?.(image, false, false, 0)
                                 content.pack_start?.(label, false, false, 0)
@@ -354,33 +355,63 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                             scroll.set_policy?.(hPolicy, vPolicy)
                             scroll.set_hexpand?.(true)
                             scroll.set_vexpand?.(true)
+                            scroll.set_can_focus?.(true)
+                            scroll.set_size_request?.(760, 92)
 
                             const row = (Gtk as any).Box.new((Gtk as any).Orientation.HORIZONTAL, 8)
+                            const hadj = scroll.get_hadjustment?.()
+
+                            const scrollBy = (delta: number) => {
+                                if (!hadj) return
+                                const current = hadj.get_value?.() ?? 0
+                                const upper = hadj.get_upper?.() ?? 0
+                                const page = hadj.get_page_size?.() ?? 0
+                                const next = Math.max(0, Math.min(upper - page, current + delta))
+                                hadj.set_value?.(next)
+                            }
+
+                            scroll.connect?.("key-press-event", (_: any, event: any) => {
+                                const keyval = event?.get_keyval?.()[1] ?? event?.keyval
+                                if (keyval === 65361) {
+                                    scrollBy(-180)
+                                    return true
+                                }
+                                if (keyval === 65363) {
+                                    scrollBy(180)
+                                    return true
+                                }
+                                return false
+                            })
+                            scroll.connect?.("scroll-event", (_: any, event: any) => {
+                                const deltas = event?.get_scroll_deltas?.()
+                                if (deltas && deltas[0]) {
+                                    const dx = deltas[1] ?? 0
+                                    const dy = deltas[2] ?? 0
+                                    const value = Math.abs(dx) > 0.01 ? dx : dy
+                                    if (Math.abs(value) > 0.01) {
+                                        scrollBy(value * 140)
+                                        return true
+                                    }
+                                }
+                                const dir = event?.get_scroll_direction?.()
+                                if (dir === 0) {
+                                    scrollBy(-140)
+                                    return true
+                                }
+                                if (dir === 1) {
+                                    scrollBy(140)
+                                    return true
+                                }
+                                return false
+                            })
+
                             files.forEach((path) => {
                                 try {
-                                    const lower = path.toLowerCase()
-                                    const isVideo = supportedVideoExt.some((ext) => lower.endsWith(ext))
                                     const button = (Gtk as any).Button.new()
                                     button.get_style_context?.()?.add_class("wallpaper-tile")
-
-                                    if (isVideo) {
-                                        const thumb = ensureVideoThumbnail(path)
-                                        if (thumb) {
-                                            const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(thumb, 140, 78, true)
-                                            const image = (Gtk as any).Image.new_from_pixbuf(pixbuf)
-                                            button.add(image)
-                                        } else {
-                                            const fallback = (Gtk as any).Image.new_from_icon_name(
-                                                "video-x-generic",
-                                                (Gtk as any).IconSize.DIALOG
-                                            )
-                                            button.add(fallback)
-                                        }
-                                    } else {
-                                        const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, 140, 78, true)
-                                        const image = (Gtk as any).Image.new_from_pixbuf(pixbuf)
-                                        button.add(image)
-                                    }
+                                    const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, 140, 78, true)
+                                    const image = (Gtk as any).Image.new_from_pixbuf(pixbuf)
+                                    button.add(image)
 
                                     button.connect("clicked", () => {
                                         applyWallpaper(path)

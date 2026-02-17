@@ -75,8 +75,15 @@ window.Bar {
         min-height: 86px;
         border-radius: 10px;
         margin: 4px;
-        background: rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.04);
         color: $fg-color;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .apps-tile label {
+        text-align: center;
     }
 
     .wallpaper-title {
@@ -86,16 +93,16 @@ window.Bar {
 
     .wallpaper-block {
         min-height: 92px;
-        border-radius: 12px;
+        border-radius: 8px;
         border: none;
-        padding: 2px;
+        padding: 0;
     }
 
     .wallpaper-tile {
         border-radius: 8px;
         background: transparent;
         padding: 0;
-        min-width: 144px;
+        min-width: 180px;
         min-height: 82px;
         border: none;
         box-shadow: none;
