@@ -11,7 +11,6 @@ const apps = Gio.AppInfo
     .map((app) => ({
         app,
         name: app.get_display_name() ?? app.get_name() ?? "Application",
-        icon: app.get_icon(),
     }))
     .sort((a, b) => a.name.localeCompare(b.name))
 
@@ -70,16 +69,10 @@ export function Launcher(gdkmonitor: Gdk.Monitor) {
                 <button onClicked={closeLauncher}>Close</button>
             </box>
             <scrolledwindow className="launcher-scroll" vexpand>
-                <flowbox className="launcher-grid" maxChildrenPerLine={8}>
+                <flowbox className="launcher-grid">
                     {apps.map((entry) => (
                         <button className="app-tile" onClicked={() => launchApp(entry.app)}>
-                            <box vertical spacing={8}>
-                                {entry.icon
-                                    ? <image gicon={entry.icon} pixelSize={40} />
-                                    : <image iconName="application-x-executable" pixelSize={40} />
-                                }
-                                <label label={entry.name} />
-                            </box>
+                            <label label={entry.name} />
                         </button>
                     ))}
                 </flowbox>
