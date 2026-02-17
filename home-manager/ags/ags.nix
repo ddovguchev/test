@@ -42,7 +42,6 @@ let
     cp ${cfg}/assets/* $out/assets/
     cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
     cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
-    cp ${cfg}/widget/InteractionBackdrop.tsx $out/widget/InteractionBackdrop.tsx
     cp ${cfg}/widget/launcherState.ts $out/widget/launcherState.ts
 
     cat > $out/style.scss <<'EOF'

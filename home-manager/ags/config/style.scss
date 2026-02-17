@@ -80,14 +80,3 @@ window.Bar {
     .mode-wallpaper {}
 }
 
-window.InteractionBackdrop {
-    all: unset;
-    background: transparent;
-
-    .backdrop-hitbox,
-    .backdrop-fill {
-        background: transparent;
-        border: none;
-        box-shadow: none;
-    }
-}

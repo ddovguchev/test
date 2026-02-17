@@ -9,12 +9,11 @@ const notificationsIcon = `${SRC}/assets/notification-box-svgrepo-com.svg`
 const time = Variable("").poll(1000, "date +'%I:%M %p'")
 
 function NavIcon({ path }: { path: string }) {
-    return <box
+    return <image
         className="nav-icon"
         setup={(self: any) => {
-            const image = Gtk.Image.new_from_file(path)
-            image.set_pixel_size(14)
-            self.add(image)
+            self.set_from_file(path)
+            self.set_pixel_size?.(14)
         }}
     />
 }

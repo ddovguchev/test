@@ -1,7 +1,6 @@
 import { App } from "astal/gtk3"
 import style from "./style.scss"
 import Bar from "./widget/Bar"
-import InteractionBackdrop from "./widget/InteractionBackdrop"
 import { closePanel, setPanelMode, togglePanelMode } from "./widget/launcherState"
 
 App.start({
@@ -29,7 +28,6 @@ App.start({
     },
     main() {
         App.get_monitors().forEach((monitor) => {
-            InteractionBackdrop(monitor)
             Bar(monitor)
         })
     }
