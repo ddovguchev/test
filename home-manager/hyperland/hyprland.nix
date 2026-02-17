@@ -54,8 +54,6 @@
       layerrule = [
         "blur,^(Bar)$"
         "ignorezero,^(Bar)$"
-        "blur,^(PanelOverlay)$"
-        "ignorezero,^(PanelOverlay)$"
       ];
     };
   };

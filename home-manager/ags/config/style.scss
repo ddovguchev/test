@@ -38,37 +38,23 @@ window.Bar {
             color: $fg-color;
         }
     }
-}
 
-window.PanelOverlay {
-    min-height: 300px;
-    background: transparent;
-    color: $panel-text;
-
-    .panel-root {
-        margin-top: 60px;
-        border-radius: 16px;
-        border: 1px solid $panel-border;
-        background: $panel-bg;
-        min-height: 160px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-    }
-
-    .panel-header {
-        padding: 10px 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .panel-content {
+    .shell-content {
         padding: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        margin-top: 8px;
     }
 
-    &.mode-apps .panel-root {
+    .mode-none {
+        min-height: 50px;
+    }
+
+    .mode-apps {
         min-width: 1536px;
         min-height: 200px;
     }
 
-    &.mode-notifications .panel-root {
+    .mode-notifications {
         min-width: 768px;
         min-height: 160px;
     }

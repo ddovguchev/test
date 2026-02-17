@@ -41,7 +41,6 @@ let
     cp ${cfg}/.gitignore $out/.gitignore
     cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
     cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
-    cp ${cfg}/widget/PanelOverlay.tsx $out/widget/PanelOverlay.tsx
     cp ${cfg}/widget/launcherState.ts $out/widget/launcherState.ts
 
     cat > $out/style.scss <<'EOF'
