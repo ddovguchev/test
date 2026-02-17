@@ -123,18 +123,40 @@ function listWorkspaceCards() {
         clientsByWorkspace.set(workspaceId, items)
     })
 
-    return workspaces
-        .filter((ws: any) => Number(ws?.id ?? -1) > 0)
-        .map((ws: any) => {
-            const id = Number(ws?.id ?? -1)
-            return {
-                id,
-                name: String(ws?.name ?? id),
-                active: id === activeId,
-                apps: clientsByWorkspace.get(id) ?? []
-            }
-        })
-        .sort((a: any, b: any) => a.id - b.id)
+    const ids = new Set<number>()
+    workspaces.forEach((ws: any) => {
+        const id = Number(ws?.id ?? -1)
+        if (id > 0) ids.add(id)
+    })
+    clients.forEach((client: any) => {
+        const id = Number(client?.workspace?.id ?? -1)
+        if (id > 0) ids.add(id)
+    })
+    if (activeId > 0) ids.add(activeId)
+
+    const maxId = Math.max(1, ...Array.from(ids))
+    const workspaceMeta = new Map<number, any>()
+    workspaces.forEach((ws: any) => {
+        const id = Number(ws?.id ?? -1)
+        if (id > 0) workspaceMeta.set(id, ws)
+    })
+
+    return Array.from({ length: maxId }, (_, index) => {
+        const id = index + 1
+        const meta = workspaceMeta.get(id)
+        return {
+            id,
+            name: String(meta?.name ?? id),
+            active: id === activeId,
+            apps: clientsByWorkspace.get(id) ?? []
+        }
+    })
+}
+
+function getWorkspaceDotsLabel() {
+    const items = listWorkspaceCards()
+    if (items.length === 0) return "•"
+    return items.map((workspace: any) => workspace.active ? "●" : "•").join(" ")
 }
 
 function switchWorkspace(id: number) {
@@ -389,10 +411,22 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <button
                         className="workspaces-button"
                         onClicked={() => togglePanelMode("workspaces")}
+                        setup={(self: any) => {
+                            const refresh = () => {
+                                self.set_label?.(getWorkspaceDotsLabel())
+                                if (!self.set_label) self.label = getWorkspaceDotsLabel()
+                            }
+                            refresh()
+                            const timerId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1200, () => {
+                                refresh()
+                                return true
+                            })
+                            self.connect?.("destroy", () => {
+                                if (timerId) GLib.source_remove(timerId)
+                            })
+                        }}
                         halign={Gtk.Align.CENTER}
-                    >
-                        WS
-                    </button>
+                    />
                     <button
                         className="notifications-button"
                         onClicked={() => togglePanelMode("notifications")}
@@ -741,8 +775,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <box className="session-title-row">
                         <label className="session-title" label="Session" />
                     </box>
-                    <box className="session-actions">
-                        <box className="session-actions-left">
+                    <box className="session-actions" hexpand>
+                        <box className="session-actions-left" hexpand>
                             <button className="session-action" onClicked={() => runSessionAction("lock-screen")}>
                                 Lock
                             </button>
@@ -756,8 +790,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                 Reboot
                             </button>
                         </box>
-                        <box hexpand />
-                        <box className="session-actions-right">
+                        <box className="session-actions-right" halign={Gtk.Align.END}>
                             <button className="session-action danger" onClicked={() => runSessionAction("poweroff")}>
                                 Poweroff
                             </button>

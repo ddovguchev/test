@@ -113,11 +113,13 @@ window.Bar {
         background: rgba(180, 60, 70, 0.35);
     }
 
-    .session-actions-left,
-    .session-actions-right {
-        button:last-child {
-            margin-right: 0;
-        }
+    .session-actions {
+        min-height: 46px;
+    }
+
+    .session-actions-left button:last-child,
+    .session-actions-right button:last-child {
+        margin-right: 0;
     }
 
     .wallpaper-title {

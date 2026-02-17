@@ -17,6 +17,15 @@ let
       "$AGS" request wallpaper
     fi
   '';
+
+  agsRequestWorkspaces = pkgs.writeShellScript "ags-request-workspaces" ''
+    AGS="${config.home.profileDirectory}/bin/ags"
+    if ! "$AGS" request workspaces; then
+      systemctl --user start ags.service
+      sleep 0.2
+      "$AGS" request workspaces
+    fi
+  '';
 in
 {
   wayland.windowManager.hyprland = {
@@ -46,12 +55,14 @@ in
       };
       exec-once = [
         "swww-daemon"
+        "xwaylandvideobridge"
       ];
       bind = [
         "$mod, F, exec, firefox"
         "$mod, T, exec, kitty"
         "$mod, R, exec, ${agsRequestApps}"
-        "$mod, W, exec, ${agsRequestWallpaper}"
+        "$mod, W, exec, ${agsRequestWorkspaces}"
+        "$mod SHIFT, W, exec, ${agsRequestWallpaper}"
         "$mod, Q, killactive"
         "$mod, 1, workspace, 1"
         "$mod, 2, workspace, 2"
