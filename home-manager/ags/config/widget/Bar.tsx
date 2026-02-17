@@ -90,6 +90,59 @@ function applyWallpaper(path: string) {
     )
 }
 
+function runJsonCommand(command: string) {
+    try {
+        const [ok, stdout] = GLib.spawn_command_line_sync(`sh -lc '${command}'`)
+        if (!ok || !stdout) return null
+        const text = new TextDecoder().decode(stdout as Uint8Array).trim()
+        if (!text) return null
+        return JSON.parse(text)
+    } catch {
+        return null
+    }
+}
+
+function listWorkspaceCards() {
+    const workspacesRaw = runJsonCommand("hyprctl -j workspaces")
+    const clientsRaw = runJsonCommand("hyprctl -j clients")
+    const activeRaw = runJsonCommand("hyprctl -j activeworkspace")
+
+    const workspaces = Array.isArray(workspacesRaw) ? workspacesRaw : []
+    const clients = Array.isArray(clientsRaw) ? clientsRaw : []
+    const activeId = Number(activeRaw?.id ?? -1)
+
+    const clientsByWorkspace = new Map<number, string[]>()
+    clients.forEach((client: any) => {
+        const workspaceId = Number(client?.workspace?.id ?? -1)
+        if (workspaceId <= 0) return
+        const title = String(client?.title ?? "").trim()
+        const appClass = String(client?.class ?? "").trim()
+        const label = title || appClass || "App"
+        const items = clientsByWorkspace.get(workspaceId) ?? []
+        items.push(label)
+        clientsByWorkspace.set(workspaceId, items)
+    })
+
+    return workspaces
+        .filter((ws: any) => Number(ws?.id ?? -1) > 0)
+        .map((ws: any) => {
+            const id = Number(ws?.id ?? -1)
+            return {
+                id,
+                name: String(ws?.name ?? id),
+                active: id === activeId,
+                apps: clientsByWorkspace.get(id) ?? []
+            }
+        })
+        .sort((a: any, b: any) => a.id - b.id)
+}
+
+function switchWorkspace(id: number) {
+    if (!Number.isFinite(id) || id <= 0) return
+    GLib.spawn_command_line_async(`hyprctl dispatch workspace ${Math.floor(id)}`)
+    closePanel()
+}
+
 function runSessionAction(action: "lock-screen" | "logout" | "sleep" | "reboot" | "poweroff") {
     const commands: Record<string, string> = {
         "lock-screen": "sh -lc 'command -v hyprlock >/dev/null && hyprlock || command -v swaylock >/dev/null && swaylock -f || loginctl lock-session'",
@@ -227,6 +280,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         const fullWidth = Math.max(600, monitorWidth - horizontalInset)
         if (mode === "apps") return { width: Math.round(monitorWidth * 0.6), height: 400 }
         if (mode === "wallpaper") return { width: Math.max(1320, Math.round(monitorWidth * 0.5)), height: 280 }
+        if (mode === "workspaces") return { width: Math.max(1320, Math.round(monitorWidth * 0.56)), height: 300 }
         if (mode === "session") return { width: Math.round(monitorWidth * 0.36), height: 190 }
         if (mode === "notifications") return { width: Math.round(monitorWidth * 0.3), height: 180 }
         return { width: fullWidth, height: 36 }
@@ -332,6 +386,13 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 </box>
                 <box />
                 <box>
+                    <button
+                        className="workspaces-button"
+                        onClicked={() => togglePanelMode("workspaces")}
+                        halign={Gtk.Align.CENTER}
+                    >
+                        WS
+                    </button>
                     <button
                         className="notifications-button"
                         onClicked={() => togglePanelMode("notifications")}
@@ -598,6 +659,78 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 </box>
                 <box
                     setup={(self: any) => {
+                        self.visible = panelMode() === "workspaces"
+                        panelMode.subscribe((mode: string) => {
+                            self.visible = mode === "workspaces"
+                        })
+                    }}
+                    vertical
+                >
+                    <label className="workspace-title" label="Workspaces" />
+                    <box
+                        className="workspace-block"
+                        setup={(self: any) => {
+                            self.get_children?.().forEach((child: any) => self.remove(child))
+                            const items = listWorkspaceCards()
+
+                            if (items.length === 0) {
+                                const empty = (Gtk as any).Label.new("No workspaces found")
+                                empty.get_style_context?.()?.add_class("workspace-empty")
+                                self.add(empty)
+                                self.show_all?.()
+                                return
+                            }
+
+                            const scroll = (Gtk as any).ScrolledWindow.new(null, null)
+                            const hPolicy = (Gtk as any).PolicyType.AUTOMATIC ?? 1
+                            const vPolicy = (Gtk as any).PolicyType.NEVER ?? 2
+                            scroll.set_policy?.(hPolicy, vPolicy)
+                            scroll.set_hexpand?.(true)
+                            scroll.set_vexpand?.(true)
+
+                            const row = (Gtk as any).Box.new((Gtk as any).Orientation.HORIZONTAL, 12)
+                            items.forEach((workspace: any) => {
+                                const button = (Gtk as any).Button.new()
+                                button.get_style_context?.()?.add_class("workspace-tile")
+                                if (workspace.active) button.get_style_context?.()?.add_class("active")
+
+                                const card = (Gtk as any).Box.new((Gtk as any).Orientation.VERTICAL, 6)
+                                card.get_style_context?.()?.add_class("workspace-card")
+
+                                const title = (Gtk as any).Label.new(`Workspace ${workspace.id}`)
+                                title.get_style_context?.()?.add_class("workspace-tile-header")
+                                title.set_xalign?.(0)
+                                card.pack_start?.(title, false, false, 0)
+
+                                const preview = (Gtk as any).Box.new((Gtk as any).Orientation.VERTICAL, 3)
+                                preview.get_style_context?.()?.add_class("workspace-preview")
+                                const previewItems = workspace.apps.length > 0
+                                    ? workspace.apps.slice(0, 4)
+                                    : ["Empty"]
+
+                                previewItems.forEach((item: string) => {
+                                    const appLabel = (Gtk as any).Label.new(item)
+                                    appLabel.get_style_context?.()?.add_class("workspace-app")
+                                    appLabel.set_xalign?.(0)
+                                    appLabel.set_ellipsize?.(3)
+                                    appLabel.set_max_width_chars?.(26)
+                                    preview.pack_start?.(appLabel, false, false, 0)
+                                })
+
+                                card.pack_start?.(preview, true, true, 0)
+                                button.add(card)
+                                button.connect("clicked", () => switchWorkspace(workspace.id))
+                                row.pack_start?.(button, false, false, 0)
+                            })
+
+                            scroll.add(row)
+                            self.add(scroll)
+                            self.show_all?.()
+                        }}
+                    />
+                </box>
+                <box
+                    setup={(self: any) => {
                         self.visible = panelMode() === "session"
                         panelMode.subscribe((mode: string) => {
                             self.visible = mode === "session"
@@ -608,22 +741,27 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <box className="session-title-row">
                         <label className="session-title" label="Session" />
                     </box>
-                    <box className="session-actions" homogeneous>
-                        <button className="session-action" onClicked={() => runSessionAction("lock-screen")}>
-                            Lock
-                        </button>
-                        <button className="session-action" onClicked={() => runSessionAction("logout")}>
-                            Logout
-                        </button>
-                        <button className="session-action" onClicked={() => runSessionAction("sleep")}>
-                            Sleep
-                        </button>
-                        <button className="session-action" onClicked={() => runSessionAction("reboot")}>
-                            Reboot
-                        </button>
-                        <button className="session-action danger" onClicked={() => runSessionAction("poweroff")}>
-                            Poweroff
-                        </button>
+                    <box className="session-actions">
+                        <box className="session-actions-left">
+                            <button className="session-action" onClicked={() => runSessionAction("lock-screen")}>
+                                Lock
+                            </button>
+                            <button className="session-action" onClicked={() => runSessionAction("logout")}>
+                                Logout
+                            </button>
+                            <button className="session-action" onClicked={() => runSessionAction("sleep")}>
+                                Sleep
+                            </button>
+                            <button className="session-action" onClicked={() => runSessionAction("reboot")}>
+                                Reboot
+                            </button>
+                        </box>
+                        <box hexpand />
+                        <box className="session-actions-right">
+                            <button className="session-action danger" onClicked={() => runSessionAction("poweroff")}>
+                                Poweroff
+                            </button>
+                        </box>
                     </box>
                 </box>
             </box>

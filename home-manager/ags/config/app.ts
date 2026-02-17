@@ -16,6 +16,9 @@ App.start({
             case "wallpaper":
                 togglePanelMode("wallpaper")
                 return "ok"
+            case "workspaces":
+                togglePanelMode("workspaces")
+                return "ok"
             case "session":
                 togglePanelMode("session")
                 return "ok"
