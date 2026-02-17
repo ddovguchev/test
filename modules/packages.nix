@@ -10,6 +10,7 @@
     pavucontrol
     ffmpeg
     ffmpegthumbnailer
+    mpvpaper
     astal.gjs astal.astal3 astal.io astal.wireplumber astal.notifd
   ];
   virtualisation.docker.enable = lib.mkDefault true;

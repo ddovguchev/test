@@ -23,7 +23,8 @@ const apps = Gio.AppInfo
             "htop",
             "nixos manual",
             "volume control",
-            "xterm"
+            "xterm",
+            "ranger"
         ].includes(name)
     })
     .sort((a: any, b: any) => a.name.localeCompare(b.name))
@@ -67,13 +68,16 @@ function applyWallpaper(path: string) {
 
     const applyImagePath = (imagePath: string) => {
         const escapedImage = imagePath.replaceAll("\"", "\\\"")
+        GLib.spawn_command_line_async("sh -lc 'pkill -x mpvpaper >/dev/null 2>&1 || true'")
         GLib.spawn_command_line_async(`hyprctl hyprpaper preload "${escapedImage}"`)
         GLib.spawn_command_line_async(`hyprctl hyprpaper wallpaper ",${escapedImage}"`)
     }
 
     if (isVideo) {
-        const thumb = ensureVideoThumbnail(path)
-        if (thumb) applyImagePath(thumb)
+        const escapedVideo = path.replaceAll("\"", "\\\"")
+        GLib.spawn_command_line_async(
+            `sh -lc 'pkill -x mpvpaper >/dev/null 2>&1 || true; mpvpaper -o "no-audio --loop-file=inf --hwdec=auto-safe" "*" "${escapedVideo}" >/dev/null 2>&1 &'`
+        )
         return
     }
     applyImagePath(path)
@@ -89,16 +93,14 @@ function createAppImage(app: any) {
         }
         const iconTheme = (Gtk as any).IconTheme.get_default?.()
         const names = icon?.get_names?.() ?? []
-        for (const name of names) {
-            try {
-                const pixbuf = iconTheme?.load_icon?.(name, 32, 0)
-                if (pixbuf) {
-                    return (Gtk as any).Image.new_from_pixbuf(pixbuf)
-                }
-            } catch {
-                // continue trying icon names
-            }
+        const info = iconTheme?.choose_icon?.(names, 32, 0)
+        const filename = info?.get_filename?.()
+        if (filename) {
+            const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(filename, 32, 32, true)
+            return (Gtk as any).Image.new_from_pixbuf(pixbuf)
         }
+        const appId = app.get_id?.()?.replace?.(".desktop", "")
+        if (appId) return (Gtk as any).Image.new_from_icon_name(appId, (Gtk as any).IconSize.DIALOG)
         if (icon) {
             return (Gtk as any).Image.new_from_gicon(icon, (Gtk as any).IconSize.DIALOG)
         }
@@ -132,7 +134,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         const horizontalInset = 24
         const fullWidth = Math.max(600, monitorWidth - horizontalInset)
         if (mode === "apps") return { width: Math.round(monitorWidth * 0.6), height: 400 }
-        if (mode === "wallpaper") return { width: Math.round(monitorWidth * 0.4), height: 700 }
+        if (mode === "wallpaper") return { width: Math.round(monitorWidth * 0.4), height: 220 }
         if (mode === "notifications") return { width: Math.round(monitorWidth * 0.3), height: 180 }
         return { width: fullWidth, height: 36 }
     }
@@ -346,77 +348,52 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         setup={(self: any) => {
                             self.get_children?.().forEach((child: any) => self.remove(child))
                             const files = listPictureFiles()
-                            let start = 0
+                            const scroll = (Gtk as any).ScrolledWindow.new(null, null)
+                            const hPolicy = (Gtk as any).PolicyType.AUTOMATIC ?? 1
+                            const vPolicy = (Gtk as any).PolicyType.NEVER ?? 2
+                            scroll.set_policy?.(hPolicy, vPolicy)
+                            scroll.set_hexpand?.(true)
+                            scroll.set_vexpand?.(true)
 
-                            const wrapper = (Gtk as any).Box.new((Gtk as any).Orientation.HORIZONTAL, 8)
-                            wrapper.set_hexpand?.(true)
-                            wrapper.set_vexpand?.(true)
+                            const row = (Gtk as any).Box.new((Gtk as any).Orientation.HORIZONTAL, 8)
+                            files.forEach((path) => {
+                                try {
+                                    const lower = path.toLowerCase()
+                                    const isVideo = supportedVideoExt.some((ext) => lower.endsWith(ext))
+                                    const button = (Gtk as any).Button.new()
+                                    button.get_style_context?.()?.add_class("wallpaper-tile")
 
-                            const prev = (Gtk as any).Button.new_with_label("◀")
-                            prev.get_style_context?.()?.add_class("carousel-nav")
-                            const next = (Gtk as any).Button.new_with_label("▶")
-                            next.get_style_context?.()?.add_class("carousel-nav")
-                            const view = (Gtk as any).Box.new((Gtk as any).Orientation.HORIZONTAL, 8)
-                            view.set_hexpand?.(true)
-
-                            const renderView = () => {
-                                view.get_children?.().forEach((child: any) => view.remove(child))
-                                const visible = files.slice(start, start + 4)
-                                visible.forEach((path) => {
-                                    try {
-                                        const lower = path.toLowerCase()
-                                        const isVideo = supportedVideoExt.some((ext) => lower.endsWith(ext))
-                                        const button = (Gtk as any).Button.new()
-                                        button.get_style_context?.()?.add_class("wallpaper-tile")
-
-                                        if (isVideo) {
-                                            const thumb = ensureVideoThumbnail(path)
-                                            if (thumb) {
-                                                const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(thumb, 140, 78, true)
-                                                const image = (Gtk as any).Image.new_from_pixbuf(pixbuf)
-                                                button.add(image)
-                                            } else {
-                                                const fallback = (Gtk as any).Image.new_from_icon_name(
-                                                    "video-x-generic",
-                                                    (Gtk as any).IconSize.DIALOG
-                                                )
-                                                button.add(fallback)
-                                            }
-                                        } else {
-                                            const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, 140, 78, true)
+                                    if (isVideo) {
+                                        const thumb = ensureVideoThumbnail(path)
+                                        if (thumb) {
+                                            const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(thumb, 140, 78, true)
                                             const image = (Gtk as any).Image.new_from_pixbuf(pixbuf)
                                             button.add(image)
+                                        } else {
+                                            const fallback = (Gtk as any).Image.new_from_icon_name(
+                                                "video-x-generic",
+                                                (Gtk as any).IconSize.DIALOG
+                                            )
+                                            button.add(fallback)
                                         }
-
-                                        button.connect("clicked", () => {
-                                            applyWallpaper(path)
-                                            closePanel()
-                                        })
-                                        view.pack_start?.(button, true, true, 0)
-                                    } catch {
-                                        // skip broken file
+                                    } else {
+                                        const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, 140, 78, true)
+                                        const image = (Gtk as any).Image.new_from_pixbuf(pixbuf)
+                                        button.add(image)
                                     }
-                                })
-                                view.show_all?.()
-                                prev.set_sensitive?.(start > 0)
-                                next.set_sensitive?.(start < Math.max(0, files.length - 4))
-                            }
 
-                            prev.connect("clicked", () => {
-                                start = Math.max(0, start - 1)
-                                renderView()
-                            })
-                            next.connect("clicked", () => {
-                                const maxStart = Math.max(0, files.length - 4)
-                                start = Math.min(maxStart, start + 1)
-                                renderView()
+                                    button.connect("clicked", () => {
+                                        applyWallpaper(path)
+                                        closePanel()
+                                    })
+                                    row.pack_start?.(button, false, false, 0)
+                                } catch {
+                                    // skip broken file
+                                }
                             })
 
-                            wrapper.pack_start?.(prev, false, false, 0)
-                            wrapper.pack_start?.(view, true, true, 0)
-                            wrapper.pack_start?.(next, false, false, 0)
-                            self.add(wrapper)
-                            renderView()
+                            scroll.add(row)
+                            self.add(scroll)
                             self.show_all?.()
                         }}
                     />

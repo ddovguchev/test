@@ -85,23 +85,25 @@ window.Bar {
     }
 
     .wallpaper-block {
-        min-height: 150px;
+        min-height: 92px;
         border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        padding: 6px;
+        border: none;
+        padding: 2px;
     }
 
     .wallpaper-tile {
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.06);
-        padding: 2px;
-        min-width: 148px;
-        min-height: 84px;
+        border-radius: 8px;
+        background: transparent;
+        padding: 0;
+        min-width: 144px;
+        min-height: 82px;
+        border: none;
+        box-shadow: none;
     }
 
-    .carousel-nav {
-        min-width: 30px;
-        min-height: 84px;
+    .wallpaper-tile:hover,
+    .wallpaper-tile:focus {
+        background: rgba(255, 255, 255, 0.08);
         border-radius: 8px;
     }
 
