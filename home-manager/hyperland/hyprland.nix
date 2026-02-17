@@ -9,6 +9,14 @@
         gaps_in = 3;
         gaps_out = 5;
       };
+      decoration = {
+        blur = {
+          enabled = true;
+          size = 8;
+          passes = 2;
+          new_optimizations = true;
+        };
+      };
       input = {
         kb_layout = "us,ru";
         kb_options = "grp:alt_shift_toggle";

@@ -18,3 +18,49 @@ window.Bar {
         margin: 2px;
     }
 }
+
+window.LauncherOverlay {
+    background: rgba(12, 12, 16, 0.28);
+    color: #f3f3f3;
+
+    .launcher-backdrop {
+        margin: 20px;
+    }
+
+    .launcher-header {
+        margin-bottom: 12px;
+
+        button {
+            border-radius: 10px;
+            padding: 8px 14px;
+        }
+    }
+
+    .launcher-scroll {
+        min-height: 420px;
+    }
+
+    .launcher-grid {
+        padding: 14px;
+    }
+
+    .app-tile {
+        min-width: 128px;
+        min-height: 96px;
+        border-radius: 14px;
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.08);
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        box {
+            spacing: 8px;
+        }
+
+        label {
+            font-size: 12px;
+        }
+    }
+}
