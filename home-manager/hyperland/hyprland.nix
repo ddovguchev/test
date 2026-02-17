@@ -40,8 +40,9 @@ in
         ",highrr,auto,1"
       ];
       general = {
-        gaps_in = 6;
+        gaps_in = 0;
         gaps_out = 10;
+        border_size = 0;
       };
       decoration = {
         rounding = 14;
