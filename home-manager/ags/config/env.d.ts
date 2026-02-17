@@ -88,6 +88,11 @@ declare module "gi://GLib" {
     export default GLib
 }
 
+declare module "gi://GdkPixbuf" {
+    const GdkPixbuf: any
+    export default GdkPixbuf
+}
+
 declare namespace JSX {
     interface IntrinsicElements {
         [elemName: string]: Record<string, unknown>

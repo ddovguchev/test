@@ -18,7 +18,7 @@ window.Bar {
         margin: 8px 12px 0;
         padding: 2px 6px;
         min-height: 36px;
-        box-shadow: 0 8px 22px $bar-shadow;
+        box-shadow: none;
     }
 
     .shell-top-row {
@@ -32,21 +32,16 @@ window.Bar {
         button {
             border-radius: 8px;
             margin: 1px;
-            background: rgba(255, 255, 255, 0.05);
+            background: transparent;
             color: $fg-color;
         }
 
         .apps-button,
         .notifications-button {
             font-weight: 600;
-        }
-
-        .nav-button-content {
-            padding: 0 4px;
-        }
-
-        .nav-button-content > label {
-            margin-left: 6px;
+            image {
+                margin-right: 6px;
+            }
         }
     }
 

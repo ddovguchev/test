@@ -2,6 +2,7 @@ import { App, Astal, Gtk } from "astal/gtk3"
 import type { Gdk } from "astal/gtk3"
 import { Variable } from "astal"
 import GLib from "gi://GLib"
+import GdkPixbuf from "gi://GdkPixbuf"
 import { closePanel, panelMode, togglePanelMode } from "./launcherState"
 
 const appsIcon = `${SRC}/assets/apps-svgrepo-com.svg`
@@ -106,20 +107,20 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <button
                         className="apps-button"
                         onClicked={() => togglePanelMode("apps")}
+                        setup={(self: any) => {
+                            const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
+                                appsIcon,
+                                14,
+                                14,
+                                true
+                            )
+                            const icon = (Gtk as any).Image.new_from_pixbuf(pixbuf)
+                            self.set_image(icon)
+                            self.set_always_show_image?.(true)
+                            self.set_label("")
+                        }}
                         halign={Gtk.Align.CENTER}
-                    >
-                        <box
-                            className="nav-button-content"
-                            setup={(self: any) => {
-                                const icon = Gtk.Image.new_from_file(appsIcon)
-                                icon.set_pixel_size(14)
-                                self.add(icon)
-                                self.show_all()
-                            }}
-                        >
-                            <label label="Applications" />
-                        </box>
-                    </button>
+                    />
                     <button
                         onClicked={() => togglePanelMode("wallpaper")}
                         halign={Gtk.Align.CENTER}
@@ -132,20 +133,20 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <button
                         className="notifications-button"
                         onClicked={() => togglePanelMode("notifications")}
+                        setup={(self: any) => {
+                            const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
+                                notificationsIcon,
+                                14,
+                                14,
+                                true
+                            )
+                            const icon = (Gtk as any).Image.new_from_pixbuf(pixbuf)
+                            self.set_image(icon)
+                            self.set_always_show_image?.(true)
+                            self.set_label("")
+                        }}
                         halign={Gtk.Align.CENTER}
-                    >
-                        <box
-                            className="nav-button-content"
-                            setup={(self: any) => {
-                                const icon = Gtk.Image.new_from_file(notificationsIcon)
-                                icon.set_pixel_size(14)
-                                self.add(icon)
-                                self.show_all()
-                            }}
-                        >
-                            <label label="Notifications" />
-                        </box>
-                    </button>
+                    />
                 </box>
             </centerbox>
             <box
