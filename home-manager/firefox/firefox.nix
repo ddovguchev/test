@@ -36,5 +36,5 @@
   };
 
   home.file.".mozilla/firefox/hikari/chrome/userChrome.css".source =
-    ./firefox/arcfox-userChrome.css;
+    ./config/arcfox-userChrome.css;
 }
