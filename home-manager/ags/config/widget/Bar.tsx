@@ -240,6 +240,21 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         exclusivity={Astal.Exclusivity.EXCLUSIVE}
         anchor={TOP | LEFT | RIGHT}
         keymode={Astal.Keymode.ON_DEMAND}
+        setup={(self: any) => {
+            self.set_can_focus?.(true)
+            panelMode.subscribe((mode: string) => {
+                const active = mode !== "none"
+                const nextKeymode = active ? Astal.Keymode.EXCLUSIVE : Astal.Keymode.ON_DEMAND
+                self.keymode = nextKeymode
+                self.set_keymode?.(nextKeymode)
+                if (!active) return
+                GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                    self.present?.()
+                    self.grab_focus?.()
+                    return false
+                })
+            })
+        }}
         onKeyPressEvent={(_: any, event: any) => {
             const keyval = event?.get_keyval?.()[1] ?? event?.keyval
             if (keyval === (Gdk.KEY_Escape ?? 65307)) {
