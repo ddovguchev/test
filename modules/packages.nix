@@ -12,6 +12,14 @@ let
       [ pkgs.cursor ]
     else
       [ ];
+  vesktopWrapped = pkgs.hiPrio (pkgs.writeShellScriptBin "vesktop" ''
+    exec ${pkgs.vesktop}/bin/vesktop \
+      --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer \
+      --ozone-platform=wayland \
+      --disable-gpu-compositing \
+      --disable-gpu \
+      "$@"
+  '');
 in
 {
   environment.systemPackages = (with pkgs; [
@@ -34,7 +42,7 @@ in
     ffmpeg
     swww
     astal.gjs astal.astal3 astal.io astal.wireplumber astal.notifd
-  ]) ++ xwaylandVideoBridgePkg ++ cursorPkg;
+  ]) ++ [ vesktopWrapped ] ++ xwaylandVideoBridgePkg ++ cursorPkg;
   virtualisation.docker.enable = lib.mkDefault true;
   virtualisation.docker.rootless = {
     enable = lib.mkDefault false;
