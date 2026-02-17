@@ -1,64 +1,49 @@
-# AGS: конфиг из ./config, обёртка ags с typelibs и GSettings, --gtk 3 для run.
 { config, pkgs, lib, ... }:
 let
-  agsConfigDir = ./config;
-  astalPkgs = with pkgs; [ astal.astal3 astal.io astal.wireplumber astal.notifd ];
-  typelibPath = lib.makeSearchPath "lib/girepository-1.0" astalPkgs;
-  schemaPath = lib.makeSearchPath "share/glib-2.0/schemas" astalPkgs;
-  dataDirs = lib.makeSearchPath "share" astalPkgs;
-  astalGjsPath = "${pkgs.astal.gjs}/share/astal/gjs";
-
-  wrappedAgs = pkgs.runCommand "ags-wrapped" { buildInputs = [ pkgs.makeWrapper ]; } ''
+  cfg = ./config;
+  astal = with pkgs; [ astal.astal3 astal.io astal.wireplumber astal.notifd ];
+  typelib = lib.makeSearchPath "lib/girepository-1.0" astal;
+  schema = lib.makeSearchPath "share/glib-2.0/schemas" astal;
+  data = lib.makeSearchPath "share" astal;
+  astalGjs = "${pkgs.astal.gjs}/share/astal/gjs";
+  wrapped = pkgs.runCommand "ags-wrapped" { buildInputs = [ pkgs.makeWrapper ]; } ''
     mkdir -p $out/bin
     makeWrapper ${pkgs.ags}/bin/ags $out/bin/ags \
-      --set GI_TYPELIB_PATH "${typelibPath}" \
-      --set GSETTINGS_SCHEMA_DIR "${schemaPath}" \
-      --prefix XDG_DATA_DIRS : "${dataDirs}"
+      --set GI_TYPELIB_PATH "${typelib}" \
+      --set GSETTINGS_SCHEMA_DIR "${schema}" \
+      --prefix XDG_DATA_DIRS : "${data}"
   '';
-
-  agsBin = "${wrappedAgs}/bin/ags";
-  agsEnv = ''
-    export GI_TYPELIB_PATH="${typelibPath}"
-    export GSETTINGS_SCHEMA_DIR="${schemaPath}:''${GSETTINGS_SCHEMA_DIR:-}"
-    export XDG_DATA_DIRS="${dataDirs}:''${XDG_DATA_DIRS:-}"
-  '';
-  agsWrapper = pkgs.writeShellScript "ags" ''
-    ${agsEnv}
-    if [ "''${1:-}" = "run" ]; then shift; exec "${agsBin}" run "$@"; else exec "${agsBin}" "$@"; fi
-  '';
-  agsRun = pkgs.writeShellScript "ags-run" ''
-    ${agsEnv}
-    cd "''${AGS_CONFIG:-${config.home.homeDirectory}/.config/ags}" && exec "${agsBin}" run "$@"
-  '';
+  env = "export GI_TYPELIB_PATH=\"${typelib}\" GSETTINGS_SCHEMA_DIR=\"${schema}:\${GSETTINGS_SCHEMA_DIR:-}\" XDG_DATA_DIRS=\"${data}:\${XDG_DATA_DIRS:-}\"";
+  bin = "${wrapped}/bin/ags";
+  home = config.home.homeDirectory;
 in
 {
-  # Удалить старый ~/.config/ags если это симлинк в store (read-only), иначе home-manager не сможет записать файлы
   home.activation.removeOldAgsLink = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
-    if [ -L ${config.home.homeDirectory}/.config/ags ]; then
-      rm -f ${config.home.homeDirectory}/.config/ags
-    fi
+    [ -L ${home}/.config/ags ] && rm -f ${home}/.config/ags
   '';
-
-  xdg.configFile."ags/app.ts".source = "${agsConfigDir}/app.ts";
-  xdg.configFile."ags/style.scss".source = "${agsConfigDir}/style.scss";
-  xdg.configFile."ags/tsconfig.json".source = "${agsConfigDir}/tsconfig.json";
-  xdg.configFile."ags/env.d.ts".source = "${agsConfigDir}/env.d.ts";
-  xdg.configFile."ags/.gitignore".source = "${agsConfigDir}/.gitignore";
-  xdg.configFile."ags/widget/Bar.tsx".source = "${agsConfigDir}/widget/Bar.tsx";
+  xdg.configFile."ags/app.ts".source = "${cfg}/app.ts";
+  xdg.configFile."ags/style.scss".source = "${cfg}/style.scss";
+  xdg.configFile."ags/tsconfig.json".source = "${cfg}/tsconfig.json";
+  xdg.configFile."ags/env.d.ts".source = "${cfg}/env.d.ts";
+  xdg.configFile."ags/.gitignore".source = "${cfg}/.gitignore";
+  xdg.configFile."ags/widget/Bar.tsx".source = "${cfg}/widget/Bar.tsx";
   xdg.configFile."ags/package.json".text = builtins.toJSON {
     name = "astal-shell";
-    dependencies = { astal = astalGjsPath; };
+    dependencies = { astal = astalGjs; };
   };
-  # Бандлер резолвит "astal/gtk3" из node_modules/astal — симлинк в store
-  xdg.configFile."ags/node_modules/astal".source = astalGjsPath;
-
-  home.sessionPath = [ "${config.home.homeDirectory}/.local/bin" ];
-  home.file.".local/bin/ags" = { source = agsWrapper; executable = true; };
-  home.file.".local/bin/ags-run" = { source = agsRun; executable = true; };
-
+  xdg.configFile."ags/node_modules/astal".source = astalGjs;
+  home.sessionPath = [ "${home}/.local/bin" ];
+  home.file.".local/bin/ags" = {
+    source = pkgs.writeShellScript "ags" "${env}\nif [ \"\${1:-}\" = \"run\" ]; then shift; exec \"${bin}\" run \"\$@\"; else exec \"${bin}\" \"\$@\"; fi";
+    executable = true;
+  };
+  home.file.".local/bin/ags-run" = {
+    source = pkgs.writeShellScript "ags-run" "${env}\ncd \"\${AGS_CONFIG:-${home}/.config/ags}\" && exec \"${bin}\" run \"\$@\"";
+    executable = true;
+  };
   home.sessionVariables = {
-    GI_TYPELIB_PATH = typelibPath;
-    GSETTINGS_SCHEMA_DIR = schemaPath;
-    XDG_DATA_DIRS = dataDirs;
+    GI_TYPELIB_PATH = typelib;
+    GSETTINGS_SCHEMA_DIR = schema;
+    XDG_DATA_DIRS = data;
   };
 }

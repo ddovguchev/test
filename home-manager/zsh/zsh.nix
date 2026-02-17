@@ -14,8 +14,7 @@
       ll = "ls -la";
       rebuild = "~/nixos-flake/rebuild.sh";
     };
-    initExtra = ''
-      # Prompt
+    initContent = ''
       setopt PROMPT_SUBST
       PROMPT='%F{blue}%n@%m%f:%F{green}%~%f$ '
     '';
