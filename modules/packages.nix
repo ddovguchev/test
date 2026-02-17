@@ -2,6 +2,7 @@
 {
   environment.systemPackages = with pkgs; [
     git curl wget unzip nodejs_22 nodePackages.typescript
+    nixpkgs-fmt
     kubectl k9s helm docker docker-compose
     ansible tmux neovim
     jetbrains.idea
