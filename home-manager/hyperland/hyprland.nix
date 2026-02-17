@@ -51,6 +51,12 @@
         "float,class:^(com\\.github\\.Aylur\\.ags)$"
         "noborder,class:^(com\\.github\\.Aylur\\.ags)$"
       ];
+      layerrule = [
+        "blur,^(Bar)$"
+        "ignorezero,^(Bar)$"
+        "blur,^(PanelOverlay)$"
+        "ignorezero,^(PanelOverlay)$"
+      ];
     };
   };
 }

@@ -20,29 +20,11 @@ export default function PanelOverlay(gdkmonitor: Gdk.Monitor) {
         application={App}>
         <box className="panel-root" halign={Gtk.Align.CENTER} vertical>
             <box className="panel-header">
-                <label
-                    setup={(self: any) => {
-                        self.label = "Applications"
-                        panelMode.subscribe((mode: string) => {
-                            self.label = mode === "notifications"
-                                ? "Notifications"
-                                : "Applications"
-                        })
-                    }}
-                />
+                <label label="Panel" />
                 <button onClicked={closePanel}>Close</button>
             </box>
             <box className="panel-content" vertical>
-                <label
-                    setup={(self: any) => {
-                        self.label = "Applications content"
-                        panelMode.subscribe((mode: string) => {
-                            self.label = mode === "notifications"
-                                ? "Notifications content"
-                                : "Applications content"
-                        })
-                    }}
-                />
+                <label label="Content" />
             </box>
         </box>
     </window>
