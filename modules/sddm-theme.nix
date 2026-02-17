@@ -56,18 +56,6 @@ in
         InputMethod = "qtvirtualkeyboard";
         GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}${themeDir}/components/,QT_IM_MODULE=qtvirtualkeyboard";
       };
-      Wayland = {
-        CompositorCommand = "${pkgs.weston}/bin/weston --shell=kiosk -c /etc/sddm/weston.ini";
-      };
     };
   };
-
-  environment.etc."sddm/weston.ini".text = ''
-    [core]
-    idle-time=0
-
-    [output]
-    name=DP-1
-    mode=2560x1080@200
-  '';
 }
