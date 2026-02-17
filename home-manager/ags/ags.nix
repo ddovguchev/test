@@ -14,28 +14,34 @@ let
       --prefix XDG_DATA_DIRS : "${data}"
   '';
   bin = "${wrapped}/bin/ags";
-  home = config.home.homeDirectory;
-  agsScript = pkgs.writeShellScript "ags" ''
+  agsSh = pkgs.writeShellScript "ags" ''
     export GI_TYPELIB_PATH="${typelib}"
     export GSETTINGS_SCHEMA_DIR="${schema}:''${GSETTINGS_SCHEMA_DIR:-}"
     export XDG_DATA_DIRS="${data}:''${XDG_DATA_DIRS:-}"
-    if [ "''${1:-}" = "run" ]; then
-      shift
-      exec "${bin}" run "$@"
-    else
-      exec "${bin}" "$@"
-    fi
+    if [ "''${1:-}" = "run" ]; then shift; exec "${bin}" run "$@"; else exec "${bin}" "$@"; fi
   '';
-  agsRunScript = pkgs.writeShellScript "ags-run" ''
+  agsRunSh = pkgs.writeShellScript "ags-run" ''
     export GI_TYPELIB_PATH="${typelib}"
     export GSETTINGS_SCHEMA_DIR="${schema}:''${GSETTINGS_SCHEMA_DIR:-}"
     export XDG_DATA_DIRS="${data}:''${XDG_DATA_DIRS:-}"
     cd "''${AGS_CONFIG:-$HOME/.config/ags}" && exec "${bin}" run "$@"
   '';
+  agsScripts = pkgs.runCommand "ags-scripts" {} ''
+    mkdir -p $out/bin
+    cp ${agsSh} $out/bin/ags
+    cp ${agsRunSh} $out/bin/ags-run
+    chmod +x $out/bin/ags $out/bin/ags-run
+  '';
+  home = config.home.homeDirectory;
 in
 {
   home.activation.removeOldAgsLink = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
     [ -L ${home}/.config/ags ] && rm -f ${home}/.config/ags
+  '';
+  home.activation.installAgsScripts = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+    mkdir -p ${home}/.local/bin
+    ln -sf ${agsScripts}/bin/ags ${home}/.local/bin/ags
+    ln -sf ${agsScripts}/bin/ags-run ${home}/.local/bin/ags-run
   '';
   xdg.configFile."ags/app.ts".source = "${cfg}/app.ts";
   xdg.configFile."ags/style.scss".source = "${cfg}/style.scss";
@@ -49,14 +55,7 @@ in
   };
   xdg.configFile."ags/node_modules/astal".source = astalGjs;
   home.sessionPath = [ "${home}/.local/bin" ];
-  home.file.".local/bin/ags" = {
-    source = agsScript;
-    executable = true;
-  };
-  home.file.".local/bin/ags-run" = {
-    source = agsRunScript;
-    executable = true;
-  };
+  home.packages = [ agsScripts ];
   home.sessionVariables = {
     GI_TYPELIB_PATH = typelib;
     GSETTINGS_SCHEMA_DIR = schema;
