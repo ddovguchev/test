@@ -45,6 +45,12 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             }
             return false
         }}
+        onFocusOutEvent={() => {
+            if (panelMode() !== "none") {
+                closePanel()
+            }
+            return false
+        }}
         application={App}>
         <box
             className="shell-panel mode-none"
