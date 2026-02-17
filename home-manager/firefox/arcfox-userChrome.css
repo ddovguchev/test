@@ -145,12 +145,4 @@ toolbarbutton[open=true] {
  padding-top: 0 !important;
 }
 
-@media (prefers-color-scheme: light) {
- .browserStack {
- background: linear-gradient(#dadce5, #dadce5);
- }
- #nav-bar,
- #urlbar-background {
- background: #dadce5 !important;
- }
-}
+/* Keep ArcFox style always dark. */

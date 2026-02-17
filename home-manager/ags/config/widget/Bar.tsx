@@ -179,6 +179,8 @@ function createAppImage(app: any) {
 export default function Bar(gdkmonitor: Gdk.Monitor) {
     const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
     let appsEntryRef: any = null
+    let appsQuery = ""
+    let rerenderApps: (() => void) | null = null
 
     const getModeSize = (mode: string) => {
         const geometry = (gdkmonitor as any)?.get_geometry?.()
@@ -325,6 +327,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <entry
                         className="apps-input"
                         placeholderText="Search app..."
+                        onChanged={(self: any) => {
+                            appsQuery = String(self.text ?? "").toLowerCase()
+                            rerenderApps?.()
+                        }}
                         setup={(self: any) => {
                             appsEntryRef = self
                             panelMode.subscribe((mode: string) => {
@@ -332,6 +338,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                     GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
                                         appsEntryRef?.grab_focus?.()
                                         appsEntryRef?.set_position?.(-1)
+                                        appsQuery = String(appsEntryRef?.text ?? "").toLowerCase()
+                                        rerenderApps?.()
                                         return false
                                     })
                                 }
@@ -342,8 +350,6 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         className="apps-menu-scroll"
                         vexpand
                         setup={(self: any) => {
-                            self.get_children?.().forEach((child: any) => self.remove(child))
-
                             const scroll = (Gtk as any).ScrolledWindow.new(null, null)
                             const hPolicy = (Gtk as any).PolicyType.NEVER ?? 2
                             const vPolicy = (Gtk as any).PolicyType.AUTOMATIC ?? 1
@@ -358,39 +364,52 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                             grid.set_row_spacing(8)
                             grid.set_column_spacing(8)
                             grid.set_column_homogeneous?.(true)
-                            const apps = getApps()
                             const columns = 6
 
-                            apps.forEach((entry: any, index: number) => {
-                                const button = (Gtk as any).Button.new()
-                                button.get_style_context?.()?.add_class("apps-tile")
-                                button.set_hexpand?.(true)
-
-                                const content = (Gtk as any).Box.new((Gtk as any).Orientation.VERTICAL, 4)
-                                content.set_halign?.((Gtk as any).Align.CENTER)
-                                content.set_valign?.((Gtk as any).Align.CENTER)
-                                const image = createAppImage(entry.app)
-                                image.set_pixel_size?.(28)
-
-                                const label = (Gtk as any).Label.new(entry.name)
-                                label.set_max_width_chars?.(14)
-                                label.set_ellipsize?.(3)
-                                label.set_xalign?.(0.5)
-                                label.set_justify?.((Gtk as any).Justification.CENTER)
-
-                                content.pack_start?.(image, false, false, 0)
-                                content.pack_start?.(label, false, false, 0)
-                                button.add(content)
-
-                                button.connect("clicked", () => {
-                                    entry.app.launch([], null)
-                                    closePanel()
+                            const renderApps = () => {
+                                grid.get_children?.().forEach((child: any) => grid.remove(child))
+                                const apps = getApps()
+                                const filtered = apps.filter((entry: any) => {
+                                    const name = String(entry.name ?? "").toLowerCase()
+                                    const id = String(entry.app?.get_id?.() ?? "").toLowerCase()
+                                    return appsQuery.length === 0 || name.includes(appsQuery) || id.includes(appsQuery)
                                 })
 
-                                const col = index % columns
-                                const row = Math.floor(index / columns)
-                                grid.attach(button, col, row, 1, 1)
-                            })
+                                filtered.forEach((entry: any, index: number) => {
+                                    const button = (Gtk as any).Button.new()
+                                    button.get_style_context?.()?.add_class("apps-tile")
+                                    button.set_hexpand?.(true)
+
+                                    const content = (Gtk as any).Box.new((Gtk as any).Orientation.VERTICAL, 4)
+                                    content.set_halign?.((Gtk as any).Align.CENTER)
+                                    content.set_valign?.((Gtk as any).Align.CENTER)
+                                    const image = createAppImage(entry.app)
+                                    image.set_pixel_size?.(28)
+
+                                    const label = (Gtk as any).Label.new(entry.name)
+                                    label.set_max_width_chars?.(14)
+                                    label.set_ellipsize?.(3)
+                                    label.set_xalign?.(0.5)
+                                    label.set_justify?.((Gtk as any).Justification.CENTER)
+
+                                    content.pack_start?.(image, false, false, 0)
+                                    content.pack_start?.(label, false, false, 0)
+                                    button.add(content)
+
+                                    button.connect("clicked", () => {
+                                        entry.app.launch([], null)
+                                        closePanel()
+                                    })
+
+                                    const col = index % columns
+                                    const row = Math.floor(index / columns)
+                                    grid.attach(button, col, row, 1, 1)
+                                })
+                                grid.show_all?.()
+                            }
+
+                            rerenderApps = renderApps
+                            renderApps()
 
                             container.add(grid)
                             scroll.add(container)

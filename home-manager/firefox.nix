@@ -12,6 +12,11 @@
         "browser.search.defaultenginename" = "Google";
         "browser.search.defaultenginename.private" = "Google";
         "browser.urlbar.placeholderName" = "Google";
+        "ui.systemUsesDarkTheme" = 1;
+        "layout.css.prefers-color-scheme.content-override" = 0;
+        "browser.theme.toolbar-theme" = 0;
+        "browser.theme.content-theme" = 0;
+        "browser.in-content.dark-mode" = true;
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "privacy.trackingprotection.enabled" = true;
         "privacy.donottrackheader.enabled" = true;

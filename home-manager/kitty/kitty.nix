@@ -45,11 +45,11 @@ in
       window_border_width = "1pt";
       draw_minimal_borders = true;
       window_padding_width = 10;
-      inactive_text_alpha = 0.6;
+      inactive_text_alpha = 1.0;
       hide_window_decorations = true;
       confirm_os_window_close = 0;
       tab_bar_style = "powerline";
-      background_opacity = 0.98;
+      background_opacity = 1.0;
     };
   };
 }

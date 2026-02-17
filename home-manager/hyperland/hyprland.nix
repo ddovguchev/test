@@ -71,6 +71,7 @@ in
         "$mod SHIFT, 9, movetoworkspace, 9"
       ];
       windowrulev2 = [
+        "opacity 0.94 0.90,class:^(.*)$"
         "pin,class:^(com\\.github\\.Aylur\\.ags)$"
         "float,class:^(com\\.github\\.Aylur\\.ags)$"
         "noborder,class:^(com\\.github\\.Aylur\\.ags)$"
