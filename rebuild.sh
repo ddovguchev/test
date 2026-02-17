@@ -2,8 +2,6 @@
 
 set -euo pipefail
 
-git pull
-
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -67,6 +65,11 @@ done
 
 cd "$(dirname "$0")"
 
+# Update repo only when this is a git checkout
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  git pull
+fi
+
 # Validate action
 case $ACTION in
   switch|boot|test|build)
@@ -95,7 +98,7 @@ echo ""
 
 if [[ $DRY_RUN == true ]]; then
   echo -e "${YELLOW}🔍 Dry run mode - showing what would be executed:${NC}"
-  echo "sudo nixos-rebuild $ACTION --flake .#$HOST"
+  echo "sudo nixos-rebuild $ACTION --flake .#$HOST --option warn-dirty false"
   echo ""
   echo -e "${YELLOW}To actually rebuild, run without --dry-run${NC}"
   exit 0
@@ -104,13 +107,19 @@ fi
 # Format nix files before rebuild
 if command -v nix &> /dev/null; then
   echo -e "${BLUE}📝 Formatting Nix files...${NC}"
-  nix fmt . 2>/dev/null || echo -e "${YELLOW}⚠️  nix fmt not available, skipping${NC}"
+  if nix fmt . >/dev/null 2>&1; then
+    :
+  elif command -v nixpkgs-fmt >/dev/null 2>&1; then
+    nixpkgs-fmt . >/dev/null 2>&1 || true
+  else
+    echo -e "${YELLOW}⚠️  nix fmt not available, skipping${NC}"
+  fi
   echo ""
 fi
 
 # Execute rebuild
 echo -e "${BLUE}🔨 Building configuration...${NC}"
-if sudo nixos-rebuild $ACTION --flake .#$HOST; then
+if sudo nixos-rebuild $ACTION --flake .#$HOST --option warn-dirty false; then
   echo ""
   echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
   echo -e "${GREEN}✅ NixOS configuration successfully applied!${NC}"
@@ -130,6 +139,6 @@ else
   echo -e "${YELLOW}💡 Tips for debugging:${NC}"
   echo "  - Check the error messages above"
   echo "  - Run 'nix flake check' to validate the flake"
-  echo "  - Run 'sudo nixos-rebuild switch --flake .#$HOST --show-trace' for detailed errors"
+  echo "  - Run 'sudo nixos-rebuild switch --flake .#$HOST --option warn-dirty false --show-trace' for detailed errors"
   exit 1
 fi
