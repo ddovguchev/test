@@ -10,7 +10,11 @@ let
   typelib = lib.makeSearchPath "lib/girepository-1.0" astalDeps;
   schema = lib.makeSearchPath "share/glib-2.0/schemas" astalDeps;
   gsettingsData = lib.concatStringsSep ":" (map (p: "${p}/share/gsettings-schemas/${p.name}") astalDeps);
-  data = lib.makeSearchPath "share" astalDeps;
+  data = lib.makeSearchPath "share" (astalDeps ++ [
+    pkgs.hicolor-icon-theme
+    pkgs.adwaita-icon-theme
+    pkgs.gnome-icon-theme
+  ]);
   astalGjs = "${pkgs.astal.gjs}/share/astal/gjs";
   palette = import ../theme/palette.nix;
   styleScss = builtins.replaceStrings

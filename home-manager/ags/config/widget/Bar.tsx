@@ -62,17 +62,21 @@ function listPictureFiles() {
 }
 
 function applyWallpaper(path: string) {
-    const escaped = path.replaceAll("\"", "\\\"")
     const lower = path.toLowerCase()
     const isVideo = supportedVideoExt.some((ext) => lower.endsWith(ext))
+
+    const applyImagePath = (imagePath: string) => {
+        const escapedImage = imagePath.replaceAll("\"", "\\\"")
+        GLib.spawn_command_line_async(`hyprctl hyprpaper preload "${escapedImage}"`)
+        GLib.spawn_command_line_async(`hyprctl hyprpaper wallpaper ",${escapedImage}"`)
+    }
+
     if (isVideo) {
-        GLib.spawn_command_line_async(
-            `sh -lc 'if command -v mpvpaper >/dev/null; then pkill -x mpvpaper || true; mpvpaper -o "no-audio --loop-file=inf" "*" "${escaped}"; fi'`
-        )
+        const thumb = ensureVideoThumbnail(path)
+        if (thumb) applyImagePath(thumb)
         return
     }
-    GLib.spawn_command_line_async(`hyprctl hyprpaper preload "${escaped}"`)
-    GLib.spawn_command_line_async(`hyprctl hyprpaper wallpaper ",${escaped}"`)
+    applyImagePath(path)
 }
 
 function createAppImage(app: any) {
@@ -114,7 +118,7 @@ function ensureVideoThumbnail(path: string) {
     const escapedInput = path.replaceAll("\"", "\\\"")
     const escapedOutput = thumbPath.replaceAll("\"", "\\\"")
     GLib.spawn_command_line_sync(
-        `sh -lc 'command -v ffmpeg >/dev/null && ffmpeg -y -ss 00:00:01 -i "${escapedInput}" -frames:v 1 -vf scale=440:-1 "${escapedOutput}" >/dev/null 2>&1'`
+        `sh -lc 'if command -v ffmpegthumbnailer >/dev/null; then ffmpegthumbnailer -i "${escapedInput}" -o "${escapedOutput}" -s 440 >/dev/null 2>&1; elif command -v ffmpeg >/dev/null; then ffmpeg -y -ss 00:00:01 -i "${escapedInput}" -frames:v 1 -vf scale=440:-1 "${escapedOutput}" >/dev/null 2>&1; fi'`
     )
     return GLib.file_test(thumbPath, GLib.FileTest.EXISTS) ? thumbPath : null
 }
@@ -368,7 +372,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                         if (isVideo) {
                                             const thumb = ensureVideoThumbnail(path)
                                             if (thumb) {
-                                                const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(thumb, 180, 100, true)
+                                                const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(thumb, 140, 78, true)
                                                 const image = (Gtk as any).Image.new_from_pixbuf(pixbuf)
                                                 button.add(image)
                                             } else {
@@ -379,7 +383,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                                 button.add(fallback)
                                             }
                                         } else {
-                                            const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, 180, 100, true)
+                                            const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, 140, 78, true)
                                             const image = (Gtk as any).Image.new_from_pixbuf(pixbuf)
                                             button.add(image)
                                         }
@@ -394,6 +398,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                     }
                                 })
                                 view.show_all?.()
+                                prev.set_sensitive?.(start > 0)
+                                next.set_sensitive?.(start < Math.max(0, files.length - 4))
                             }
 
                             prev.connect("clicked", () => {

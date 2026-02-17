@@ -85,23 +85,23 @@ window.Bar {
     }
 
     .wallpaper-block {
-        min-height: 260px;
+        min-height: 150px;
         border-radius: 12px;
         border: 1px solid rgba(255, 255, 255, 0.12);
-        padding: 8px;
+        padding: 6px;
     }
 
     .wallpaper-tile {
         border-radius: 10px;
         background: rgba(255, 255, 255, 0.06);
         padding: 2px;
-        min-width: 188px;
-        min-height: 108px;
+        min-width: 148px;
+        min-height: 84px;
     }
 
     .carousel-nav {
-        min-width: 36px;
-        min-height: 108px;
+        min-width: 30px;
+        min-height: 84px;
         border-radius: 8px;
     }
 
