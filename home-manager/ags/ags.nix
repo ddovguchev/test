@@ -13,6 +13,26 @@ let
   data = lib.makeSearchPath "share" astalDeps;
   astalGjs = "${pkgs.astal.gjs}/share/astal/gjs";
   palette = import ../theme/palette.nix;
+  styleScss = builtins.replaceStrings
+    [
+      "__FG_COLOR__"
+      "__BAR_BG__"
+      "__BAR_BORDER__"
+      "__BAR_SHADOW__"
+      "__PANEL_BG__"
+      "__PANEL_TEXT__"
+      "__PANEL_BORDER__"
+    ]
+    [
+      palette.ags.barFg
+      palette.ags.barBgOpacity
+      palette.ags.barBorder
+      palette.ags.barShadow
+      palette.ags.panelBg
+      palette.ags.launcherText
+      palette.ags.panelBorder
+    ]
+    (builtins.readFile "${cfg}/style.scss");
   agsConfig = pkgs.runCommand "ags-config" {} ''
     mkdir -p $out/widget $out/node_modules
     cp ${cfg}/app.ts $out/app.ts
@@ -21,19 +41,12 @@ let
     cp ${cfg}/.gitignore $out/.gitignore
     cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
     cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
+    cp ${cfg}/widget/PanelOverlay.tsx $out/widget/PanelOverlay.tsx
     cp ${cfg}/widget/launcherState.ts $out/widget/launcherState.ts
 
     cat > $out/style.scss <<'EOF'
-$fg-color: ${palette.ags.barFg};
-$bg-color: ${palette.ags.barBg};
-$launcher-overlay: ${palette.ags.launcherOverlay};
-$launcher-text: ${palette.ags.launcherText};
-$launcher-panel: ${palette.ags.launcherPanel};
-$launcher-tile: ${palette.ags.launcherTile};
-$launcher-tile-hover: ${palette.ags.launcherTileHover};
-
+${styleScss}
 EOF
-    cat ${cfg}/style.scss >> $out/style.scss
 
     cat > $out/package.json <<'EOF'
 {

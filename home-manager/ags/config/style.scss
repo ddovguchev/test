@@ -1,14 +1,25 @@
+/* Replaced by Nix in ags.nix */
+$fg-color: __FG_COLOR__;
+$bar-bg: __BAR_BG__;
+$bar-border: __BAR_BORDER__;
+$bar-shadow: __BAR_SHADOW__;
+$panel-bg: __PANEL_BG__;
+$panel-text: __PANEL_TEXT__;
+$panel-border: __PANEL_BORDER__;
+
 window.Bar {
     background: transparent;
     color: $fg-color;
     font-weight: bold;
 
     .shell-panel {
-        background: $bg-color;
+        background: $bar-bg;
         border-radius: 14px;
+        border: 1px solid $bar-border;
         margin: 8px;
         padding: 8px;
         min-height: 50px;
+        box-shadow: 0 10px 28px $bar-shadow;
     }
 
     .shell-top-row {
@@ -19,25 +30,36 @@ window.Bar {
             margin: 2px;
         }
     }
+}
 
-    .shell-content {
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        margin-top: 8px;
-        padding-top: 10px;
-        min-height: 120px;
+window.PanelOverlay {
+    background: transparent;
+    color: $panel-text;
+
+    .panel-root {
+        margin-top: 60px;
+        border-radius: 16px;
+        border: 1px solid $panel-border;
+        background: $panel-bg;
+        min-height: 160px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
     }
 
-    .mode-none {
-        min-width: 96vw;
-        min-height: 50px;
+    .panel-header {
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .mode-apps {
+    .panel-content {
+        padding: 12px;
+    }
+
+    &.mode-apps .panel-root {
         min-width: 60vw;
         min-height: 200px;
     }
 
-    .mode-notifications {
+    &.mode-notifications .panel-root {
         min-width: 30vw;
         min-height: 160px;
         max-height: 300px;
