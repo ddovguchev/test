@@ -100,7 +100,12 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         halign={Gtk.Align.CENTER}
                     >
                         <box>
-                            <image file={appsIcon} pixelSize={14} />
+                            <image
+                                className="toolbar-icon"
+                                setup={(self: any) => {
+                                    self.set_from_file(appsIcon)
+                                }}
+                            />
                             <label label="Applications" />
                         </box>
                     </button>
@@ -118,7 +123,12 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         halign={Gtk.Align.CENTER}
                     >
                         <box>
-                            <image file={notificationIcon} pixelSize={14} />
+                            <image
+                                className="toolbar-icon"
+                                setup={(self: any) => {
+                                    self.set_from_file(notificationIcon)
+                                }}
+                            />
                             <label label="Notifications" />
                         </box>
                     </button>
