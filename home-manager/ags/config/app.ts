@@ -1,28 +1,20 @@
 import { App } from "astal/gtk3"
 import style from "./style.scss"
 import Bar from "./widget/Bar"
-import { closePanel, panelMode, setPanelMode, togglePanelMode } from "./widget/launcherState"
+import { closePanel, setPanelMode, togglePanelMode } from "./widget/launcherState"
 
 App.start({
     css: style,
     requestHandler(request: string) {
         switch (request) {
             case "apps":
-                if (panelMode() === "apps") {
-                    closePanel()
-                } else {
-                    setPanelMode("apps")
-                }
+                togglePanelMode("apps")
                 return "ok"
             case "notifications":
                 togglePanelMode("notifications")
                 return "ok"
             case "wallpaper":
-                if (panelMode() === "wallpaper") {
-                    closePanel()
-                } else {
-                    setPanelMode("wallpaper")
-                }
+                togglePanelMode("wallpaper")
                 return "ok"
             case "close":
                 closePanel()

@@ -17,9 +17,19 @@ const apps = Gio.AppInfo
         app,
         name: app.get_display_name() ?? app.get_name() ?? "Application"
     }))
+    .filter((entry: any) => {
+        const name = String(entry.name).toLowerCase()
+        return ![
+            "htop",
+            "nixos manual",
+            "volume control",
+            "xterm"
+        ].includes(name)
+    })
     .sort((a: any, b: any) => a.name.localeCompare(b.name))
 
 const supportedImageExt = [".jpg", ".jpeg", ".png", ".webp", ".bmp"]
+const supportedVideoExt = [".mp4", ".webm", ".mkv", ".mov"]
 
 function listPictureFiles() {
     const picturesDir = `${GLib.get_home_dir()}/Pictures`
@@ -37,7 +47,10 @@ function listPictureFiles() {
             if (info.get_file_type() !== Gio.FileType.REGULAR) continue
             const name = info.get_name()
             const lower = name.toLowerCase()
-            if (supportedImageExt.some((ext) => lower.endsWith(ext))) {
+            if (
+                supportedImageExt.some((ext) => lower.endsWith(ext))
+                || supportedVideoExt.some((ext) => lower.endsWith(ext))
+            ) {
                 files.push(`${picturesDir}/${name}`)
             }
         }
@@ -50,8 +63,33 @@ function listPictureFiles() {
 
 function applyWallpaper(path: string) {
     const escaped = path.replaceAll("\"", "\\\"")
+    const lower = path.toLowerCase()
+    const isVideo = supportedVideoExt.some((ext) => lower.endsWith(ext))
+    if (isVideo) {
+        GLib.spawn_command_line_async(
+            `sh -lc 'command -v mpvpaper >/dev/null && (pkill -x mpvpaper || true; mpvpaper -o "no-audio --loop-file=inf" "*" "${escaped}")'`
+        )
+        return
+    }
     GLib.spawn_command_line_async(`hyprctl hyprpaper preload "${escaped}"`)
     GLib.spawn_command_line_async(`hyprctl hyprpaper wallpaper "DP-4,${escaped}"`)
+}
+
+function createAppImage(app: any) {
+    try {
+        const icon = app.get_icon?.()
+        const iconString = icon?.to_string?.() ?? ""
+        if (iconString.startsWith("/")) {
+            const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(iconString, 32, 32, true)
+            return (Gtk as any).Image.new_from_pixbuf(pixbuf)
+        }
+        if (icon) {
+            return (Gtk as any).Image.new_from_gicon(icon, (Gtk as any).IconSize.DIALOG)
+        }
+    } catch {
+        // continue with fallback icon
+    }
+    return (Gtk as any).Image.new_from_icon_name("application-x-executable", (Gtk as any).IconSize.DIALOG)
 }
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
@@ -154,7 +192,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         }}
                         halign={Gtk.Align.CENTER}
                     />
-                    <button onClicked={() => togglePanelMode("wallpaper")} halign={Gtk.Align.CENTER}>
+                    <button
+                        onClicked={() => togglePanelMode("wallpaper")}
+                        halign={Gtk.Align.CENTER}
+                    >
                         Wallpapers
                     </button>
                 </box>
@@ -220,10 +261,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                 button.get_style_context?.()?.add_class("apps-tile")
 
                                 const content = (Gtk as any).Box.new((Gtk as any).Orientation.VERTICAL, 4)
-                                const icon = entry.app.get_icon?.()
-                                const image = icon
-                                    ? (Gtk as any).Image.new_from_gicon(icon, (Gtk as any).IconSize.DIALOG)
-                                    : (Gtk as any).Image.new_from_icon_name("application-x-executable", (Gtk as any).IconSize.DIALOG)
+                                const image = createAppImage(entry.app)
                                 image.set_pixel_size?.(28)
 
                                 const label = (Gtk as any).Label.new(entry.name)
@@ -287,11 +325,29 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                             const row = (Gtk as any).Box.new((Gtk as any).Orientation.HORIZONTAL, 10)
                             listPictureFiles().forEach((path) => {
                                 try {
-                                    const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, 220, 130, true)
-                                    const image = (Gtk as any).Image.new_from_pixbuf(pixbuf)
+                                    const lower = path.toLowerCase()
+                                    const isVideo = supportedVideoExt.some((ext) => lower.endsWith(ext))
                                     const button = (Gtk as any).Button.new()
                                     button.get_style_context()?.add_class("wallpaper-tile")
-                                    button.add(image)
+
+                                    if (isVideo) {
+                                        const box = (Gtk as any).Box.new((Gtk as any).Orientation.VERTICAL, 6)
+                                        const image = (Gtk as any).Image.new_from_icon_name(
+                                            "video-x-generic",
+                                            (Gtk as any).IconSize.DIALOG
+                                        )
+                                        const label = (Gtk as any).Label.new(path.split("/").pop() ?? "video")
+                                        label.set_max_width_chars?.(20)
+                                        label.set_ellipsize?.(3)
+                                        box.pack_start?.(image, false, false, 0)
+                                        box.pack_start?.(label, false, false, 0)
+                                        button.add(box)
+                                    } else {
+                                        const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, 220, 130, true)
+                                        const image = (Gtk as any).Image.new_from_pixbuf(pixbuf)
+                                        button.add(image)
+                                    }
+
                                     button.connect("clicked", () => {
                                         applyWallpaper(path)
                                         closePanel()
