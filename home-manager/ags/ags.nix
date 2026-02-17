@@ -13,9 +13,25 @@ let
       --set GSETTINGS_SCHEMA_DIR "${schema}" \
       --prefix XDG_DATA_DIRS : "${data}"
   '';
-  env = "export GI_TYPELIB_PATH=\"${typelib}\" GSETTINGS_SCHEMA_DIR=\"${schema}:\${GSETTINGS_SCHEMA_DIR:-}\" XDG_DATA_DIRS=\"${data}:\${XDG_DATA_DIRS:-}\"";
   bin = "${wrapped}/bin/ags";
   home = config.home.homeDirectory;
+  agsScript = pkgs.writeShellScript "ags" ''
+    export GI_TYPELIB_PATH="${typelib}"
+    export GSETTINGS_SCHEMA_DIR="${schema}:''${GSETTINGS_SCHEMA_DIR:-}"
+    export XDG_DATA_DIRS="${data}:''${XDG_DATA_DIRS:-}"
+    if [ "''${1:-}" = "run" ]; then
+      shift
+      exec "${bin}" run "$@"
+    else
+      exec "${bin}" "$@"
+    fi
+  '';
+  agsRunScript = pkgs.writeShellScript "ags-run" ''
+    export GI_TYPELIB_PATH="${typelib}"
+    export GSETTINGS_SCHEMA_DIR="${schema}:''${GSETTINGS_SCHEMA_DIR:-}"
+    export XDG_DATA_DIRS="${data}:''${XDG_DATA_DIRS:-}"
+    cd "''${AGS_CONFIG:-$HOME/.config/ags}" && exec "${bin}" run "$@"
+  '';
 in
 {
   home.activation.removeOldAgsLink = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
@@ -34,11 +50,11 @@ in
   xdg.configFile."ags/node_modules/astal".source = astalGjs;
   home.sessionPath = [ "${home}/.local/bin" ];
   home.file.".local/bin/ags" = {
-    source = pkgs.writeShellScript "ags" "${env}\nif [ \"\${1:-}\" = \"run\" ]; then shift; exec \"${bin}\" run \"\$@\"; else exec \"${bin}\" \"\$@\"; fi";
+    source = agsScript;
     executable = true;
   };
   home.file.".local/bin/ags-run" = {
-    source = pkgs.writeShellScript "ags-run" "${env}\ncd \"\${AGS_CONFIG:-${home}/.config/ags}\" && exec \"${bin}\" run \"\$@\"";
+    source = agsRunScript;
     executable = true;
   };
   home.sessionVariables = {
