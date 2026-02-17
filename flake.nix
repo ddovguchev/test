@@ -33,10 +33,9 @@
           nixpkgs.config.allowUnfree = true;
           time.timeZone = "Europe/Minsk";
           programs.silentSDDM = {
-            enable = false;
+            enable = true;
             theme = "rei";
           };
-          services.displayManager.sddm.theme = "breeze";
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "bak";
