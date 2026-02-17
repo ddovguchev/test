@@ -6,6 +6,8 @@
     jetbrains.idea vscode
     kitty ranger fastfetch htop
     firefox spotify
+    pulseaudio
+    pavucontrol
     astal.gjs astal.astal3 astal.io astal.wireplumber astal.notifd
   ];
   virtualisation.docker.enable = lib.mkDefault true;
