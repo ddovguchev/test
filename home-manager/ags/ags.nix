@@ -35,14 +35,14 @@ let
   home = config.home.homeDirectory;
 in
 {
-  home.activation.removeOldAgsLink = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
-    [ -L ${home}/.config/ags ] && rm -f ${home}/.config/ags
-  '';
-  home.activation.installAgsScripts = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-    mkdir -p ${home}/.local/bin
-    ln -sf ${agsScripts}/bin/ags ${home}/.local/bin/ags
-    ln -sf ${agsScripts}/bin/ags-run ${home}/.local/bin/ags-run
-  '';
+  home.file.".local/bin/ags" = {
+    source = "${agsScripts}/bin/ags";
+    executable = true;
+  };
+  home.file.".local/bin/ags-run" = {
+    source = "${agsScripts}/bin/ags-run";
+    executable = true;
+  };
   xdg.configFile."ags/app.ts".source = "${cfg}/app.ts";
   xdg.configFile."ags/style.scss".source = "${cfg}/style.scss";
   xdg.configFile."ags/tsconfig.json".source = "${cfg}/tsconfig.json";
