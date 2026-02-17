@@ -26,27 +26,12 @@
         ./modules/hyprland.nix
         ./modules/audio.nix
         ./modules/packages.nix
-        ./sddm/SilentSDDM/nix/module.nix
+        ./modules/sddm-theme.nix
         home-manager.nixosModules.home-manager
         ({ config, pkgs, ... }: {
           system.stateVersion = "25.11";
           nixpkgs.config.allowUnfree = true;
           time.timeZone = "Europe/Minsk";
-          programs.silentSDDM = {
-            enable = true;
-            theme = "rei";
-            settings = {
-              General = {
-                enable-animations = false;
-              };
-              LoginScreen = {
-                background = "rei.png";
-              };
-              LockScreen = {
-                background = "rei.png";
-              };
-            };
-          };
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "bak";
