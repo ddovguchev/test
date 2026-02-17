@@ -1,4 +1,7 @@
 { config, pkgs, ... }:
+let
+  palette = import ../theme/palette.nix;
+in
 {
   programs.kitty = {
     enable = true;
@@ -7,31 +10,31 @@
       size = 11.5;
     };
     settings = {
-      cursor = "#e0e2e8";
-      cursor_text_color = "#c2c7ce";
+      cursor = palette.kitty.cursor;
+      cursor_text_color = palette.kitty.cursorText;
       cursor_shape = "block";
       cursor_stop_blinking_after = 0;
-      foreground = "#e0e2e8";
-      background = "#101418";
-      selection_foreground = "#233240";
-      selection_background = "#b8c8da";
-      url_color = "#99ccfa";
-      color0 = "#4c4c4c";
-      color8 = "#262626";
-      color1 = "#ac8a8c";
-      color9 = "#c49ea0";
-      color2 = "#8aac8b";
-      color10 = "#9ec49f";
-      color3 = "#aca98a";
-      color11 = "#c4c19e";
-      color4 = "#99ccfa";
-      color12 = "#a39ec4";
-      color5 = "#ac8aac";
-      color13 = "#c49ec4";
-      color6 = "#8aacab";
-      color14 = "#9ec3c4";
-      color7 = "#f0f0f0";
-      color15 = "#e7e7e7";
+      foreground = palette.kitty.foreground;
+      background = palette.kitty.background;
+      selection_foreground = palette.kitty.selectionForeground;
+      selection_background = palette.kitty.selectionBackground;
+      url_color = palette.kitty.url;
+      color0 = palette.kitty.color0;
+      color8 = palette.kitty.color8;
+      color1 = palette.kitty.color1;
+      color9 = palette.kitty.color9;
+      color2 = palette.kitty.color2;
+      color10 = palette.kitty.color10;
+      color3 = palette.kitty.color3;
+      color11 = palette.kitty.color11;
+      color4 = palette.kitty.color4;
+      color12 = palette.kitty.color12;
+      color5 = palette.kitty.color5;
+      color13 = palette.kitty.color13;
+      color6 = palette.kitty.color6;
+      color14 = palette.kitty.color14;
+      color7 = palette.kitty.color7;
+      color15 = palette.kitty.color15;
       scrollback_lines = 2000;
       copy_on_select = "yes";
       mouse_hide_wait = 0;

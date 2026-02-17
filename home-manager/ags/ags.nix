@@ -12,6 +12,7 @@ let
   gsettingsData = lib.concatStringsSep ":" (map (p: "${p}/share/gsettings-schemas/${p.name}") astalDeps);
   data = lib.makeSearchPath "share" astalDeps;
   astalGjs = "${pkgs.astal.gjs}/share/astal/gjs";
+  palette = import ../theme/palette.nix;
   wrapped = pkgs.runCommand "ags-wrapped" { buildInputs = [ pkgs.makeWrapper ]; } ''
     mkdir -p $out/bin
     makeWrapper ${pkgs.ags}/bin/ags $out/bin/ags \
@@ -42,10 +43,21 @@ in
 {
   xdg.configFile."ags/app.ts".source = "${cfg}/app.ts";
   xdg.configFile."ags/style.scss".source = "${cfg}/style.scss";
+  xdg.configFile."ags/palette.scss".text = ''
+    $fg-color: ${palette.ags.barFg};
+    $bg-color: ${palette.ags.barBg};
+    $launcher-overlay: ${palette.ags.launcherOverlay};
+    $launcher-text: ${palette.ags.launcherText};
+    $launcher-panel: ${palette.ags.launcherPanel};
+    $launcher-tile: ${palette.ags.launcherTile};
+    $launcher-tile-hover: ${palette.ags.launcherTileHover};
+  '';
   xdg.configFile."ags/tsconfig.json".source = "${cfg}/tsconfig.json";
   xdg.configFile."ags/env.d.ts".source = "${cfg}/env.d.ts";
   xdg.configFile."ags/.gitignore".source = "${cfg}/.gitignore";
   xdg.configFile."ags/widget/Bar.tsx".source = "${cfg}/widget/Bar.tsx";
+  xdg.configFile."ags/widget/Launcher.tsx".source = "${cfg}/widget/Launcher.tsx";
+  xdg.configFile."ags/widget/launcherState.ts".source = "${cfg}/widget/launcherState.ts";
   xdg.configFile."ags/package.json".text = builtins.toJSON {
     name = "astal-shell";
     dependencies = { astal = astalGjs; };

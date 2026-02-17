@@ -5,6 +5,7 @@ declare module "astal" {
         (): T
         set(value: T): void
         poll(intervalMs: number, command: string): VariableValue<string>
+        subscribe(callback: (value: T) => void): void
     }
 
     export interface VariableFactory {
