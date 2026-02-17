@@ -5,70 +5,43 @@ window.Bar {
     color: $fg-color;
     font-weight: bold;
 
-    >centerbox {
+    .shell-panel {
         background: $bg-color;
-        border-radius: 10px;
-        margin: 8px;
-    }
-
-    button {
-        border-radius: 8px;
-        margin: 2px;
-    }
-}
-
-window.LauncherOverlay {
-    background: $launcher-overlay;
-    color: $launcher-text;
-
-    .launcher-backdrop {
-        margin: 0;
-        padding: 24px;
-    }
-
-    .launcher-dismiss {
-        all: unset;
-        min-height: 22px;
-        opacity: 0;
-    }
-
-    .launcher-panel {
-        background: $launcher-panel;
-        border-radius: 18px;
-        min-height: 460px;
-        max-width: 920px;
-        margin: 8px auto 0;
-        padding: 18px 16px 12px;
-    }
-
-    .launcher-search {
-        min-height: 38px;
         border-radius: 14px;
-        margin-bottom: 14px;
+        margin: 8px;
+        padding: 8px;
+        min-height: 50px;
     }
 
-    .launcher-scroll {
-        min-height: 380px;
-    }
+    .shell-top-row {
+        min-height: 34px;
 
-    .launcher-grid {
-        padding: 8px 6px;
-    }
-
-    .app-tile {
-        min-width: 110px;
-        min-height: 56px;
-        border-radius: 12px;
-        padding: 6px 10px;
-        background: $launcher-tile;
-
-        &:hover {
-            background: $launcher-tile-hover;
+        button {
+            border-radius: 8px;
+            margin: 2px;
         }
+    }
 
-        label {
-            font-size: 12px;
-            font-weight: 600;
-        }
+    .shell-content {
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        margin-top: 8px;
+        padding-top: 10px;
+        min-height: 120px;
+    }
+
+    .mode-none {
+        min-width: 96vw;
+        min-height: 50px;
+    }
+
+    .mode-apps {
+        min-width: 60vw;
+        min-height: 200px;
+    }
+
+    .mode-notifications {
+        min-width: 30vw;
+        min-height: 160px;
+        max-height: 300px;
     }
 }
