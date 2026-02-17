@@ -20,10 +20,11 @@
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "privacy.trackingprotection.enabled" = true;
         "privacy.donottrackheader.enabled" = true;
-        "gfx.webrender.all" = true;
+        "gfx.webrender.all" = false;
+        "layers.acceleration.force-enabled" = false;
         "widget.dmabuf.force-enabled" = false;
-        "media.ffmpeg.vaapi.enabled" = true;
-        "media.hardware-video-decoding.force-enabled" = true;
+        "media.ffmpeg.vaapi.enabled" = false;
+        "media.hardware-video-decoding.force-enabled" = false;
         "media.getdisplaymedia.enabled" = true;
         "media.getusermedia.screensharing.enabled" = true;
         "media.webrtc.capture.allow-pipewire" = true;
