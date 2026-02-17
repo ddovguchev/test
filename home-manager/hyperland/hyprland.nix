@@ -48,7 +48,7 @@ in
         active_opacity = 1.0;
         inactive_opacity = 1.0;
         blur = {
-          enabled = false;
+          enabled = true;
           size = 10;
           passes = 3;
           ignore_opacity = true;
