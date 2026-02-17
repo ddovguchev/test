@@ -1,6 +1,6 @@
 import { Variable } from "astal"
 
-export type PanelMode = "none" | "apps" | "notifications" | "wallpaper"
+export type PanelMode = "none" | "apps" | "notifications" | "wallpaper" | "session"
 
 export const panelMode = Variable<PanelMode>("none")
 export const launcherQuery = Variable("")

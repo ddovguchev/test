@@ -16,6 +16,9 @@ App.start({
             case "wallpaper":
                 togglePanelMode("wallpaper")
                 return "ok"
+            case "session":
+                togglePanelMode("session")
+                return "ok"
             case "close":
                 closePanel()
                 return "ok"

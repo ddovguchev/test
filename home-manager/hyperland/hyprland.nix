@@ -29,7 +29,7 @@
         "$mod, F, exec, firefox"
         "$mod, T, exec, kitty"
         "$mod, R, exec, ags request apps"
-        "$mod, W, exec, ags request wallpaper"
+        "$mod, W, exec, ags request session"
         "$mod, Q, killactive"
         "$mod, 1, workspace, 1"
         "$mod, 2, workspace, 2"

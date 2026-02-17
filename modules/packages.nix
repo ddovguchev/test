@@ -3,9 +3,13 @@
   environment.systemPackages = with pkgs; [
     git curl wget unzip vim nodejs_22 nodePackages.typescript
     kubectl k9s docker
-    jetbrains.idea vscode
+    jetbrains.idea
     kitty ranger fastfetch htop
     firefox spotify
+    blender qemu terraform terragrunt go gcc
+    insomnia discord obs-studio steam
+    wireguard-tools wireshark teams-for-linux telegram-desktop
+    gns3-gui
     pulseaudio
     pavucontrol
     ffmpeg

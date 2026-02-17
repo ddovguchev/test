@@ -30,6 +30,14 @@ const apps = Gio.AppInfo
     .sort((a: any, b: any) => a.name.localeCompare(b.name))
 
 const supportedImageExt = [".jpg", ".jpeg", ".png", ".webp", ".bmp"]
+const iconThemeSearchPaths = [
+    "/run/current-system/sw/share/icons",
+    `/etc/profiles/per-user/${GLib.get_user_name()}/share/icons`,
+    `${GLib.get_home_dir()}/.nix-profile/share/icons`,
+    "/usr/local/share/icons",
+    "/usr/share/icons"
+]
+let iconThemeInitialized = false
 
 function listPictureFiles() {
     const picturesDir = `${GLib.get_home_dir()}/Pictures`
@@ -66,13 +74,33 @@ function applyWallpaper(path: string) {
     )
 }
 
+function runSessionAction(action: "lock-screen" | "logout" | "sleep" | "reboot" | "poweroff") {
+    const commands: Record<string, string> = {
+        "lock-screen": "hyprlock || loginctl lock-session",
+        "logout": "hyprctl dispatch exit",
+        "sleep": "systemctl suspend",
+        "reboot": "systemctl reboot",
+        "poweroff": "systemctl poweroff"
+    }
+    const command = commands[action]
+    GLib.spawn_command_line_async(`sh -lc '${command}'`)
+    closePanel()
+}
+
 function iconFromDesktopFile(app: any) {
     try {
         const id = app.get_id?.()
         if (!id) return null
-        const xdgData = GLib.getenv("XDG_DATA_DIRS") ?? "/usr/local/share:/usr/share"
-        const bases = xdgData.split(":")
-        const iconTheme = (Gtk as any).IconTheme.get_default?.()
+        const envData = GLib.getenv("XDG_DATA_DIRS") ?? ""
+        const bases = [
+            "/run/current-system/sw/share",
+            `/etc/profiles/per-user/${GLib.get_user_name()}/share`,
+            `${GLib.get_home_dir()}/.nix-profile/share`,
+            "/usr/local/share",
+            "/usr/share",
+            ...envData.split(":").filter(Boolean)
+        ]
+        const iconTheme = getIconTheme()
         for (const base of bases) {
             const desktopPath = `${base}/applications/${id}`
             if (!GLib.file_test(desktopPath, GLib.FileTest.EXISTS)) continue
@@ -93,6 +121,17 @@ function iconFromDesktopFile(app: any) {
     return null
 }
 
+function getIconTheme() {
+    const iconTheme = (Gtk as any).IconTheme.get_default?.()
+    if (iconTheme && !iconThemeInitialized) {
+        iconThemeSearchPaths.forEach((path) => {
+            iconTheme.append_search_path?.(path)
+        })
+        iconThemeInitialized = true
+    }
+    return iconTheme
+}
+
 function createAppImage(app: any) {
     try {
         const icon = app.get_icon?.()
@@ -101,7 +140,7 @@ function createAppImage(app: any) {
             const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(iconString, 32, 32, true)
             return (Gtk as any).Image.new_from_pixbuf(pixbuf)
         }
-        const iconTheme = (Gtk as any).IconTheme.get_default?.()
+        const iconTheme = getIconTheme()
         const names = icon?.get_names?.() ?? []
         const info = iconTheme?.choose_icon?.(names, 32, 0)
         const filename = info?.get_filename?.()
@@ -131,7 +170,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         const horizontalInset = 24
         const fullWidth = Math.max(600, monitorWidth - horizontalInset)
         if (mode === "apps") return { width: Math.round(monitorWidth * 0.6), height: 400 }
-        if (mode === "wallpaper") return { width: Math.round(monitorWidth * 0.4), height: 150 }
+        if (mode === "wallpaper") return { width: Math.max(1100, Math.round(monitorWidth * 0.4)), height: 230 }
+        if (mode === "session") return { width: Math.round(monitorWidth * 0.36), height: 190 }
         if (mode === "notifications") return { width: Math.round(monitorWidth * 0.3), height: 180 }
         return { width: fullWidth, height: 36 }
     }
@@ -222,12 +262,6 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         }}
                         halign={Gtk.Align.CENTER}
                     />
-                    <button
-                        onClicked={() => togglePanelMode("wallpaper")}
-                        halign={Gtk.Align.CENTER}
-                    >
-                        Wallpapers
-                    </button>
                 </box>
                 <box />
                 <box>
@@ -243,6 +277,13 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         }}
                         halign={Gtk.Align.CENTER}
                     />
+                    <button
+                        className="session-button"
+                        onClicked={() => togglePanelMode("session")}
+                        halign={Gtk.Align.CENTER}
+                    >
+                        ⏻
+                    </button>
                 </box>
             </centerbox>
 
@@ -356,28 +397,43 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                             scroll.set_hexpand?.(true)
                             scroll.set_vexpand?.(true)
                             scroll.set_can_focus?.(true)
-                            scroll.set_size_request?.(760, 92)
+                            const tileWidth = 188
+                            const tileHeight = 108
+                            const tileGap = 10
+                            const visibleCount = 5
+                            const step = tileWidth + tileGap
+                            const viewportWidth = visibleCount * tileWidth + (visibleCount - 1) * tileGap
+                            scroll.set_size_request?.(viewportWidth, tileHeight + 10)
 
-                            const row = (Gtk as any).Box.new((Gtk as any).Orientation.HORIZONTAL, 8)
+                            const row = (Gtk as any).Box.new((Gtk as any).Orientation.HORIZONTAL, tileGap)
                             const hadj = scroll.get_hadjustment?.()
 
-                            const scrollBy = (delta: number) => {
+                            const snapTo = (value: number) => {
                                 if (!hadj) return
-                                const current = hadj.get_value?.() ?? 0
                                 const upper = hadj.get_upper?.() ?? 0
                                 const page = hadj.get_page_size?.() ?? 0
-                                const next = Math.max(0, Math.min(upper - page, current + delta))
+                                const max = Math.max(0, upper - page)
+                                const clamped = Math.max(0, Math.min(max, value))
+                                const snapped = Math.round(clamped / step) * step
+                                const next = Math.max(0, Math.min(max, snapped))
                                 hadj.set_value?.(next)
+                            }
+
+                            const scrollByStep = (dir: number) => {
+                                if (!hadj) return
+                                const current = hadj.get_value?.() ?? 0
+                                const currentIndex = Math.round(current / step)
+                                snapTo((currentIndex + dir) * step)
                             }
 
                             scroll.connect?.("key-press-event", (_: any, event: any) => {
                                 const keyval = event?.get_keyval?.()[1] ?? event?.keyval
                                 if (keyval === 65361) {
-                                    scrollBy(-180)
+                                    scrollByStep(-1)
                                     return true
                                 }
                                 if (keyval === 65363) {
-                                    scrollBy(180)
+                                    scrollByStep(1)
                                     return true
                                 }
                                 return false
@@ -389,17 +445,17 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                     const dy = deltas[2] ?? 0
                                     const value = Math.abs(dx) > 0.01 ? dx : dy
                                     if (Math.abs(value) > 0.01) {
-                                        scrollBy(value * 140)
+                                        scrollByStep(value > 0 ? 1 : -1)
                                         return true
                                     }
                                 }
                                 const dir = event?.get_scroll_direction?.()
                                 if (dir === 0) {
-                                    scrollBy(-140)
+                                    scrollByStep(-1)
                                     return true
                                 }
                                 if (dir === 1) {
-                                    scrollBy(140)
+                                    scrollByStep(1)
                                     return true
                                 }
                                 return false
@@ -409,7 +465,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                 try {
                                     const button = (Gtk as any).Button.new()
                                     button.get_style_context?.()?.add_class("wallpaper-tile")
-                                    const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, 140, 78, true)
+                                    const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, tileWidth, tileHeight, true)
                                     const image = (Gtk as any).Image.new_from_pixbuf(pixbuf)
                                     button.add(image)
 
@@ -428,6 +484,36 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                             self.show_all?.()
                         }}
                     />
+                </box>
+                <box
+                    setup={(self: any) => {
+                        self.visible = panelMode() === "session"
+                        panelMode.subscribe((mode: string) => {
+                            self.visible = mode === "session"
+                        })
+                    }}
+                    vertical
+                >
+                    <box className="session-title-row">
+                        <label className="session-title" label="Session" />
+                    </box>
+                    <box className="session-actions" homogeneous>
+                        <button className="session-action" onClicked={() => runSessionAction("lock-screen")}>
+                            Lock
+                        </button>
+                        <button className="session-action" onClicked={() => runSessionAction("logout")}>
+                            Logout
+                        </button>
+                        <button className="session-action" onClicked={() => runSessionAction("sleep")}>
+                            Sleep
+                        </button>
+                        <button className="session-action" onClicked={() => runSessionAction("reboot")}>
+                            Reboot
+                        </button>
+                        <button className="session-action danger" onClicked={() => runSessionAction("poweroff")}>
+                            Poweroff
+                        </button>
+                    </box>
                 </box>
             </box>
         </box>
