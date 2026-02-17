@@ -13,6 +13,7 @@
     shellAliases = {
       ll = "ls -la";
       rebuild = "~/nixos-flake/rebuild.sh";
+      discord = "vesktop";
     };
     initContent = ''
       setopt PROMPT_SUBST
