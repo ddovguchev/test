@@ -187,20 +187,49 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         placeholderText="Search app..."
                     />
                     <box
-                        className="apps-menu-list"
+                        className="apps-menu-grid"
                         vertical
                         setup={(self: any) => {
                             self.get_children?.().forEach((child: any) => self.remove(child))
-                            apps.forEach((entry: any) => {
-                                const button = (Gtk as any).Button.new_with_label(entry.name)
-                                button.get_style_context()?.add_class("apps-menu-item")
+
+                            const grid = (Gtk as any).Grid.new()
+                            grid.set_row_spacing(10)
+                            grid.set_column_spacing(10)
+
+                            apps.slice(0, 40).forEach((entry: any, index: number) => {
+                                const button = (Gtk as any).Button.new()
+                                button.set_always_show_image?.(true)
+                                button.get_style_context()?.add_class("apps-tile")
+
+                                const content = (Gtk as any).Box.new(1, 4)
+                                const image = (Gtk as any).Image.new()
+                                const icon = entry.app.get_icon?.()
+                                if (icon) {
+                                    image.set_from_gicon?.(icon, (Gtk as any).IconSize.DIALOG)
+                                }
+                                image.set_pixel_size?.(28)
+
+                                const label = (Gtk as any).Label.new(entry.name)
+                                label.set_max_width_chars?.(14)
+                                label.set_ellipsize?.(3)
+                                label.set_justify?.((Gtk as any).Justification.CENTER)
+
+                                content.pack_start?.(image, false, false, 0)
+                                content.pack_start?.(label, false, false, 0)
+                                button.add(content)
+
                                 button.connect("clicked", () => {
                                     entry.app.launch([], null)
                                     closePanel()
                                 })
-                                self.add(button)
+
+                                const col = index % 8
+                                const row = Math.floor(index / 8)
+                                grid.attach(button, col, row, 1, 1)
                             })
-                            self.show_all()
+
+                            self.add(grid)
+                            self.show_all?.()
                         }}
                     />
                 </box>

@@ -61,19 +61,22 @@ window.Bar {
         color: $fg-color;
     }
 
-    .apps-menu-list {
+    .apps-menu-grid {
         min-height: 300px;
         margin-top: 10px;
         padding: 4px;
     }
 
-    .apps-menu-item {
-        min-width: 220px;
-        min-height: 42px;
-        border-radius: 10px;
-        margin: 4px;
+    .apps-tile {
+        min-width: 120px;
+        min-height: 86px;
+        border-radius: 12px;
         background: rgba(255, 255, 255, 0.06);
         color: $fg-color;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.14);
+        }
     }
 
     .wallpaper-title {
