@@ -59,6 +59,12 @@ in
         kb_layout = "us,ru";
         kb_options = "grp:alt_shift_toggle";
       };
+      misc = {
+        vrr = 0;
+      };
+      animations = {
+        enabled = false;
+      };
       exec-once = [
         "swww-daemon"
       ] ++ lib.optional hasXwaylandVideoBridge "xwaylandvideobridge";
