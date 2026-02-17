@@ -29,6 +29,9 @@ let
   '');
 in
 {
+  programs.steam = {
+    enable = true;
+  };
   environment.systemPackages = (with pkgs; [
     git
     curl

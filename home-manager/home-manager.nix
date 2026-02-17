@@ -8,6 +8,7 @@
     ./kitty/kitty.nix
     ./hyperland/hyprland.nix
     ./ranger/ranger.nix
+    ./spicetify.nix
     ./zsh/zsh.nix
   ];
 }

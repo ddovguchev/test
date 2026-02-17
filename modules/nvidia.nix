@@ -9,6 +9,7 @@
   boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
 
   hardware.graphics.enable = true;
+  hardware.graphics.enable32Bit = true;
   services.xserver.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
