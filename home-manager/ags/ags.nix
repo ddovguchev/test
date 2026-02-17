@@ -1,10 +1,15 @@
 { config, pkgs, lib, ... }:
 let
   cfg = ./config;
-  astal = with pkgs; [ astal.astal3 astal.io astal.wireplumber astal.notifd ];
-  typelib = lib.makeSearchPath "lib/girepository-1.0" astal;
-  schema = lib.makeSearchPath "share/glib-2.0/schemas" astal;
-  data = lib.makeSearchPath "share" astal;
+  astalDeps = [
+    pkgs.astal.astal3
+    pkgs.astal.io
+    pkgs.astal.wireplumber
+    pkgs.astal.notifd
+  ];
+  typelib = lib.makeSearchPath "lib/girepository-1.0" astalDeps;
+  schema = lib.makeSearchPath "share/glib-2.0/schemas" astalDeps;
+  data = lib.makeSearchPath "share" astalDeps;
   astalGjs = "${pkgs.astal.gjs}/share/astal/gjs";
   wrapped = pkgs.runCommand "ags-wrapped" { buildInputs = [ pkgs.makeWrapper ]; } ''
     mkdir -p $out/bin
