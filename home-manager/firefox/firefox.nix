@@ -20,6 +20,17 @@
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "privacy.trackingprotection.enabled" = true;
         "privacy.donottrackheader.enabled" = true;
+        "gfx.webrender.all" = true;
+        "widget.dmabuf.force-enabled" = false;
+        "media.ffmpeg.vaapi.enabled" = true;
+        "media.hardware-video-decoding.force-enabled" = true;
+        "media.getdisplaymedia.enabled" = true;
+        "media.getusermedia.screensharing.enabled" = true;
+        "media.webrtc.capture.allow-pipewire" = true;
+        "media.webrtc.platformencoder" = true;
+        "media.webrtc.hw.h264.enabled" = true;
+        "media.peerconnection.video.h264_enabled" = true;
+        "media.peerconnection.ice.default_address_only" = false;
       };
     };
     policies = {

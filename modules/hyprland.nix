@@ -19,5 +19,8 @@
 
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
+    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+    XDG_SESSION_TYPE = "wayland";
+    MOZ_ENABLE_WAYLAND = "1";
   };
 }

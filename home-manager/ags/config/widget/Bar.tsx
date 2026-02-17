@@ -775,8 +775,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <box className="session-title-row">
                         <label className="session-title" label="Session" />
                     </box>
-                    <box className="session-actions" hexpand>
-                        <box className="session-actions-left" hexpand>
+                    <centerbox className="session-actions" hexpand>
+                        <box className="session-actions-left">
                             <button className="session-action" onClicked={() => runSessionAction("lock-screen")}>
                                 Lock
                             </button>
@@ -790,12 +790,13 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                 Reboot
                             </button>
                         </box>
-                        <box className="session-actions-right" halign={Gtk.Align.END}>
+                        <box />
+                        <box className="session-actions-right">
                             <button className="session-action danger" onClicked={() => runSessionAction("poweroff")}>
                                 Poweroff
                             </button>
                         </box>
-                    </box>
+                    </centerbox>
                 </box>
             </box>
         </box>
