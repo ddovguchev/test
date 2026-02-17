@@ -15,10 +15,10 @@ window.Bar {
     .shell-panel {
         background-color: $bar-bg;
         border-radius: 14px;
-        border: 1px solid $bar-border;
+        border: none;
         margin: 8px;
-        padding: 8px;
-        min-height: 50px;
+        padding: 6px 8px;
+        min-height: 42px;
         box-shadow: 0 10px 28px $bar-shadow;
     }
 
@@ -65,4 +65,8 @@ window.Bar {
     .mode-apps {}
     .mode-notifications {}
     .mode-wallpaper {}
+}
+
+window.InteractionBackdrop {
+    background: transparent;
 }
