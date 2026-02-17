@@ -7,8 +7,13 @@ const launcherVisible = Variable(false)
 
 const apps = Gio.AppInfo
     .get_all()
-    .filter((app) => app.should_show() && app.get_display_name())
-    .sort((a, b) => a.get_display_name().localeCompare(b.get_display_name()))
+    .filter((app) => app.should_show())
+    .map((app) => ({
+        app,
+        name: app.get_display_name() ?? app.get_name() ?? "Application",
+        icon: app.get_icon(),
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name))
 
 function toggleLauncher() {
     launcherVisible.set(!launcherVisible())
@@ -66,11 +71,14 @@ export function Launcher(gdkmonitor: Gdk.Monitor) {
             </box>
             <scrolledwindow className="launcher-scroll" vexpand>
                 <flowbox className="launcher-grid" maxChildrenPerLine={8}>
-                    {apps.map((app) => (
-                        <button className="app-tile" onClicked={() => launchApp(app)}>
+                    {apps.map((entry) => (
+                        <button className="app-tile" onClicked={() => launchApp(entry.app)}>
                             <box vertical spacing={8}>
-                                <image gicon={app.get_icon()} pixelSize={40} />
-                                <label label={app.get_display_name()} />
+                                {entry.icon
+                                    ? <image gicon={entry.icon} pixelSize={40} />
+                                    : <image iconName="application-x-executable" pixelSize={40} />
+                                }
+                                <label label={entry.name} />
                             </box>
                         </button>
                     ))}
