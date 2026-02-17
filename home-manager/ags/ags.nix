@@ -13,6 +13,39 @@ let
   data = lib.makeSearchPath "share" astalDeps;
   astalGjs = "${pkgs.astal.gjs}/share/astal/gjs";
   palette = import ../theme/palette.nix;
+  agsConfig = pkgs.runCommand "ags-config" {} ''
+    mkdir -p $out/widget $out/node_modules
+    cp ${cfg}/app.ts $out/app.ts
+    cp ${cfg}/tsconfig.json $out/tsconfig.json
+    cp ${cfg}/env.d.ts $out/env.d.ts
+    cp ${cfg}/.gitignore $out/.gitignore
+    cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
+    cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
+    cp ${cfg}/widget/launcherState.ts $out/widget/launcherState.ts
+
+    cat > $out/style.scss <<'EOF'
+$fg-color: ${palette.ags.barFg};
+$bg-color: ${palette.ags.barBg};
+$launcher-overlay: ${palette.ags.launcherOverlay};
+$launcher-text: ${palette.ags.launcherText};
+$launcher-panel: ${palette.ags.launcherPanel};
+$launcher-tile: ${palette.ags.launcherTile};
+$launcher-tile-hover: ${palette.ags.launcherTileHover};
+
+EOF
+    cat ${cfg}/style.scss >> $out/style.scss
+
+    cat > $out/package.json <<'EOF'
+{
+  "name": "astal-shell",
+  "dependencies": {
+    "astal": "${astalGjs}"
+  }
+}
+EOF
+
+    ln -s ${astalGjs} $out/node_modules/astal
+  '';
   wrapped = pkgs.runCommand "ags-wrapped" { buildInputs = [ pkgs.makeWrapper ]; } ''
     mkdir -p $out/bin
     makeWrapper ${pkgs.ags}/bin/ags $out/bin/ags \
@@ -41,27 +74,7 @@ let
   '';
 in
 {
-  xdg.configFile."ags/app.ts".source = "${cfg}/app.ts";
-  xdg.configFile."ags/style.scss".text = ''
-    $fg-color: ${palette.ags.barFg};
-    $bg-color: ${palette.ags.barBg};
-    $launcher-overlay: ${palette.ags.launcherOverlay};
-    $launcher-text: ${palette.ags.launcherText};
-    $launcher-panel: ${palette.ags.launcherPanel};
-    $launcher-tile: ${palette.ags.launcherTile};
-    $launcher-tile-hover: ${palette.ags.launcherTileHover};
-  '' + builtins.readFile "${cfg}/style.scss";
-  xdg.configFile."ags/tsconfig.json".source = "${cfg}/tsconfig.json";
-  xdg.configFile."ags/env.d.ts".source = "${cfg}/env.d.ts";
-  xdg.configFile."ags/.gitignore".source = "${cfg}/.gitignore";
-  xdg.configFile."ags/widget/Bar.tsx".source = "${cfg}/widget/Bar.tsx";
-  xdg.configFile."ags/widget/Launcher.tsx".source = "${cfg}/widget/Launcher.tsx";
-  xdg.configFile."ags/widget/launcherState.ts".source = "${cfg}/widget/launcherState.ts";
-  xdg.configFile."ags/package.json".text = builtins.toJSON {
-    name = "astal-shell";
-    dependencies = { astal = astalGjs; };
-  };
-  xdg.configFile."ags/node_modules/astal".source = astalGjs;
+  xdg.configFile."ags".source = agsConfig;
   home.packages = [ agsScripts ];
   systemd.user.services.ags = {
     Unit = {
