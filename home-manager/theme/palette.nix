@@ -29,10 +29,10 @@
   ags = {
     barFg = "#e0e2e8";
     barBg = "#101418";
-    barBgOpacity = "rgba(16, 20, 24, 0.98)";
-    barBorder = "#4c4c4c";
-    barShadow = "rgba(0, 0, 0, 0.35)";
-    panelBg = "rgba(16, 20, 24, 0.96)";
+    barBgOpacity = "rgba(16, 20, 24, 0.82)";
+    barBorder = "#99ccfa";
+    barShadow = "rgba(0, 0, 0, 0.45)";
+    panelBg = "rgba(16, 20, 24, 0.88)";
     panelBorder = "#4c4c4c";
     launcherOverlay = "rgba(16, 20, 24, 0.35)";
     launcherPanel = "rgba(38, 38, 38, 0.72)";
