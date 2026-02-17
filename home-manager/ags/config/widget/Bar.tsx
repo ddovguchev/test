@@ -189,7 +189,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         placeholderText="Search app..."
                     />
                     <scrolledwindow className="apps-menu-scroll" vexpand>
-                        <flowbox className="apps-menu-grid">
+                        <box className="apps-menu-list" vertical>
                             {apps.map((entry) => (
                                 <button
                                     className="apps-menu-item"
@@ -201,7 +201,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                     <label label={entry.name} />
                                 </button>
                             ))}
-                        </flowbox>
+                        </box>
                     </scrolledwindow>
                 </box>
                 <box
