@@ -1,4 +1,23 @@
 { config, pkgs, ... }:
+let
+  agsRequestApps = pkgs.writeShellScript "ags-request-apps" ''
+    AGS="${config.home.profileDirectory}/bin/ags"
+    if ! "$AGS" request apps; then
+      systemctl --user start ags.service
+      sleep 0.2
+      "$AGS" request apps
+    fi
+  '';
+
+  agsRequestWallpaper = pkgs.writeShellScript "ags-request-wallpaper" ''
+    AGS="${config.home.profileDirectory}/bin/ags"
+    if ! "$AGS" request wallpaper; then
+      systemctl --user start ags.service
+      sleep 0.2
+      "$AGS" request wallpaper
+    fi
+  '';
+in
 {
   wayland.windowManager.hyprland = {
     enable = true;
@@ -28,8 +47,8 @@
       bind = [
         "$mod, F, exec, firefox"
         "$mod, T, exec, kitty"
-        "$mod, R, exec, ${config.home.profileDirectory}/bin/ags request apps"
-        "$mod, W, exec, ${config.home.profileDirectory}/bin/ags request wallpaper"
+        "$mod, R, exec, ${agsRequestApps}"
+        "$mod, W, exec, ${agsRequestWallpaper}"
         "$mod, Q, killactive"
         "$mod, 1, workspace, 1"
         "$mod, 2, workspace, 2"
