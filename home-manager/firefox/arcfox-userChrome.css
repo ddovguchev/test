@@ -61,6 +61,30 @@ browser {
  border-color: transparent !important;
 }
 
+/* Force-hide top browser chrome (tabs/nav/toolbars). */
+#navigator-toolbox,
+#TabsToolbar,
+#titlebar,
+#toolbar-menubar {
+ display: none !important;
+ min-height: 0 !important;
+ max-height: 0 !important;
+ height: 0 !important;
+ opacity: 0 !important;
+ overflow: hidden !important;
+ pointer-events: none !important;
+}
+
+/* Remove any window control buttons everywhere. */
+.titlebar-buttonbox-container,
+.titlebar-buttonbox,
+.titlebar-min,
+.titlebar-max,
+.titlebar-restore,
+.titlebar-close {
+ display: none !important;
+}
+
 #navigator-toolbox:hover {
  height: 40px;
  opacity: 1 !important;
@@ -105,6 +129,14 @@ toolbarbutton[open=true] {
  background-color: transparent !important;
  border: none !important;
  box-shadow: none !important;
+}
+
+/* Keep settings/extensions controls grouped at end when visible. */
+#unified-extensions-button,
+#PanelUI-menu-button,
+#preferences-button,
+#fxa-toolbar-menu-button {
+ order: 999 !important;
 }
 
 /* Hiding the header on new tab page */

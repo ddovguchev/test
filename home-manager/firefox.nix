@@ -7,8 +7,11 @@
       isDefault = true;
       path = "hikari";
       settings = {
-        "browser.startup.homepage" = "https://duckduckgo.com";
+        "browser.startup.homepage" = "https://www.google.com";
         "browser.search.suggest.enabled" = true;
+        "browser.search.defaultenginename" = "Google";
+        "browser.search.defaultenginename.private" = "Google";
+        "browser.urlbar.placeholderName" = "Google";
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "privacy.trackingprotection.enabled" = true;
         "privacy.donottrackheader.enabled" = true;
