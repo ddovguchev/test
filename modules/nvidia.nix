@@ -10,8 +10,8 @@
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     modesetting.enable = lib.mkDefault true;
-    # Proprietary kernel module is usually the most reliable on desktop NVIDIA.
-    open = lib.mkDefault false;
+    # Blackwell GPUs (like RTX 5060 Ti) require NVIDIA open kernel modules.
+    open = true;
     # Pin to the long-lived/production driver branch.
     package =
       let nvidiaPackages = config.boot.kernelPackages.nvidiaPackages;
