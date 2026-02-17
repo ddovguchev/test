@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
   agsRequestApps = pkgs.writeShellScript "ags-request-apps" ''
     AGS="${config.home.profileDirectory}/bin/ags"
@@ -26,6 +26,9 @@ let
       "$AGS" request workspaces
     fi
   '';
+  hasXwaylandVideoBridge =
+    lib.hasAttrByPath [ "plasma6Packages" "xwaylandvideobridge" ] pkgs
+    || lib.hasAttrByPath [ "kdePackages" "xwaylandvideobridge" ] pkgs;
 in
 {
   wayland.windowManager.hyprland = {
@@ -55,8 +58,7 @@ in
       };
       exec-once = [
         "swww-daemon"
-        "xwaylandvideobridge"
-      ];
+      ] ++ lib.optional hasXwaylandVideoBridge "xwaylandvideobridge";
       bind = [
         "$mod, F, exec, firefox"
         "$mod, T, exec, kitty"
