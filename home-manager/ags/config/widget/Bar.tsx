@@ -65,10 +65,10 @@ export function Launcher(gdkmonitor: Gdk.Monitor) {
                 <button onClicked={closeLauncher}>Close</button>
             </box>
             <scrolledwindow className="launcher-scroll" vexpand>
-                <flowbox className="launcher-grid" maxChildrenPerLine={8} rowSpacing={12} columnSpacing={12}>
+                <flowbox className="launcher-grid" maxChildrenPerLine={8}>
                     {apps.map((app) => (
                         <button className="app-tile" onClicked={() => launchApp(app)}>
-                            <box vertical>
+                            <box vertical spacing={8}>
                                 <image gicon={app.get_icon()} pixelSize={40} />
                                 <label label={app.get_display_name()} />
                             </box>
