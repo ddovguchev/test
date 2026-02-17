@@ -1,1 +1,20 @@
-{"name":"astal-shell","dependencies":{"astal":"file:~/.local/share/ags"}}
+{
+  "name": "astal-shell",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "astal": "file:~/.local/share/ags"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^5.6.1",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
+    "eslint": "^9.39.1",
+    "typescript": "^5.3.3"
+  }
+}

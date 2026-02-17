@@ -10,3 +10,17 @@ indent_size = 2
 tab_width = 2
 max_line_length = 120
 
+[{*.ts,*.mts,*.cts,*.tsx,*.js,*.mjs,*.cjs,*.jsx,*.css,*.scss}]
+indent_size = 2
+tab_width = 2
+max_line_length = 140
+
+trim_trailing_whitespace = true
+ij_visual_guides = 140
+ij_continuation_indent_size = 2
+ij_typescript_spaces_within_imports = true
+ij_typescript_space_before_async_arrow_lparen = false
+ij_typescript_if_brace_force = if_multiline
+ij_typescript_spaces_within_object_literal_braces = true
+ij_typescript_blacklist_imports = rxjs/Rx, node_modules/**/*, @sb/network-bus/src/**/*, @sb/utils/src/**/*, @sb/uikit/src/**/*, @sb/di/src/**/*, @sb/adminui-core/src/**/*, @sb/antx/src/**/*, @sb/betting-core/src/**/*, @sb/selenium/**/*, @sb/components/src/**/*, @sb/rpc-synchronizator/**/*
+

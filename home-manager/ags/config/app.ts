@@ -9,5 +9,5 @@ App.start({
             Bar(monitor)
             Launcher(monitor)
         })
-    },
+    }
 })

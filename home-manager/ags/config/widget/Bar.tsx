@@ -1,6 +1,8 @@
-import { App, Astal, Gtk, Gdk } from "astal/gtk3"
+import { App, Astal, Gtk } from "astal/gtk3"
+import type { Gdk } from "astal/gtk3"
 import { Variable } from "astal"
 import Gio from "gi://Gio"
+import type { AppInfo } from "gi://Gio"
 
 const time = Variable("").poll(1000, "date")
 const launcherVisible = Variable(false)
@@ -10,7 +12,7 @@ const apps = Gio.AppInfo
     .filter((app) => app.should_show())
     .map((app) => ({
         app,
-        name: app.get_display_name() ?? app.get_name() ?? "Application",
+        name: app.get_display_name() ?? app.get_name() ?? "Application"
     }))
     .sort((a, b) => a.name.localeCompare(b.name))
 
@@ -22,7 +24,7 @@ function closeLauncher() {
     launcherVisible.set(false)
 }
 
-function launchApp(app: Gio.AppInfo) {
+function launchApp(app: AppInfo) {
     app.launch([], null)
     closeLauncher()
 }
@@ -45,7 +47,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             </button>
             <box />
             <button
-                onClicked={() => print("hello")}
+                onClicked={() => console.log("hello")}
                 halign={Gtk.Align.CENTER}
             >
                 <label label={time()} />
