@@ -3,8 +3,9 @@ import type { Gdk } from "astal/gtk3"
 import { Variable } from "astal"
 import GLib from "gi://GLib"
 import { closePanel, panelMode, togglePanelMode } from "./launcherState"
-import appsIcon from "../assets/apps-svgrepo-com.svg"
-import notificationIcon from "../assets/notification-box-svgrepo-com.svg"
+
+const appsIcon = `${SRC}/assets/apps-svgrepo-com.svg`
+const notificationIcon = `${SRC}/assets/notification-box-svgrepo-com.svg`
 
 const time = Variable("").poll(1000, "date +'%I:%M %p'")
 
