@@ -74,6 +74,11 @@ declare module "gi://Gio" {
     export default Gio
 }
 
+declare module "gi://GLib" {
+    const GLib: any
+    export default GLib
+}
+
 declare namespace JSX {
     interface IntrinsicElements {
         [elemName: string]: Record<string, unknown>

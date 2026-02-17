@@ -45,17 +45,25 @@ window.Bar {
         margin-top: 8px;
     }
 
-    .mode-none {
-        min-height: 50px;
+    .apps-input {
+        margin-top: 8px;
+        min-height: 34px;
     }
 
-    .mode-apps {
-        min-width: 1536px;
-        min-height: 200px;
+    .wallpaper-title {
+        margin-bottom: 8px;
+        font-weight: 700;
     }
 
-    .mode-notifications {
-        min-width: 768px;
-        min-height: 160px;
+    .wallpaper-block {
+        min-height: 620px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 10px;
     }
+
+    .mode-none {}
+    .mode-apps {}
+    .mode-notifications {}
+    .mode-wallpaper {}
 }
