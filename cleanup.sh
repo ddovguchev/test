@@ -52,6 +52,8 @@ done
 
 cd "$(dirname "$0")"
 
+NIX_CMD="nix --extra-experimental-features 'nix-command'"
+
 run_cmd() {
   local cmd="$1"
   if [[ "$DRY_RUN" == true ]]; then
@@ -97,15 +99,15 @@ fi
 
 echo ""
 echo -e "${BLUE}📦 Cleaning Nix user generations...${NC}"
-run_cmd "nix profile wipe-history --profile /nix/var/nix/profiles/per-user/$USER/profile --older-than 7d || true"
+run_cmd "$NIX_CMD profile wipe-history --profile /nix/var/nix/profiles/per-user/$USER/profile --older-than 7d || true"
 run_cmd "nix-collect-garbage -d"
 
 echo ""
 echo -e "${BLUE}🛠️  Cleaning system generations (sudo)...${NC}"
-run_cmd "sudo nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 7d || true"
+run_cmd "sudo $NIX_CMD profile wipe-history --profile /nix/var/nix/profiles/system --older-than 7d || true"
 run_cmd "sudo nix-collect-garbage -d"
-run_cmd "sudo nix store gc"
-run_cmd "sudo nix store optimise"
+run_cmd "sudo $NIX_CMD store gc"
+run_cmd "sudo $NIX_CMD store optimise"
 
 echo ""
 echo -e "${BLUE}🧽 Cleaning temporary directories...${NC}"
