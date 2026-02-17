@@ -12,6 +12,13 @@ let
       [ pkgs.cursor ]
     else
       [ ];
+  spicetifyPkg =
+    if lib.hasAttrByPath [ "spicetify-cli" ] pkgs then
+      [ pkgs."spicetify-cli" ]
+    else if lib.hasAttrByPath [ "spicetify" ] pkgs then
+      [ pkgs.spicetify ]
+    else
+      [ ];
   vesktopWrapped = lib.hiPrio (pkgs.writeShellScriptBin "vesktop" ''
     exec ${pkgs.vesktop}/bin/vesktop \
       --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer \
@@ -78,7 +85,7 @@ in
     astal.io
     astal.wireplumber
     astal.notifd
-  ]) ++ [ vesktopWrapped ] ++ xwaylandVideoBridgePkg ++ cursorPkg;
+  ]) ++ [ vesktopWrapped ] ++ xwaylandVideoBridgePkg ++ cursorPkg ++ spicetifyPkg;
   virtualisation.docker.enable = lib.mkDefault true;
   virtualisation.docker.rootless = {
     enable = lib.mkDefault false;

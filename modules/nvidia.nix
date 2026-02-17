@@ -1,6 +1,9 @@
 { config, pkgs, lib, ... }:
 {
-  boot.kernelParams = [ "nvidia_drm.modeset=1" ];
+  boot.kernelParams = [
+    "nvidia_drm.modeset=1"
+    "video=DP-1:2560x1080@200"
+  ];
   boot.blacklistedKernelModules = [ "nouveau" ];
   boot.initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
   boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
