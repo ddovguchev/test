@@ -89,6 +89,10 @@ in
         "pin,class:^(com\\.github\\.Aylur\\.ags)$"
         "float,class:^(com\\.github\\.Aylur\\.ags)$"
         "noborder,class:^(com\\.github\\.Aylur\\.ags)$"
+        "float,title:^(Picture-in-Picture|Picture in Picture|Picture-in-picture)$"
+        "pin,title:^(Picture-in-Picture|Picture in Picture|Picture-in-picture)$"
+        "size 480 270,title:^(Picture-in-Picture|Picture in Picture|Picture-in-picture)$"
+        "move 100%-w-20 100%-h-20,title:^(Picture-in-Picture|Picture in Picture|Picture-in-picture)$"
       ];
       layerrule = [
         "blur,^(Bar)$"

@@ -14,7 +14,7 @@
     wireguard-tools wireshark teams-for-linux telegram-desktop
     gns3-gui
     hyprlock
-    xwaylandvideobridge
+    kdePackages.xwaylandvideobridge
     grim slurp wf-recorder wl-screenrec
     pulseaudio
     pavucontrol
