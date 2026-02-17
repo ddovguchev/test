@@ -26,7 +26,7 @@
         ./modules/hyprland.nix
         ./modules/audio.nix
         ./modules/packages.nix
-        ./example/SilentSDDM/nix/module.nix
+        ./sddm/SilentSDDM/nix/module.nix
         home-manager.nixosModules.home-manager
         ({ config, pkgs, ... }: {
           system.stateVersion = "25.11";
