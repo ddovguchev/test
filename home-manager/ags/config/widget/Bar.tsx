@@ -2,6 +2,7 @@ import { App, Astal, Gtk } from "astal/gtk3"
 import type { Gdk } from "astal/gtk3"
 import { Variable } from "astal"
 import GLib from "gi://GLib"
+import Gdk from "gi://Gdk"
 import GdkPixbuf from "gi://GdkPixbuf"
 import Gio from "gi://Gio"
 import { closePanel, panelMode, togglePanelMode } from "./launcherState"
@@ -177,10 +178,81 @@ function createAppImage(app: any) {
 }
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
-    const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
+    const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
     let appsEntryRef: any = null
     let appsQuery = ""
     let rerenderApps: (() => void) | null = null
+
+    const syncAppsQuery = () => {
+        appsQuery = String(appsEntryRef?.text ?? "").toLowerCase()
+        rerenderApps?.()
+    }
+
+    const setAppsEntryText = (next: string) => {
+        appsEntryRef?.set_text?.(next)
+        if (appsEntryRef && !appsEntryRef.set_text) appsEntryRef.text = next
+        appsEntryRef?.set_position?.(-1)
+        syncAppsQuery()
+    }
+
+    const handleAppsTyping = (event: any, keyval: number) => {
+        if (panelMode() !== "apps" || !appsEntryRef) return false
+        const state = event?.get_state?.()[1] ?? event?.state ?? 0
+        const blockedMask =
+            (Gdk.ModifierType.CONTROL_MASK ?? 0)
+            | (Gdk.ModifierType.MOD1_MASK ?? 0)
+            | (Gdk.ModifierType.SUPER_MASK ?? 0)
+        if ((state & blockedMask) !== 0) return false
+
+        if (keyval === (Gdk.KEY_BackSpace ?? 65288)) {
+            const current = String(appsEntryRef?.text ?? "")
+            setAppsEntryText(current.slice(0, -1))
+            return true
+        }
+
+        const unicode = Gdk.keyval_to_unicode?.(keyval) ?? 0
+        if (!unicode) return false
+        const character = String.fromCodePoint(unicode)
+        if (character.length === 0 || character === "\u0000") return false
+
+        const current = String(appsEntryRef?.text ?? "")
+        setAppsEntryText(`${current}${character}`)
+        return true
+    }
+
+    const inputLayer = <window
+        name="panel-input-layer"
+        namespace="panel-input-layer"
+        className="PanelInputLayer"
+        gdkmonitor={gdkmonitor}
+        exclusivity={Astal.Exclusivity.IGNORE}
+        anchor={TOP | BOTTOM | LEFT | RIGHT}
+        keymode={Astal.Keymode.ON_DEMAND}
+        onKeyPressEvent={(_: any, event: any) => {
+            const keyval = event?.get_keyval?.()[1] ?? event?.keyval
+            if (keyval === (Gdk.KEY_Escape ?? 65307)) {
+                closePanel()
+                return true
+            }
+            return handleAppsTyping(event, keyval)
+        }}
+        setup={(self: any) => {
+            self.visible = false
+            panelMode.subscribe((mode: string) => {
+                const active = mode === "apps" || mode === "wallpaper"
+                self.visible = active
+                if (!active) return
+                GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                    self.present?.()
+                    self.grab_focus?.()
+                    if (panelMode() === "apps") appsEntryRef?.grab_focus?.()
+                    return false
+                })
+            })
+        }}
+        application={App}>
+        <eventbox className="panel-input-layer" />
+    </window>
 
     const getModeSize = (mode: string) => {
         const geometry = (gdkmonitor as any)?.get_geometry?.()
@@ -194,7 +266,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         return { width: fullWidth, height: 36 }
     }
 
-    return <window
+    const barWindow = <window
         name="bar"
         namespace="bar"
         className="Bar"
@@ -580,4 +652,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             </box>
         </box>
     </window>
+
+    void inputLayer
+    return barWindow
 }
