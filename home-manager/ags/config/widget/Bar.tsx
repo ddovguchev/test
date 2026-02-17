@@ -196,7 +196,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
     }
 
     const handleAppsTyping = (event: any, keyval: number) => {
-        if (panelMode() !== "apps" || !appsEntryRef) return false
+        if (panelMode() !== "apps") return false
         const state = event?.get_state?.()[1] ?? event?.state ?? 0
         const blockedMask =
             (Gdk.ModifierType.CONTROL_MASK ?? 0)
@@ -206,7 +206,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 
         if (keyval === (Gdk.KEY_BackSpace ?? 65288)) {
             const current = String(appsEntryRef?.text ?? "")
-            setAppsEntryText(current.slice(0, -1))
+            if (current.length > 0) setAppsEntryText(current.slice(0, -1))
             return true
         }
 
@@ -227,7 +227,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         gdkmonitor={gdkmonitor}
         exclusivity={Astal.Exclusivity.IGNORE}
         anchor={TOP | BOTTOM | LEFT | RIGHT}
-        keymode={Astal.Keymode.ON_DEMAND}
+        keymode={Astal.Keymode.EXCLUSIVE}
         onKeyPressEvent={(_: any, event: any) => {
             const keyval = event?.get_keyval?.()[1] ?? event?.keyval
             if (keyval === (Gdk.KEY_Escape ?? 65307)) {
@@ -245,13 +245,12 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
                     self.present?.()
                     self.grab_focus?.()
-                    if (panelMode() === "apps") appsEntryRef?.grab_focus?.()
                     return false
                 })
             })
         }}
         application={App}>
-        <eventbox className="panel-input-layer" />
+        <eventbox className="panel-input-layer" hexpand vexpand />
     </window>
 
     const getModeSize = (mode: string) => {
