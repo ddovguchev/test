@@ -1,18 +1,20 @@
-{
-  lib,
-  callPackage,
-  stdenvNoCC,
-  kdePackages,
-  gitRev ? "unknown",
-  theme ? "default",
-  theme-overrides ? {},
-  extraBackgrounds ? [],
+{ lib
+, callPackage
+, stdenvNoCC
+, kdePackages
+, gitRev ? "unknown"
+, theme ? "default"
+, theme-overrides ? { }
+, extraBackgrounds ? [ ]
+,
 }:
-stdenvNoCC.mkDerivation (final: let
+stdenvNoCC.mkDerivation (final:
+let
   inherit (lib) attrValues substring concatStringsSep map any;
   inherit (lib.generators) toINI;
   inherit (lib.fileset) toSource difference unions fileFilter;
-in {
+in
+{
   pname = "silent";
   version = "${substring 0 8 gitRev}";
 
@@ -21,7 +23,7 @@ in {
   src = toSource {
     root = ../.;
     fileset = difference ../. (unions [
-      (fileFilter (file: any file.hasExt ["nix" "sh"]) ../.)
+      (fileFilter (file: any file.hasExt [ "nix" "sh" ]) ../.)
       ../nix
       ../docs
       ../LICENSE
@@ -36,39 +38,43 @@ in {
 
   dontWrapQtApps = true;
 
-  installPhase = let
-    basePath = "$out/share/sddm/themes/${final.pname}";
-    overrides' = toINI {} theme-overrides;
-    overrides = builtins.replaceStrings ["="] [" = "] overrides';
+  installPhase =
+    let
+      basePath = "$out/share/sddm/themes/${final.pname}";
+      overrides' = toINI { } theme-overrides;
+      overrides = builtins.replaceStrings [ "=" ] [ " = " ] overrides';
 
-    # no, using baseNameOf on derivations don't do the right thing :/
-    # so we have have this to not break things
-    copyBg = bg: let
-      name =
-        if lib.isDerivation bg
-        then bg.name
-        else builtins.baseNameOf bg;
-    in "cp ${bg} ${basePath}/backgrounds/${name}";
-  in ''
-    mkdir -p ${basePath}
-    cp -r $src/* ${basePath}
+      # no, using baseNameOf on derivations don't do the right thing :/
+      # so we have have this to not break things
+      copyBg = bg:
+        let
+          name =
+            if lib.isDerivation bg
+            then bg.name
+            else builtins.baseNameOf bg;
+        in
+        "cp ${bg} ${basePath}/backgrounds/${name}";
+    in
+    ''
+      mkdir -p ${basePath}
+      cp -r $src/* ${basePath}
 
-    substituteInPlace ${basePath}/metadata.desktop \
-      --replace-warn configs/default.conf configs/${theme}.conf
+      substituteInPlace ${basePath}/metadata.desktop \
+        --replace-warn configs/default.conf configs/${theme}.conf
 
-    chmod +w ${basePath}/configs/${theme}.conf
-    echo '${overrides}' >> ${basePath}/configs/${theme}.conf
+      chmod +w ${basePath}/configs/${theme}.conf
+      echo '${overrides}' >> ${basePath}/configs/${theme}.conf
 
-    chmod -R +w ${basePath}/backgrounds
-    ${concatStringsSep "\n" (map copyBg extraBackgrounds)}
-  '';
+      chmod -R +w ${basePath}/backgrounds
+      ${concatStringsSep "\n" (map copyBg extraBackgrounds)}
+    '';
 
-  passthru.test = callPackage ./test-package.nix {silent = final.finalPackage;};
+  passthru.test = callPackage ./test-package.nix { silent = final.finalPackage; };
 
   meta = {
     homepage = "https://github.com/uiriansan/SilentSDDM";
     description = "A very customizable SDDM theme that actually looks good";
-    maintainers = [lib.maintainers.rexies];
-    license = [lib.licenses.gpl3];
+    maintainers = [ lib.maintainers.rexies ];
+    license = [ lib.licenses.gpl3 ];
   };
 })

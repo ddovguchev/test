@@ -23,26 +23,61 @@ let
 in
 {
   environment.systemPackages = (with pkgs; [
-    git curl wget unzip nodejs_22 nodePackages.typescript
-    ripgrep pciutils
+    git
+    curl
+    wget
+    unzip
+    nodejs_22
+    nodePackages.typescript
+    ripgrep
+    pciutils
     nixpkgs-fmt
-    kubectl k9s helm docker docker-compose
-    ansible tmux neovim
+    kubectl
+    k9s
+    helm
+    docker
+    docker-compose
+    ansible
+    tmux
+    neovim
     jetbrains.idea
-    kitty ranger fastfetch htop
-    firefox spotify
-    blender qemu terraform terragrunt go gcc
-    insomnia vesktop obs-studio steam
-    burpsuite metasploit
-    wireguard-tools wireshark teams-for-linux telegram-desktop
+    kitty
+    ranger
+    fastfetch
+    htop
+    firefox
+    spotify
+    blender
+    qemu
+    terraform
+    terragrunt
+    go
+    gcc
+    insomnia
+    vesktop
+    obs-studio
+    steam
+    burpsuite
+    metasploit
+    wireguard-tools
+    wireshark
+    teams-for-linux
+    telegram-desktop
     gns3-gui
     hyprlock
-    grim slurp wf-recorder wl-screenrec
+    grim
+    slurp
+    wf-recorder
+    wl-screenrec
     pulseaudio
     pavucontrol
     ffmpeg
     swww
-    astal.gjs astal.astal3 astal.io astal.wireplumber astal.notifd
+    astal.gjs
+    astal.astal3
+    astal.io
+    astal.wireplumber
+    astal.notifd
   ]) ++ [ vesktopWrapped ] ++ xwaylandVideoBridgePkg ++ cursorPkg;
   virtualisation.docker.enable = lib.mkDefault true;
   virtualisation.docker.rootless = {

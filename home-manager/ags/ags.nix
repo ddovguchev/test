@@ -48,31 +48,31 @@ let
       palette.ags.panelBorder
     ]
     (builtins.readFile "${cfg}/style.scss");
-  agsConfig = pkgs.runCommand "ags-config" {} ''
-    mkdir -p $out/widget $out/node_modules $out/assets
-    cp ${cfg}/app.ts $out/app.ts
-    cp ${cfg}/tsconfig.json $out/tsconfig.json
-    cp ${cfg}/env.d.ts $out/env.d.ts
-    cp ${cfg}/.gitignore $out/.gitignore
-    cp -r ${cfg}/assets/. $out/assets/
-    cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
-    cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
-    cp ${cfg}/widget/launcherState.ts $out/widget/launcherState.ts
+  agsConfig = pkgs.runCommand "ags-config" { } ''
+        mkdir -p $out/widget $out/node_modules $out/assets
+        cp ${cfg}/app.ts $out/app.ts
+        cp ${cfg}/tsconfig.json $out/tsconfig.json
+        cp ${cfg}/env.d.ts $out/env.d.ts
+        cp ${cfg}/.gitignore $out/.gitignore
+        cp -r ${cfg}/assets/. $out/assets/
+        cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
+        cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
+        cp ${cfg}/widget/launcherState.ts $out/widget/launcherState.ts
 
-    cat > $out/style.scss <<'EOF'
-${styleScss}
-EOF
+        cat > $out/style.scss <<'EOF'
+    ${styleScss}
+    EOF
 
-    cat > $out/package.json <<'EOF'
-{
-  "name": "astal-shell",
-  "dependencies": {
-    "astal": "${astalGjs}"
-  }
-}
-EOF
+        cat > $out/package.json <<'EOF'
+    {
+      "name": "astal-shell",
+      "dependencies": {
+        "astal": "${astalGjs}"
+      }
+    }
+    EOF
 
-    ln -s ${astalGjs} $out/node_modules/astal
+        ln -s ${astalGjs} $out/node_modules/astal
   '';
   wrapped = pkgs.runCommand "ags-wrapped" { buildInputs = [ pkgs.makeWrapper ]; } ''
     mkdir -p $out/bin
@@ -94,7 +94,7 @@ EOF
     export XDG_DATA_DIRS="${gsettingsData}:${data}:''${XDG_DATA_DIRS:-}"
     cd "''${AGS_CONFIG:-$HOME/.config/ags}" && exec "${bin}" run "$@"
   '';
-  agsScripts = pkgs.runCommand "ags-scripts" {} ''
+  agsScripts = pkgs.runCommand "ags-scripts" { } ''
     mkdir -p $out/bin
     cp ${agsSh} $out/bin/ags
     cp ${agsRunSh} $out/bin/ags-run

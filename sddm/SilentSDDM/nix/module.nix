@@ -1,9 +1,9 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}: let
+{ lib
+, pkgs
+, config
+, ...
+}:
+let
   inherit (lib) map pipe flatten flip elem assertMsg;
   inherit (lib) mkIf mkEnableOption mkOption literalExpression;
   inherit (lib.types) enum attrsWith path attrs package;
@@ -19,10 +19,11 @@
 
   # TODO pass gitRev somehow? (maybe like quickshell?)
   # this is done this way to be independent of the flake
-  silent = pkgs.callPackage ./package.nix {};
+  silent = pkgs.callPackage ./package.nix { };
   cfg = config.programs.silentSDDM;
   silent' = cfg.package'; # silent with configuration applied
-in {
+in
+{
   options.programs.silentSDDM = {
     enable = mkEnableOption "silentSDDM theme";
 
@@ -44,7 +45,7 @@ in {
         placeholder = "image";
         elemType = path;
       };
-      default = {};
+      default = { };
       example = literalExpression ''
         {
           reze = pkgs.fetchurl {
@@ -64,7 +65,7 @@ in {
         placeholder = "image";
         elemType = path;
       };
-      default = {};
+      default = { };
       example = literalExpression ''
         {
           # <username> = <path / drv>
@@ -80,7 +81,7 @@ in {
 
     settings = mkOption {
       type = attrs;
-      default = {};
+      default = { };
       example = literalExpression ''
         {
             "LoginScreen.LoginArea.Avatar" = {
@@ -133,7 +134,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [silent' silent'.test];
+    environment.systemPackages = [ silent' silent'.test ];
     qt.enable = true;
     systemd.services.display-manager.enable = true;
     services.displayManager.sddm = {
@@ -153,6 +154,6 @@ in {
     };
 
     # setup profile pictures
-    systemd.tmpfiles.rules = mkIf (cfg.profileIcons != {}) cfg.profileIcons';
+    systemd.tmpfiles.rules = mkIf (cfg.profileIcons != { }) cfg.profileIcons';
   };
 }
