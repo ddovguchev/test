@@ -10,24 +10,26 @@ const appsIcon = `${SRC}/assets/apps-svgrepo-com.svg`
 const notificationsIcon = `${SRC}/assets/notification-box-svgrepo-com.svg`
 const time = Variable("").poll(1000, "date +'%I:%M %p'")
 
-const apps = Gio.AppInfo
-    .get_all()
-    .filter((app: any) => app.should_show())
-    .map((app: any) => ({
-        app,
-        name: app.get_display_name() ?? app.get_name() ?? "Application"
-    }))
-    .filter((entry: any) => {
-        const name = String(entry.name).toLowerCase()
-        return ![
-            "htop",
-            "nixos manual",
-            "volume control",
-            "xterm",
-            "ranger"
-        ].includes(name)
-    })
-    .sort((a: any, b: any) => a.name.localeCompare(b.name))
+function getApps() {
+    return Gio.AppInfo
+        .get_all()
+        .filter((app: any) => app.should_show())
+        .map((app: any) => ({
+            app,
+            name: app.get_display_name() ?? app.get_name() ?? "Application"
+        }))
+        .filter((entry: any) => {
+            const name = String(entry.name).toLowerCase()
+            return ![
+                "htop",
+                "nixos manual",
+                "volume control",
+                "xterm",
+                "ranger"
+            ].includes(name)
+        })
+        .sort((a: any, b: any) => a.name.localeCompare(b.name))
+}
 
 const supportedImageExt = [".jpg", ".jpeg", ".png", ".webp", ".bmp"]
 const iconThemeSearchPaths = [
@@ -170,7 +172,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         const horizontalInset = 24
         const fullWidth = Math.max(600, monitorWidth - horizontalInset)
         if (mode === "apps") return { width: Math.round(monitorWidth * 0.6), height: 400 }
-        if (mode === "wallpaper") return { width: Math.max(1100, Math.round(monitorWidth * 0.4)), height: 230 }
+        if (mode === "wallpaper") return { width: Math.max(1320, Math.round(monitorWidth * 0.5)), height: 280 }
         if (mode === "session") return { width: Math.round(monitorWidth * 0.36), height: 190 }
         if (mode === "notifications") return { width: Math.round(monitorWidth * 0.3), height: 180 }
         return { width: fullWidth, height: 36 }
@@ -326,8 +328,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                             const grid = (Gtk as any).Grid.new()
                             grid.set_row_spacing(8)
                             grid.set_column_spacing(8)
+                            const apps = getApps()
 
-                            apps.slice(0, 48).forEach((entry: any, index: number) => {
+                            apps.forEach((entry: any, index: number) => {
                                 const button = (Gtk as any).Button.new()
                                 button.get_style_context?.()?.add_class("apps-tile")
 
@@ -397,9 +400,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                             scroll.set_hexpand?.(true)
                             scroll.set_vexpand?.(true)
                             scroll.set_can_focus?.(true)
-                            const tileWidth = 188
-                            const tileHeight = 108
-                            const tileGap = 10
+                            const tileWidth = 230
+                            const tileHeight = 132
+                            const tileGap = 12
                             const visibleCount = 5
                             const step = tileWidth + tileGap
                             const viewportWidth = visibleCount * tileWidth + (visibleCount - 1) * tileGap

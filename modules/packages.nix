@@ -1,8 +1,9 @@
 { config, pkgs, lib, ... }:
 {
   environment.systemPackages = with pkgs; [
-    git curl wget unzip vim nodejs_22 nodePackages.typescript
-    kubectl k9s docker
+    git curl wget unzip nodejs_22 nodePackages.typescript
+    kubectl k9s helm docker docker-compose
+    ansible tmux neovim
     jetbrains.idea
     kitty ranger fastfetch htop
     firefox spotify
