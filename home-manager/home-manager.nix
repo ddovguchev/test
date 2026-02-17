@@ -1,5 +1,6 @@
 { config, pkgs, ... }:
 {
+  fonts.fontconfig.enable = false;
   imports = [
     ./ags/ags.nix
     ./kitty/kitty.nix
