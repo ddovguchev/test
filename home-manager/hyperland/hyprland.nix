@@ -36,8 +36,8 @@ in
     settings = {
       "$mod" = "SUPER";
       monitor = [
-        ",preferred,auto,1"
         "DP-4,2560x1080@200,0x0,1"
+        ",highrr,auto,1"
       ];
       general = {
         gaps_in = 6;
