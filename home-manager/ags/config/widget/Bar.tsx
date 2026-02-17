@@ -8,16 +8,6 @@ const appsIcon = `${SRC}/assets/apps-svgrepo-com.svg`
 const notificationsIcon = `${SRC}/assets/notification-box-svgrepo-com.svg`
 const time = Variable("").poll(1000, "date +'%I:%M %p'")
 
-function NavIcon({ path }: { path: string }) {
-    return <image
-        className="nav-icon"
-        setup={(self: any) => {
-            self.set_from_file(path)
-            self.set_pixel_size?.(14)
-        }}
-    />
-}
-
 export default function Bar(gdkmonitor: Gdk.Monitor) {
     const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
 
@@ -118,8 +108,15 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         onClicked={() => togglePanelMode("apps")}
                         halign={Gtk.Align.CENTER}
                     >
-                        <box>
-                            <NavIcon path={appsIcon} />
+                        <box
+                            className="nav-button-content"
+                            setup={(self: any) => {
+                                const icon = Gtk.Image.new_from_file(appsIcon)
+                                icon.set_pixel_size(14)
+                                self.add(icon)
+                                self.show_all()
+                            }}
+                        >
                             <label label="Applications" />
                         </box>
                     </button>
@@ -137,8 +134,15 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         onClicked={() => togglePanelMode("notifications")}
                         halign={Gtk.Align.CENTER}
                     >
-                        <box>
-                            <NavIcon path={notificationsIcon} />
+                        <box
+                            className="nav-button-content"
+                            setup={(self: any) => {
+                                const icon = Gtk.Image.new_from_file(notificationsIcon)
+                                icon.set_pixel_size(14)
+                                self.add(icon)
+                                self.show_all()
+                            }}
+                        >
                             <label label="Notifications" />
                         </box>
                     </button>

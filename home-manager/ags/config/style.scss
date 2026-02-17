@@ -41,8 +41,12 @@ window.Bar {
             font-weight: 600;
         }
 
-        .nav-icon {
-            margin-right: 6px;
+        .nav-button-content {
+            padding: 0 4px;
+        }
+
+        .nav-button-content > label {
+            margin-left: 6px;
         }
     }
 
