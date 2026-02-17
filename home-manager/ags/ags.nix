@@ -9,6 +9,7 @@ let
   ];
   typelib = lib.makeSearchPath "lib/girepository-1.0" astalDeps;
   schema = lib.makeSearchPath "share/glib-2.0/schemas" astalDeps;
+  gsettingsData = lib.concatStringsSep ":" (map (p: "${p}/share/gsettings-schemas/${p.name}") astalDeps);
   data = lib.makeSearchPath "share" astalDeps;
   astalGjs = "${pkgs.astal.gjs}/share/astal/gjs";
   wrapped = pkgs.runCommand "ags-wrapped" { buildInputs = [ pkgs.makeWrapper ]; } ''
@@ -16,19 +17,19 @@ let
     makeWrapper ${pkgs.ags}/bin/ags $out/bin/ags \
       --set GI_TYPELIB_PATH "${typelib}" \
       --set GSETTINGS_SCHEMA_DIR "${schema}" \
-      --prefix XDG_DATA_DIRS : "${data}"
+      --prefix XDG_DATA_DIRS : "${gsettingsData}:${data}"
   '';
   bin = "${wrapped}/bin/ags";
   agsSh = pkgs.writeShellScript "ags" ''
     export GI_TYPELIB_PATH="${typelib}"
     export GSETTINGS_SCHEMA_DIR="${schema}:''${GSETTINGS_SCHEMA_DIR:-}"
-    export XDG_DATA_DIRS="${data}:''${XDG_DATA_DIRS:-}"
+    export XDG_DATA_DIRS="${gsettingsData}:${data}:''${XDG_DATA_DIRS:-}"
     if [ "''${1:-}" = "run" ]; then shift; exec "${bin}" run "$@"; else exec "${bin}" "$@"; fi
   '';
   agsRunSh = pkgs.writeShellScript "ags-run" ''
     export GI_TYPELIB_PATH="${typelib}"
     export GSETTINGS_SCHEMA_DIR="${schema}:''${GSETTINGS_SCHEMA_DIR:-}"
-    export XDG_DATA_DIRS="${data}:''${XDG_DATA_DIRS:-}"
+    export XDG_DATA_DIRS="${gsettingsData}:${data}:''${XDG_DATA_DIRS:-}"
     cd "''${AGS_CONFIG:-$HOME/.config/ags}" && exec "${bin}" run "$@"
   '';
   agsScripts = pkgs.runCommand "ags-scripts" {} ''
@@ -54,6 +55,6 @@ in
   home.sessionVariables = {
     GI_TYPELIB_PATH = typelib;
     GSETTINGS_SCHEMA_DIR = schema;
-    XDG_DATA_DIRS = data;
+    XDG_DATA_DIRS = "${gsettingsData}:${data}";
   };
 }
