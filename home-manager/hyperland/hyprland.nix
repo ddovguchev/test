@@ -54,6 +54,8 @@
       layerrule = [
         "blur,^(Bar)$"
         "ignorezero,^(Bar)$"
+        "blur,bar"
+        "ignorezero,bar"
       ];
     };
   };

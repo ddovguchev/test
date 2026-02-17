@@ -31,6 +31,11 @@ declare module "astal/gtk3" {
             EXCLUSIVE,
             IGNORE,
         }
+        enum Keymode {
+            ON_DEMAND,
+            EXCLUSIVE,
+            NONE,
+        }
         enum WindowAnchor {
             TOP = 1,
             BOTTOM = 2,

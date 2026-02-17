@@ -25,10 +25,19 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
     }
 
     return <window
+        name="bar"
         className="Bar"
         gdkmonitor={gdkmonitor}
         exclusivity={Astal.Exclusivity.EXCLUSIVE}
         anchor={TOP | LEFT | RIGHT}
+        keymode={Astal.Keymode.ON_DEMAND}
+        setup={(self: any) => {
+            panelMode.subscribe((mode: string) => {
+                if (mode !== "none") {
+                    self.grab_focus?.()
+                }
+            })
+        }}
         onKeyPressEvent={(_: any, event: any) => {
             const keyval = event?.get_keyval?.()[1] ?? event?.keyval
             if (keyval === 65307) {
