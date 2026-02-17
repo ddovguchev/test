@@ -26,11 +26,16 @@
         ./modules/hyprland.nix
         ./modules/audio.nix
         ./modules/packages.nix
+        ./example/SilentSDDM/nix/module.nix
         home-manager.nixosModules.home-manager
         ({ config, pkgs, ... }: {
           system.stateVersion = "25.11";
           nixpkgs.config.allowUnfree = true;
           time.timeZone = "Europe/Minsk";
+          programs.silentSDDM = {
+            enable = true;
+            theme = "rei";
+          };
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "bak";
