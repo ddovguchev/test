@@ -195,54 +195,61 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     vertical
                 >
                     <entry className="apps-input" placeholderText="Search app..." />
-                    <scrolledwindow className="apps-menu-scroll" vexpand>
-                        <box
-                            className="apps-tiles-grid"
-                            vertical
-                            setup={(self: any) => {
-                                self.get_children?.().forEach((child: any) => self.remove(child))
+                    <box
+                        className="apps-menu-scroll"
+                        vexpand
+                        setup={(self: any) => {
+                            self.get_children?.().forEach((child: any) => self.remove(child))
 
-                                const grid = (Gtk as any).Grid.new()
-                                grid.set_row_spacing(8)
-                                grid.set_column_spacing(8)
+                            const scroll = (Gtk as any).ScrolledWindow.new(null, null)
+                            const hPolicy = (Gtk as any).PolicyType.NEVER ?? 2
+                            const vPolicy = (Gtk as any).PolicyType.AUTOMATIC ?? 1
+                            scroll.set_policy?.(hPolicy, vPolicy)
+                            scroll.set_hexpand?.(true)
+                            scroll.set_vexpand?.(true)
 
-                                apps.slice(0, 40).forEach((entry: any, index: number) => {
-                                    const button = (Gtk as any).Button.new()
-                                    button.get_style_context()?.add_class("apps-tile")
+                            const container = (Gtk as any).Box.new((Gtk as any).Orientation.VERTICAL, 0)
+                            container.get_style_context?.()?.add_class("apps-tiles-grid")
 
-                                    const content = (Gtk as any).Box.new((Gtk as any).Orientation.VERTICAL, 4)
-                                    const image = (Gtk as any).Image.new()
-                                    const icon = entry.app.get_icon?.()
-                                    if (icon) {
-                                        image.set_from_gicon?.(icon, (Gtk as any).IconSize.DIALOG)
-                                    } else {
-                                        image.set_from_icon_name?.("application-x-executable", (Gtk as any).IconSize.DIALOG)
-                                    }
-                                    image.set_pixel_size?.(28)
+                            const grid = (Gtk as any).Grid.new()
+                            grid.set_row_spacing(8)
+                            grid.set_column_spacing(8)
 
-                                    const label = (Gtk as any).Label.new(entry.name)
-                                    label.set_max_width_chars?.(14)
-                                    label.set_line_wrap?.(false)
+                            apps.slice(0, 48).forEach((entry: any, index: number) => {
+                                const button = (Gtk as any).Button.new()
+                                button.get_style_context?.()?.add_class("apps-tile")
 
-                                    content.pack_start?.(image, false, false, 0)
-                                    content.pack_start?.(label, false, false, 0)
-                                    button.add(content)
+                                const content = (Gtk as any).Box.new((Gtk as any).Orientation.VERTICAL, 4)
+                                const icon = entry.app.get_icon?.()
+                                const image = icon
+                                    ? (Gtk as any).Image.new_from_gicon(icon, (Gtk as any).IconSize.DIALOG)
+                                    : (Gtk as any).Image.new_from_icon_name("application-x-executable", (Gtk as any).IconSize.DIALOG)
+                                image.set_pixel_size?.(28)
 
-                                    button.connect("clicked", () => {
-                                        entry.app.launch([], null)
-                                        closePanel()
-                                    })
+                                const label = (Gtk as any).Label.new(entry.name)
+                                label.set_max_width_chars?.(14)
+                                label.set_ellipsize?.(3)
 
-                                    const col = index % 8
-                                    const row = Math.floor(index / 8)
-                                    grid.attach(button, col, row, 1, 1)
+                                content.pack_start?.(image, false, false, 0)
+                                content.pack_start?.(label, false, false, 0)
+                                button.add(content)
+
+                                button.connect("clicked", () => {
+                                    entry.app.launch([], null)
+                                    closePanel()
                                 })
 
-                                self.add(grid)
-                                self.show_all?.()
-                            }}
-                        />
-                    </scrolledwindow>
+                                const col = index % 8
+                                const row = Math.floor(index / 8)
+                                grid.attach(button, col, row, 1, 1)
+                            })
+
+                            container.add(grid)
+                            scroll.add(container)
+                            self.add(scroll)
+                            self.show_all?.()
+                        }}
+                    />
                 </box>
 
                 <box
