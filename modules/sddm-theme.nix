@@ -46,9 +46,11 @@ in
   services.displayManager.sddm = {
     enable = true;
     package = lib.mkDefault pkgs.kdePackages.sddm;
+    wayland.enable = true;
     theme = themeName;
     extraPackages = with pkgs.kdePackages; [
       qtsvg
+      qtmultimedia
       qtvirtualkeyboard
       qtwayland
       layer-shell-qt
