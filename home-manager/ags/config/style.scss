@@ -8,17 +8,19 @@ $panel-text: __PANEL_TEXT__;
 $panel-border: __PANEL_BORDER__;
 
 window.Bar {
+    width: 100%;
     background: transparent;
     color: $fg-color;
     font-weight: bold;
 
     .shell-panel {
-        background: $bar-bg;
+        background-color: $bar-bg;
         border-radius: 14px;
         border: 1px solid $bar-border;
         margin: 8px;
         padding: 8px;
         min-height: 50px;
+        min-width: 96vw;
         box-shadow: 0 10px 28px $bar-shadow;
     }
 
@@ -35,6 +37,9 @@ window.Bar {
 }
 
 window.PanelOverlay {
+    width: 60%;
+    min-height: 300px;
+    max-height: 500px;
     background: transparent;
     color: $panel-text;
 
