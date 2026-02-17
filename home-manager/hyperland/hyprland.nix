@@ -14,7 +14,6 @@
         "$mod, T, exec, kitty"
         "$mod, Q, killactive"
       ];
-      "exec-once" = [ "bash -c 'sleep 2; ${config.home.profileDirectory}/bin/ags-run &'" ];
       windowrulev2 = [
         "pin,class:^(com\\.github\\.Aylur\\.ags)$"
         "float,class:^(com\\.github\\.Aylur\\.ags)$"

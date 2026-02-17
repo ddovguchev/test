@@ -52,6 +52,22 @@ in
   };
   xdg.configFile."ags/node_modules/astal".source = astalGjs;
   home.packages = [ agsScripts ];
+  systemd.user.services.ags = {
+    Unit = {
+      Description = "Astal/AGS shell";
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "simple";
+      ExecStart = "${config.home.profileDirectory}/bin/ags-run";
+      Restart = "on-failure";
+      RestartSec = 2;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
   home.sessionVariables = {
     GI_TYPELIB_PATH = typelib;
     GSETTINGS_SCHEMA_DIR = schema;
