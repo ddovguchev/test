@@ -38,10 +38,10 @@ window.Bar {
             margin: 1px;
             background: rgba(255, 255, 255, 0.05);
             color: $fg-color;
+        }
 
-            box {
-                spacing: 6px;
-            }
+        image {
+            margin-right: 6px;
         }
     }
 
