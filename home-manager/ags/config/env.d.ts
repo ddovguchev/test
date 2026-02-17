@@ -24,6 +24,9 @@ declare module "astal/gtk3" {
         enum Align {
             CENTER = 3,
         }
+        namespace Image {
+            function new_from_file(path: string): any
+        }
     }
 
     export namespace Astal {

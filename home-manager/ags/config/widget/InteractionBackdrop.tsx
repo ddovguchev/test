@@ -21,6 +21,7 @@ export default function InteractionBackdrop(gdkmonitor: Gdk.Monitor) {
         application={App}>
         <eventbox
             className="backdrop-hitbox"
+            visibleWindow={false}
             onButtonPressEvent={() => {
                 closePanel()
                 return true

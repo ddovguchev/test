@@ -4,7 +4,20 @@ import { Variable } from "astal"
 import GLib from "gi://GLib"
 import { closePanel, panelMode, togglePanelMode } from "./launcherState"
 
+const appsIcon = `${SRC}/assets/apps-svgrepo-com.svg`
+const notificationsIcon = `${SRC}/assets/notification-box-svgrepo-com.svg`
 const time = Variable("").poll(1000, "date +'%I:%M %p'")
+
+function NavIcon({ path }: { path: string }) {
+    return <box
+        className="nav-icon"
+        setup={(self: any) => {
+            const image = Gtk.Image.new_from_file(path)
+            image.set_pixel_size(14)
+            self.add(image)
+        }}
+    />
+}
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
     const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
@@ -106,7 +119,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         onClicked={() => togglePanelMode("apps")}
                         halign={Gtk.Align.CENTER}
                     >
-                        <label label="◉ Applications" />
+                        <box>
+                            <NavIcon path={appsIcon} />
+                            <label label="Applications" />
+                        </box>
                     </button>
                     <button
                         onClicked={() => togglePanelMode("wallpaper")}
@@ -122,7 +138,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         onClicked={() => togglePanelMode("notifications")}
                         halign={Gtk.Align.CENTER}
                     >
-                        <label label="🔔 Notifications" />
+                        <box>
+                            <NavIcon path={notificationsIcon} />
+                            <label label="Notifications" />
+                        </box>
                     </button>
                 </box>
             </centerbox>
