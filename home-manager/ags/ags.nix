@@ -42,8 +42,7 @@ let
 in
 {
   xdg.configFile."ags/app.ts".source = "${cfg}/app.ts";
-  xdg.configFile."ags/style.scss".source = "${cfg}/style.scss";
-  xdg.configFile."ags/palette.scss".text = ''
+  xdg.configFile."ags/style.scss".text = ''
     $fg-color: ${palette.ags.barFg};
     $bg-color: ${palette.ags.barBg};
     $launcher-overlay: ${palette.ags.launcherOverlay};
@@ -51,7 +50,7 @@ in
     $launcher-panel: ${palette.ags.launcherPanel};
     $launcher-tile: ${palette.ags.launcherTile};
     $launcher-tile-hover: ${palette.ags.launcherTileHover};
-  '';
+  '' + builtins.readFile "${cfg}/style.scss";
   xdg.configFile."ags/tsconfig.json".source = "${cfg}/tsconfig.json";
   xdg.configFile."ags/env.d.ts".source = "${cfg}/env.d.ts";
   xdg.configFile."ags/.gitignore".source = "${cfg}/.gitignore";
