@@ -4,7 +4,6 @@ import { Variable } from "astal"
 import GLib from "gi://GLib"
 import GdkPixbuf from "gi://GdkPixbuf"
 import Gio from "gi://Gio"
-import type { AppInfo } from "gi://Gio"
 import { closePanel, panelMode, togglePanelMode } from "./launcherState"
 
 const appsIcon = `${SRC}/assets/apps-svgrepo-com.svg`
@@ -189,19 +188,22 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         placeholderText="Search app..."
                     />
                     <scrolledwindow className="apps-menu-scroll" vexpand>
-                        <box className="apps-menu-list" vertical>
-                            {apps.map((entry) => (
-                                <button
-                                    className="apps-menu-item"
-                                    onClicked={() => {
-                                        (entry.app as AppInfo).launch([], null)
+                        <box
+                            className="apps-menu-list"
+                            vertical
+                            setup={(self: any) => {
+                                apps.forEach((entry) => {
+                                    const button = (Gtk as any).Button.new_with_label(entry.name)
+                                    button.get_style_context()?.add_class("apps-menu-item")
+                                    button.connect("clicked", () => {
+                                        entry.app.launch([], null)
                                         closePanel()
-                                    }}
-                                >
-                                    <label label={entry.name} />
-                                </button>
-                            ))}
-                        </box>
+                                    })
+                                    self.add(button)
+                                })
+                                self.show_all()
+                            }}
+                        />
                     </scrolledwindow>
                 </box>
                 <box
