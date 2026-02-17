@@ -12,8 +12,16 @@
     modesetting.enable = lib.mkDefault true;
     # Proprietary kernel module is usually the most reliable on desktop NVIDIA.
     open = lib.mkDefault false;
-    # Use production branch for maximum compatibility.
-    package = lib.mkDefault config.boot.kernelPackages.nvidiaPackages.production;
+    # Pin to the long-lived/production driver branch.
+    package =
+      let nvidiaPackages = config.boot.kernelPackages.nvidiaPackages;
+      in
+      if nvidiaPackages ? production then
+        nvidiaPackages.production
+      else if nvidiaPackages ? stable then
+        nvidiaPackages.stable
+      else
+        nvidiaPackages.latest;
     powerManagement.enable = lib.mkDefault true;
     nvidiaSettings = lib.mkDefault true;
   };

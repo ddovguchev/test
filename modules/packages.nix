@@ -12,7 +12,7 @@ let
       [ pkgs.cursor ]
     else
       [ ];
-  vesktopWrapped = pkgs.hiPrio (pkgs.writeShellScriptBin "vesktop" ''
+  vesktopWrapped = lib.hiPrio (pkgs.writeShellScriptBin "vesktop" ''
     exec ${pkgs.vesktop}/bin/vesktop \
       --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer \
       --ozone-platform=wayland \
@@ -24,6 +24,7 @@ in
 {
   environment.systemPackages = (with pkgs; [
     git curl wget unzip nodejs_22 nodePackages.typescript
+    ripgrep pciutils
     nixpkgs-fmt
     kubectl k9s helm docker docker-compose
     ansible tmux neovim
