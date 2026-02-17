@@ -45,10 +45,10 @@ in
       };
       decoration = {
         rounding = 14;
-        active_opacity = 0.95;
-        inactive_opacity = 0.90;
+        active_opacity = 1.0;
+        inactive_opacity = 1.0;
         blur = {
-          enabled = true;
+          enabled = false;
           size = 10;
           passes = 3;
           ignore_opacity = true;
