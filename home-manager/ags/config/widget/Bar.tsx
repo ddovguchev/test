@@ -6,8 +6,8 @@ import GdkPixbuf from "gi://GdkPixbuf"
 import Gio from "gi://Gio"
 import { closePanel, panelMode, togglePanelMode } from "./launcherState"
 
-const appsIcon = `${SRC}/assets/apps-svgrepo-com.svg`
-const notificationsIcon = `${SRC}/assets/notification-box-svgrepo-com.svg`
+const appsIcon = `${SRC}/assets/icons/apps-svgrepo-com.svg`
+const notificationsIcon = `${SRC}/assets/icons/notification-box-svgrepo-com.svg`
 const time = Variable("").poll(1000, "date +'%I:%M %p'")
 
 function getApps() {
