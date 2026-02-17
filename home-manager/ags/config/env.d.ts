@@ -77,9 +77,7 @@ declare module "gi://Gio" {
         get_all(): AppInfo[]
     }
 
-    const Gio: {
-        AppInfo: AppInfoStatic
-    }
+    const Gio: any
     export default Gio
 }
 

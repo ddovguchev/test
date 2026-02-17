@@ -6,12 +6,12 @@ import { closeLauncher, launcherQuery, launcherVisible } from "./launcherState"
 
 const apps = Gio.AppInfo
     .get_all()
-    .filter((app) => app.should_show())
-    .map((app) => ({
+    .filter((app: any) => app.should_show())
+    .map((app: any) => ({
         app,
         name: app.get_display_name() ?? app.get_name() ?? "Application"
     }))
-    .sort((a, b) => a.name.localeCompare(b.name))
+    .sort((a: any, b: any) => a.name.localeCompare(b.name))
 
 function launchApp(app: AppInfo) {
     app.launch([], null)
@@ -44,7 +44,7 @@ export default function Launcher(gdkmonitor: Gdk.Monitor) {
                 />
                 <scrolledwindow className="launcher-scroll" vexpand>
                     <flowbox className="launcher-grid">
-                        {apps.map((entry) => (
+                        {apps.map((entry: any) => (
                             <button className="app-tile" onClicked={() => launchApp(entry.app)}>
                                 <label label={entry.name} />
                             </button>
