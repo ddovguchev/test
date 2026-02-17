@@ -56,6 +56,10 @@
         "ignorezero,^(Bar)$"
         "blur,bar"
         "ignorezero,bar"
+        "blur,^(bar)$"
+        "ignorezero,^(bar)$"
+        "blur,ags"
+        "ignorezero,ags"
       ];
     };
   };

@@ -7,7 +7,7 @@ import { closePanel, panelMode, togglePanelMode } from "./launcherState"
 const time = Variable("").poll(1000, "date +'%I:%M %p'")
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
-    const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
+    const { TOP } = Astal.WindowAnchor
 
     const getModeSize = (mode: string) => {
         const geometry = (gdkmonitor as any)?.get_geometry?.()
@@ -26,13 +26,43 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 
     return <window
         name="bar"
+        namespace="bar"
         className="Bar"
         gdkmonitor={gdkmonitor}
         exclusivity={Astal.Exclusivity.EXCLUSIVE}
-        anchor={TOP | LEFT | RIGHT}
-        keymode={Astal.Keymode.ON_DEMAND}
+        anchor={TOP}
+        keymode={Astal.Keymode.EXCLUSIVE}
         setup={(self: any) => {
+            const initial = getModeSize(panelMode())
+            let currentWidth = initial.width
+            let currentHeight = initial.height
+            let animationId = 0
+
+            self.set_size_request(initial.width, initial.height)
             panelMode.subscribe((mode: string) => {
+                const target = getModeSize(mode)
+                if (animationId !== 0) {
+                    GLib.source_remove(animationId)
+                }
+                animationId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 16, () => {
+                    currentWidth += (target.width - currentWidth) * 0.22
+                    currentHeight += (target.height - currentHeight) * 0.22
+
+                    const widthDone = Math.abs(target.width - currentWidth) < 1
+                    const heightDone = Math.abs(target.height - currentHeight) < 1
+
+                    if (widthDone && heightDone) {
+                        currentWidth = target.width
+                        currentHeight = target.height
+                        self.set_size_request(target.width, target.height)
+                        animationId = 0
+                        return false
+                    }
+
+                    self.set_size_request(Math.round(currentWidth), Math.round(currentHeight))
+                    return true
+                })
+
                 if (mode !== "none") {
                     self.grab_focus?.()
                 }
@@ -50,36 +80,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         <box
             className="shell-panel mode-none"
             setup={(self: any) => {
-                const initial = getModeSize(panelMode())
-                let currentWidth = initial.width
-                let currentHeight = initial.height
-                let animationId = 0
-
-                self.set_size_request(initial.width, initial.height)
                 panelMode.subscribe((mode: string) => {
                     self.className = `shell-panel mode-${mode}`
-                    const target = getModeSize(mode)
-                    if (animationId !== 0) {
-                        GLib.source_remove(animationId)
-                    }
-                    animationId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 16, () => {
-                        currentWidth += (target.width - currentWidth) * 0.22
-                        currentHeight += (target.height - currentHeight) * 0.22
-
-                        const widthDone = Math.abs(target.width - currentWidth) < 1
-                        const heightDone = Math.abs(target.height - currentHeight) < 1
-
-                        if (widthDone && heightDone) {
-                            currentWidth = target.width
-                            currentHeight = target.height
-                            self.set_size_request(target.width, target.height)
-                            animationId = 0
-                            return false
-                        }
-
-                        self.set_size_request(Math.round(currentWidth), Math.round(currentHeight))
-                        return true
-                    })
                 })
             }}
             halign={Gtk.Align.CENTER}
