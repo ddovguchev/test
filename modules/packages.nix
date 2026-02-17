@@ -11,6 +11,7 @@
     insomnia discord obs-studio steam
     wireguard-tools wireshark teams-for-linux telegram-desktop
     gns3-gui
+    hyprlock
     pulseaudio
     pavucontrol
     ffmpeg

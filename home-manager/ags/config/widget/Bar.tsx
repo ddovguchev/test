@@ -20,6 +20,7 @@ function getApps() {
         }))
         .filter((entry: any) => {
             const name = String(entry.name).toLowerCase()
+            const id = String(entry.app?.get_id?.() ?? "").toLowerCase()
             return ![
                 "htop",
                 "nixos manual",
@@ -27,6 +28,12 @@ function getApps() {
                 "xterm",
                 "ranger"
             ].includes(name)
+                && !name.includes("helm")
+                && !name.includes("nvim")
+                && !name.includes("nvidia")
+                && !id.includes("helm")
+                && !id.includes("nvim")
+                && !id.includes("nvidia")
         })
         .sort((a: any, b: any) => a.name.localeCompare(b.name))
 }
@@ -42,30 +49,36 @@ const iconThemeSearchPaths = [
 let iconThemeInitialized = false
 
 function listPictureFiles() {
-    const picturesDir = `${GLib.get_home_dir()}/Pictures`
-    const dir = Gio.File.new_for_path(picturesDir)
-    const files: string[] = []
+    const scanDirs = [
+        `${GLib.get_home_dir()}/Pictures`,
+        `${GLib.get_home_dir()}/.config/ags/assets/wallpapers`
+    ]
+    const files = new Set<string>()
 
-    try {
-        const enumerator = dir.enumerate_children(
-            "standard::name,standard::type",
-            Gio.FileQueryInfoFlags.NONE,
-            null
-        )
-        let info
-        while ((info = enumerator.next_file(null)) !== null) {
-            if (info.get_file_type() !== Gio.FileType.REGULAR) continue
-            const name = info.get_name()
-            const lower = name.toLowerCase()
-            if (supportedImageExt.some((ext) => lower.endsWith(ext))) {
-                files.push(`${picturesDir}/${name}`)
+    scanDirs.forEach((scanDir) => {
+        try {
+            const dir = Gio.File.new_for_path(scanDir)
+            const enumerator = dir.enumerate_children(
+                "standard::name,standard::type",
+                Gio.FileQueryInfoFlags.NONE,
+                null
+            )
+            let info
+            while ((info = enumerator.next_file(null)) !== null) {
+                if (info.get_file_type() !== Gio.FileType.REGULAR) continue
+                const name = info.get_name()
+                const lower = name.toLowerCase()
+                if (supportedImageExt.some((ext) => lower.endsWith(ext))) {
+                    files.add(`${scanDir}/${name}`)
+                }
             }
+            enumerator.close(null)
+        } catch {
+            // ignore inaccessible directory
         }
-        enumerator.close(null)
-    } catch {
-        // ignore inaccessible Pictures directory
-    }
-    return files.sort()
+    })
+
+    return Array.from(files).sort()
 }
 
 function applyWallpaper(path: string) {
@@ -78,7 +91,7 @@ function applyWallpaper(path: string) {
 
 function runSessionAction(action: "lock-screen" | "logout" | "sleep" | "reboot" | "poweroff") {
     const commands: Record<string, string> = {
-        "lock-screen": "hyprlock || loginctl lock-session",
+        "lock-screen": "sh -lc 'command -v hyprlock >/dev/null && hyprlock || command -v swaylock >/dev/null && swaylock -f || loginctl lock-session'",
         "logout": "hyprctl dispatch exit",
         "sleep": "systemctl suspend",
         "reboot": "systemctl reboot",
@@ -165,6 +178,7 @@ function createAppImage(app: any) {
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
     const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
+    let appsEntryRef: any = null
 
     const getModeSize = (mode: string) => {
         const geometry = (gdkmonitor as any)?.get_geometry?.()
@@ -242,16 +256,6 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 }}
             >
                 <box>
-                    <label
-                        className="clock-label"
-                        label={time()}
-                        setup={(self: any) => {
-                            self.visible = panelMode() === "none"
-                            panelMode.subscribe((mode: string) => {
-                                self.visible = mode === "none"
-                            })
-                        }}
-                    />
                     <button
                         className="apps-button"
                         onClicked={() => togglePanelMode("apps")}
@@ -263,6 +267,16 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                             self.set_label("")
                         }}
                         halign={Gtk.Align.CENTER}
+                    />
+                    <label
+                        className="clock-label"
+                        label={time()}
+                        setup={(self: any) => {
+                            self.visible = panelMode() === "none"
+                            panelMode.subscribe((mode: string) => {
+                                self.visible = mode === "none"
+                            })
+                        }}
                     />
                 </box>
                 <box />
@@ -308,7 +322,22 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     }}
                     vertical
                 >
-                    <entry className="apps-input" placeholderText="Search app..." />
+                    <entry
+                        className="apps-input"
+                        placeholderText="Search app..."
+                        setup={(self: any) => {
+                            appsEntryRef = self
+                            panelMode.subscribe((mode: string) => {
+                                if (mode === "apps") {
+                                    GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                                        appsEntryRef?.grab_focus?.()
+                                        appsEntryRef?.set_position?.(-1)
+                                        return false
+                                    })
+                                }
+                            })
+                        }}
+                    />
                     <box
                         className="apps-menu-scroll"
                         vexpand
@@ -328,11 +357,14 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                             const grid = (Gtk as any).Grid.new()
                             grid.set_row_spacing(8)
                             grid.set_column_spacing(8)
+                            grid.set_column_homogeneous?.(true)
                             const apps = getApps()
+                            const columns = 6
 
                             apps.forEach((entry: any, index: number) => {
                                 const button = (Gtk as any).Button.new()
                                 button.get_style_context?.()?.add_class("apps-tile")
+                                button.set_hexpand?.(true)
 
                                 const content = (Gtk as any).Box.new((Gtk as any).Orientation.VERTICAL, 4)
                                 content.set_halign?.((Gtk as any).Align.CENTER)
@@ -355,8 +387,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                     closePanel()
                                 })
 
-                                const col = index % 8
-                                const row = Math.floor(index / 8)
+                                const col = index % columns
+                                const row = Math.floor(index / columns)
                                 grid.attach(button, col, row, 1, 1)
                             })
 
@@ -481,6 +513,14 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                                     // skip broken file
                                 }
                             })
+
+                            if (files.length === 0) {
+                                const empty = (Gtk as any).Label.new("No wallpapers found")
+                                empty.get_style_context?.()?.add_class("wallpaper-empty")
+                                self.add(empty)
+                                self.show_all?.()
+                                return
+                            }
 
                             scroll.add(row)
                             self.add(scroll)
