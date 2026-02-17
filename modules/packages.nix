@@ -9,6 +9,7 @@
     firefox spotify
     blender qemu terraform terragrunt go gcc
     insomnia discord obs-studio steam
+    burpsuite metasploit
     wireguard-tools wireshark teams-for-linux telegram-desktop
     gns3-gui
     hyprlock

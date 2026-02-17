@@ -5,6 +5,7 @@
     profiles.hikari = {
       id = 0;
       isDefault = true;
+      path = "hikari";
       settings = {
         "browser.startup.homepage" = "https://duckduckgo.com";
         "browser.search.suggest.enabled" = true;
@@ -17,6 +18,15 @@
       DisableTelemetry = true;
       DisableFirefoxStudies = true;
       DisablePocket = true;
+      ExtensionSettings = {
+        "{8a65567e-d1bc-4494-a266-b3d300c106f8}" = {
+          installation_mode = "force_installed";
+          install_url = "https://addons.mozilla.org/firefox/downloads/file/4352827/arcfox-2.5.3.xpi";
+        };
+      };
     };
   };
+
+  home.file.".mozilla/firefox/hikari/chrome/userChrome.css".source =
+    ./firefox/arcfox-userChrome.css;
 }
