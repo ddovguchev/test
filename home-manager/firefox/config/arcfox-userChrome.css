@@ -121,11 +121,17 @@ toolbarbutton[open=true] {
  max-width: 300px !important;
  min-height: unset !important;
  max-height: unset !important;
+  border-inline-end: 0 !important;
  border-right: none !important;
  background-color: #3b3f52 !important;
+  box-shadow: none !important;
 }
 
 #sidebar-splitter {
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
  background-color: transparent !important;
  border: none !important;
  box-shadow: none !important;
