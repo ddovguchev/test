@@ -12,7 +12,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
     const getModeSize = (mode: string) => {
         const geometry = (gdkmonitor as any)?.get_geometry?.()
         const monitorWidth = geometry?.width ?? 2560
-        const fullWidth = Math.max(600, monitorWidth - 20)
+        const fullWidth = Math.max(600, monitorWidth)
         if (mode === "apps") {
             return { width: Math.round(monitorWidth * 0.6), height: 230 }
         }
@@ -22,7 +22,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         if (mode === "notifications") {
             return { width: Math.round(monitorWidth * 0.3), height: 180 }
         }
-        return { width: fullWidth, height: 42 }
+        return { width: fullWidth, height: 36 }
     }
 
     return <window
@@ -112,12 +112,6 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         halign={Gtk.Align.CENTER}
                     >
                         Notifications
-                    </button>
-                    <button
-                        onClicked={closePanel}
-                        halign={Gtk.Align.CENTER}
-                    >
-                        <label label="Close" />
                     </button>
                 </box>
             </centerbox>
