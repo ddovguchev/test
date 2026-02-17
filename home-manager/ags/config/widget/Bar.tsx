@@ -178,7 +178,7 @@ function createAppImage(app: any) {
 }
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
-    const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
+    const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
     let appsEntryRef: any = null
     let appsQuery = ""
     let rerenderApps: (() => void) | null = null
@@ -220,39 +220,6 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         return true
     }
 
-    const inputLayer = <window
-        name="panel-input-layer"
-        namespace="panel-input-layer"
-        className="PanelInputLayer"
-        gdkmonitor={gdkmonitor}
-        exclusivity={Astal.Exclusivity.IGNORE}
-        anchor={TOP | BOTTOM | LEFT | RIGHT}
-        keymode={Astal.Keymode.EXCLUSIVE}
-        onKeyPressEvent={(_: any, event: any) => {
-            const keyval = event?.get_keyval?.()[1] ?? event?.keyval
-            if (keyval === (Gdk.KEY_Escape ?? 65307)) {
-                closePanel()
-                return true
-            }
-            return handleAppsTyping(event, keyval)
-        }}
-        setup={(self: any) => {
-            self.visible = false
-            panelMode.subscribe((mode: string) => {
-                const active = mode === "apps" || mode === "wallpaper"
-                self.visible = active
-                if (!active) return
-                GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
-                    self.present?.()
-                    self.grab_focus?.()
-                    return false
-                })
-            })
-        }}
-        application={App}>
-        <eventbox className="panel-input-layer" hexpand vexpand />
-    </window>
-
     const getModeSize = (mode: string) => {
         const geometry = (gdkmonitor as any)?.get_geometry?.()
         const monitorWidth = geometry?.width ?? 2560
@@ -265,7 +232,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         return { width: fullWidth, height: 36 }
     }
 
-    const barWindow = <window
+    return <window
         name="bar"
         namespace="bar"
         className="Bar"
@@ -275,15 +242,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         keymode={Astal.Keymode.ON_DEMAND}
         onKeyPressEvent={(_: any, event: any) => {
             const keyval = event?.get_keyval?.()[1] ?? event?.keyval
-            if (keyval === 65307) {
+            if (keyval === (Gdk.KEY_Escape ?? 65307)) {
                 closePanel()
                 return true
             }
-            return false
-        }}
-        onFocusOutEvent={() => {
-            if (panelMode() !== "none") closePanel()
-            return false
+            return handleAppsTyping(event, keyval)
         }}
         application={App}>
         <box
@@ -651,7 +614,4 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             </box>
         </box>
     </window>
-
-    void inputLayer
-    return barWindow
 }
