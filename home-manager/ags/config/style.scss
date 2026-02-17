@@ -61,6 +61,24 @@ window.Bar {
         color: $fg-color;
     }
 
+    .apps-menu-scroll {
+        min-height: 300px;
+        margin-top: 10px;
+    }
+
+    .apps-menu-grid {
+        padding: 4px;
+    }
+
+    .apps-menu-item {
+        min-width: 140px;
+        min-height: 42px;
+        border-radius: 10px;
+        margin: 4px;
+        background: rgba(255, 255, 255, 0.06);
+        color: $fg-color;
+    }
+
     .wallpaper-title {
         margin-bottom: 8px;
         font-weight: 700;

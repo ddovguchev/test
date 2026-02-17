@@ -3,11 +3,21 @@ import type { Gdk } from "astal/gtk3"
 import { Variable } from "astal"
 import GLib from "gi://GLib"
 import GdkPixbuf from "gi://GdkPixbuf"
+import Gio from "gi://Gio"
+import type { AppInfo } from "gi://Gio"
 import { closePanel, panelMode, togglePanelMode } from "./launcherState"
 
 const appsIcon = `${SRC}/assets/apps-svgrepo-com.svg`
 const notificationsIcon = `${SRC}/assets/notification-box-svgrepo-com.svg`
 const time = Variable("").poll(1000, "date +'%I:%M %p'")
+const apps = Gio.AppInfo
+    .get_all()
+    .filter((app) => app.should_show())
+    .map((app) => ({
+        app,
+        name: app.get_display_name() ?? app.get_name() ?? "Application"
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name))
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
     const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
@@ -18,7 +28,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         const horizontalInset = 24
         const fullWidth = Math.max(600, monitorWidth - horizontalInset)
         if (mode === "apps") {
-            return { width: Math.round(monitorWidth * 0.6), height: 230 }
+            return { width: Math.round(monitorWidth * 0.6), height: 400 }
         }
         if (mode === "wallpaper") {
             return { width: Math.round(monitorWidth * 0.4), height: 700 }
@@ -178,6 +188,21 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         className="apps-input"
                         placeholderText="Search app..."
                     />
+                    <scrolledwindow className="apps-menu-scroll" vexpand>
+                        <flowbox className="apps-menu-grid">
+                            {apps.map((entry) => (
+                                <button
+                                    className="apps-menu-item"
+                                    onClicked={() => {
+                                        (entry.app as AppInfo).launch([], null)
+                                        closePanel()
+                                    }}
+                                >
+                                    <label label={entry.name} />
+                                </button>
+                            ))}
+                        </flowbox>
+                    </scrolledwindow>
                 </box>
                 <box
                     setup={(self: any) => {
