@@ -12,7 +12,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
     const getModeSize = (mode: string) => {
         const geometry = (gdkmonitor as any)?.get_geometry?.()
         const monitorWidth = geometry?.width ?? 2560
-        const fullWidth = Math.max(600, monitorWidth)
+        const horizontalInset = 24
+        const fullWidth = Math.max(600, monitorWidth - horizontalInset)
         if (mode === "apps") {
             return { width: Math.round(monitorWidth * 0.6), height: 230 }
         }
@@ -80,7 +81,15 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             halign={Gtk.Align.CENTER}
             vertical
         >
-            <centerbox className="shell-top-row">
+            <centerbox
+                className="shell-top-row"
+                setup={(self: any) => {
+                    self.visible = panelMode() === "none"
+                    panelMode.subscribe((mode: string) => {
+                        self.visible = mode === "none"
+                    })
+                }}
+            >
                 <box>
                     <label
                         className="clock-label"
@@ -97,7 +106,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         onClicked={() => togglePanelMode("apps")}
                         halign={Gtk.Align.CENTER}
                     >
-                        <label label="Applications" />
+                        <label label="◉ Applications" />
                     </button>
                     <button
                         onClicked={() => togglePanelMode("wallpaper")}
@@ -113,7 +122,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         onClicked={() => togglePanelMode("notifications")}
                         halign={Gtk.Align.CENTER}
                     >
-                        <label label="Notifications" />
+                        <label label="🔔 Notifications" />
                     </button>
                 </box>
             </centerbox>
@@ -136,7 +145,6 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     }}
                     vertical
                 >
-                    <label label="Applications panel" />
                     <entry
                         className="apps-input"
                         placeholderText="Search app..."
