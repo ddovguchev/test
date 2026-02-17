@@ -1,13 +1,14 @@
 { config, pkgs, lib, ... }:
 {
+  boot.kernelParams = [ "nvidia_drm.modeset=1" ];
   services.xserver.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     modesetting.enable = lib.mkDefault true;
     # Proprietary kernel module is usually the most reliable on desktop NVIDIA.
     open = lib.mkDefault false;
-    # Prefer newest packaged NVIDIA branch.
-    package = lib.mkDefault config.boot.kernelPackages.nvidiaPackages.latest;
+    # Use stable branch to avoid breakage after kernel updates.
+    package = lib.mkDefault config.boot.kernelPackages.nvidiaPackages.stable;
     powerManagement.enable = lib.mkDefault true;
     nvidiaSettings = lib.mkDefault true;
   };
