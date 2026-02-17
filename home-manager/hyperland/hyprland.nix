@@ -35,7 +35,10 @@ in
     enable = true;
     settings = {
       "$mod" = "SUPER";
-      monitor = "DP-4,2560x1080@200,0x0,1";
+      monitor = [
+        ",preferred,auto,1"
+        "DP-4,2560x1080@200,0x0,1"
+      ];
       general = {
         gaps_in = 6;
         gaps_out = 10;
