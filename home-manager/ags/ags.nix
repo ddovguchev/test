@@ -54,7 +54,7 @@ let
     cp ${cfg}/tsconfig.json $out/tsconfig.json
     cp ${cfg}/env.d.ts $out/env.d.ts
     cp ${cfg}/.gitignore $out/.gitignore
-    cp ${cfg}/assets/* $out/assets/
+    cp -r ${cfg}/assets/. $out/assets/
     cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
     cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
     cp ${cfg}/widget/launcherState.ts $out/widget/launcherState.ts
