@@ -26,6 +26,11 @@ window.Bar {
     .shell-top-row {
         min-height: 34px;
 
+        .clock-label {
+            margin: 0 10px 0 6px;
+            font-weight: 700;
+        }
+
         button {
             border-radius: 8px;
             margin: 2px;
@@ -37,7 +42,6 @@ window.Bar {
 
 window.PanelOverlay {
     min-height: 300px;
-    max-height: 500px;
     background: transparent;
     color: $panel-text;
 
@@ -67,6 +71,5 @@ window.PanelOverlay {
     &.mode-notifications .panel-root {
         min-width: 768px;
         min-height: 160px;
-        max-height: 300px;
     }
 }
