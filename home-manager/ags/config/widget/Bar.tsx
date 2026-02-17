@@ -4,9 +4,6 @@ import { Variable } from "astal"
 import GLib from "gi://GLib"
 import { closePanel, panelMode, togglePanelMode } from "./launcherState"
 
-const appsIcon = `${SRC}/assets/apps-svgrepo-com.svg`
-const notificationIcon = `${SRC}/assets/notification-box-svgrepo-com.svg`
-
 const time = Variable("").poll(1000, "date +'%I:%M %p'")
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
@@ -96,18 +93,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         }}
                     />
                     <button
+                        className="apps-button"
                         onClicked={() => togglePanelMode("apps")}
                         halign={Gtk.Align.CENTER}
                     >
-                        <box>
-                            <image
-                                className="toolbar-icon"
-                                setup={(self: any) => {
-                                    self.set_from_file(appsIcon)
-                                }}
-                            />
-                            <label label="Applications" />
-                        </box>
+                        <label label="Applications" />
                     </button>
                     <button
                         onClicked={() => togglePanelMode("wallpaper")}
@@ -119,18 +109,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 <box />
                 <box>
                     <button
+                        className="notifications-button"
                         onClicked={() => togglePanelMode("notifications")}
                         halign={Gtk.Align.CENTER}
                     >
-                        <box>
-                            <image
-                                className="toolbar-icon"
-                                setup={(self: any) => {
-                                    self.set_from_file(notificationIcon)
-                                }}
-                            />
-                            <label label="Notifications" />
-                        </box>
+                        <label label="Notifications" />
                     </button>
                 </box>
             </centerbox>

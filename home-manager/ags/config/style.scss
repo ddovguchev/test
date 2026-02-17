@@ -40,10 +40,9 @@ window.Bar {
             color: $fg-color;
         }
 
-        image {
-            margin-right: 6px;
-            min-width: 14px;
-            min-height: 14px;
+        .apps-button,
+        .notifications-button {
+            font-weight: 600;
         }
     }
 
