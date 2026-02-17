@@ -26,7 +26,7 @@
 
   # Common tools to work with eBPF programs/maps.
   environment.systemPackages = with pkgs; [
-    bpftool
+    bpftools
     bpftrace
   ];
 }
