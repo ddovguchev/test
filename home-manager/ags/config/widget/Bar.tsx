@@ -185,7 +185,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
     const getModeSize = (mode: string) => {
         const geometry = (gdkmonitor as any)?.get_geometry?.()
         const monitorWidth = geometry?.width ?? 2560
-        const horizontalInset = 24
+        const horizontalInset = 20
         const fullWidth = Math.max(600, monitorWidth - horizontalInset)
         if (mode === "apps") return { width: Math.round(monitorWidth * 0.6), height: 400 }
         if (mode === "wallpaper") return { width: Math.max(1320, Math.round(monitorWidth * 0.5)), height: 280 }

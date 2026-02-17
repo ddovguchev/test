@@ -30,8 +30,8 @@ in
       };
       decoration = {
         rounding = 14;
-        active_opacity = 1.0;
-        inactive_opacity = 0.96;
+        active_opacity = 0.95;
+        inactive_opacity = 0.90;
         blur = {
           enabled = true;
           size = 10;
@@ -74,7 +74,7 @@ in
         "$mod SHIFT, 9, movetoworkspace, 9"
       ];
       windowrulev2 = [
-        "opacity 0.97 0.95,class:^(.*)$"
+        "opacity 0.92 0.88,class:^(.*)$"
         "pin,class:^(com\\.github\\.Aylur\\.ags)$"
         "float,class:^(com\\.github\\.Aylur\\.ags)$"
         "noborder,class:^(com\\.github\\.Aylur\\.ags)$"
