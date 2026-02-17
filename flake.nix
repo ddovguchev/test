@@ -35,6 +35,17 @@
           programs.silentSDDM = {
             enable = true;
             theme = "rei";
+            settings = {
+              General = {
+                enable-animations = false;
+              };
+              LoginScreen = {
+                background = "rei.png";
+              };
+              LockScreen = {
+                background = "rei.png";
+              };
+            };
           };
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
