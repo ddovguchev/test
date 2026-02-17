@@ -7,6 +7,11 @@ let
       [ pkgs.kdePackages.xwaylandvideobridge ]
     else
       [ ];
+  cursorPkg =
+    if lib.hasAttrByPath [ "cursor" ] pkgs then
+      [ pkgs.cursor ]
+    else
+      [ ];
 in
 {
   environment.systemPackages = (with pkgs; [
@@ -29,7 +34,7 @@ in
     ffmpeg
     swww
     astal.gjs astal.astal3 astal.io astal.wireplumber astal.notifd
-  ]) ++ xwaylandVideoBridgePkg;
+  ]) ++ xwaylandVideoBridgePkg ++ cursorPkg;
   virtualisation.docker.enable = lib.mkDefault true;
   virtualisation.docker.rootless = {
     enable = lib.mkDefault false;

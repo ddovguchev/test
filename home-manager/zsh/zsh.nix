@@ -13,7 +13,7 @@
     shellAliases = {
       ll = "ls -la";
       rebuild = "~/nixos-flake/rebuild.sh";
-      discord = "vesktop";
+      discord = "vesktop --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer --ozone-platform=wayland";
     };
     initContent = ''
       setopt PROMPT_SUBST
