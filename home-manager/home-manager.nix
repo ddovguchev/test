@@ -3,6 +3,7 @@
   fonts.fontconfig.enable = false;
   imports = [
     ./ags/ags.nix
+    ./firefox.nix
     ./wallpapers.nix
     ./kitty/kitty.nix
     ./hyperland/hyprland.nix
