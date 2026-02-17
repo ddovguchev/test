@@ -3,11 +3,20 @@ import type { Gdk } from "astal/gtk3"
 import { Variable } from "astal"
 import GLib from "gi://GLib"
 import GdkPixbuf from "gi://GdkPixbuf"
+import Gio from "gi://Gio"
 import { closePanel, panelMode, togglePanelMode } from "./launcherState"
 
 const appsIcon = `${SRC}/assets/apps-svgrepo-com.svg`
 const notificationsIcon = `${SRC}/assets/notification-box-svgrepo-com.svg`
 const time = Variable("").poll(1000, "date +'%I:%M %p'")
+const apps = Gio.AppInfo
+    .get_all()
+    .filter((app: any) => app.should_show())
+    .map((app: any) => ({
+        app,
+        name: app.get_display_name() ?? app.get_name() ?? "Application"
+    }))
+    .sort((a: any, b: any) => a.name.localeCompare(b.name))
 export default function Bar(gdkmonitor: Gdk.Monitor) {
     const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
 
@@ -177,6 +186,23 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         className="apps-input"
                         placeholderText="Search app..."
                     />
+                    <box
+                        className="apps-menu-list"
+                        vertical
+                        setup={(self: any) => {
+                            self.get_children?.().forEach((child: any) => self.remove(child))
+                            apps.forEach((entry: any) => {
+                                const button = (Gtk as any).Button.new_with_label(entry.name)
+                                button.get_style_context()?.add_class("apps-menu-item")
+                                button.connect("clicked", () => {
+                                    entry.app.launch([], null)
+                                    closePanel()
+                                })
+                                self.add(button)
+                            })
+                            self.show_all()
+                        }}
+                    />
                 </box>
                 <box
                     setup={(self: any) => {
@@ -186,9 +212,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         })
                     }}
                     vertical
-                >
-                    <label label="Notifications panel" />
-                </box>
+                />
                 <box
                     setup={(self: any) => {
                         self.visible = panelMode() === "wallpaper"
@@ -197,12 +221,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         })
                     }}
                     vertical
-                >
-                    <label className="wallpaper-title" label="Select wallpaper" />
-                    <box className="wallpaper-block" vertical>
-                        <label label="Wallpaper grid placeholder" />
-                    </box>
-                </box>
+                />
             </box>
         </box>
     </window>
