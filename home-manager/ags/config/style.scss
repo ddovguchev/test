@@ -8,7 +8,6 @@ $panel-text: __PANEL_TEXT__;
 $panel-border: __PANEL_BORDER__;
 
 window.Bar {
-    width: 100%;
     background: transparent;
     color: $fg-color;
     font-weight: bold;
@@ -37,7 +36,6 @@ window.Bar {
 }
 
 window.PanelOverlay {
-    width: 60%;
     min-height: 300px;
     max-height: 500px;
     background: transparent;
