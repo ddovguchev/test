@@ -46,6 +46,7 @@ declare module "astal/gtk3" {
 
     export interface AppStartParams {
         css?: string
+        requestHandler?(request: string): string
         main(): void
     }
 
@@ -106,6 +107,11 @@ declare module "*.blp" {
 }
 
 declare module "*.css" {
+    const content: string
+    export default content
+}
+
+declare module "*.svg" {
     const content: string
     export default content
 }

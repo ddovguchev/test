@@ -34,11 +34,12 @@ let
     ]
     (builtins.readFile "${cfg}/style.scss");
   agsConfig = pkgs.runCommand "ags-config" {} ''
-    mkdir -p $out/widget $out/node_modules
+    mkdir -p $out/widget $out/node_modules $out/assets
     cp ${cfg}/app.ts $out/app.ts
     cp ${cfg}/tsconfig.json $out/tsconfig.json
     cp ${cfg}/env.d.ts $out/env.d.ts
     cp ${cfg}/.gitignore $out/.gitignore
+    cp ${cfg}/assets/* $out/assets/
     cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
     cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
     cp ${cfg}/widget/InteractionBackdrop.tsx $out/widget/InteractionBackdrop.tsx

@@ -19,11 +19,13 @@ export default function InteractionBackdrop(gdkmonitor: Gdk.Monitor) {
             })
         }}
         application={App}>
-        <eventbox onButtonPressEvent={() => {
-            closePanel()
-            return true
-        }}>
-            <box hexpand vexpand />
+        <eventbox
+            className="backdrop-hitbox"
+            onButtonPressEvent={() => {
+                closePanel()
+                return true
+            }}>
+            <box className="backdrop-fill" hexpand vexpand />
         </eventbox>
     </window>
 }

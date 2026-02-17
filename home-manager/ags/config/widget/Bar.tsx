@@ -3,6 +3,8 @@ import type { Gdk } from "astal/gtk3"
 import { Variable } from "astal"
 import GLib from "gi://GLib"
 import { closePanel, panelMode, togglePanelMode } from "./launcherState"
+import appsIcon from "../assets/apps-svgrepo-com.svg"
+import notificationIcon from "../assets/notification-box-svgrepo-com.svg"
 
 const time = Variable("").poll(1000, "date +'%I:%M %p'")
 
@@ -96,7 +98,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         onClicked={() => togglePanelMode("apps")}
                         halign={Gtk.Align.CENTER}
                     >
-                        Applications
+                        <box>
+                            <image file={appsIcon} pixelSize={14} />
+                            <label label="Applications" />
+                        </box>
                     </button>
                     <button
                         onClicked={() => togglePanelMode("wallpaper")}
@@ -111,7 +116,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         onClicked={() => togglePanelMode("notifications")}
                         halign={Gtk.Align.CENTER}
                     >
-                        Notifications
+                        <box>
+                            <image file={notificationIcon} pixelSize={14} />
+                            <label label="Notifications" />
+                        </box>
                     </button>
                 </box>
             </centerbox>
