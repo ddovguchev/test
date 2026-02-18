@@ -67,13 +67,11 @@
           home-manager.extraSpecialArgs = {
             inherit self;
             inputs = { inherit stylix sops-nix nixvim ags zen-browser winapps; };
-          };
-          home-manager.users.hikari = { pkgs, config, inputs, ... }: let
             settings = import ./home-manager/settings.nix { inherit pkgs; };
-          in {
+          };
+          home-manager.users.hikari = { pkgs, config, inputs, settings, ... }: {
             home.stateVersion = "25.11";
             programs.home-manager.enable = true;
-            _module.args.settings = settings;
             imports = [
               ./home-manager/home-manager.nix
               inputs.zen-browser.homeModules.twilight
