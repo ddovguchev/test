@@ -24,7 +24,6 @@
       };
       exec-once = [
         "swww-daemon"
-        "ags run &"
       ];
       bind = [
         "$mod, F, exec, firefox"
