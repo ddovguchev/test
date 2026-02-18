@@ -1,4 +1,3 @@
-# AGS bar (ags-config / asztal) - pre-bundled config
 { config, pkgs, inputs, ... }:
 let
   system = pkgs.stdenv.hostPlatform.system;
