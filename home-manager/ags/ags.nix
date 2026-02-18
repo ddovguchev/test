@@ -84,35 +84,8 @@ in
     enable = true;
     configDir = agsConfig;
     extraPackages = with pkgs.astal; [ wireplumber notifd ];
-    systemd.enable = false;
+    systemd.enable = true;
   };
 
   home.packages = [ agsStartScript ];
-
-  # Systemd: /bin/sh -c чтобы избежать 203/EXEC (shebang в nix store)
-  systemd.user.services.ags = {
-    Unit = {
-      Description = "AGS - Astal/GTK shell bar";
-      After = [ "graphical-session.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      Type = "simple";
-      ExecStart = [
-        "/bin/sh"
-        "-c"
-        ''
-          for _ in $(seq 1 25); do
-            [ -f "$HOME/.config/ags/app.ts" ] && break
-            sleep 0.4
-          done
-          cd "$HOME/.config/ags" && exec ${agsBin}/bin/ags run --gtk 3
-        ''
-      ];
-      Restart = "on-failure";
-      RestartSec = 5;
-      Environment = [ "PATH=%h/.nix-profile/bin:/run/current-system/sw/bin" ];
-    };
-    Install.WantedBy = [ "graphical-session.target" ];
-  };
 }

@@ -30,11 +30,7 @@
         kb_layout = "us,ru";
         kb_options = "grp:alt_shift_toggle";
       };
-      exec-once = lib.mkAfter (
-        [ "swww-daemon" ]
-        ++ lib.optional config.programs.ags.enable
-          "ags-start &"
-      );
+      exec-once = [ "swww-daemon" ];
       bind = [
         "$mod, F, exec, firefox"
         "$mod, T, exec, kitty"
