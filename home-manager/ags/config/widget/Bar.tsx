@@ -216,7 +216,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         application={app}>
         <box
             class="shell-panel mode-none"
-            setup={(self: any) => {
+            $={(self: any) => {
                 const initial = getModeSize(panelMode())
                 let currentWidth = initial.width
                 let currentHeight = initial.height
@@ -253,7 +253,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         >
             <centerbox
                 class="shell-top-row"
-                setup={(self: any) => {
+                $={(self: any) => {
                     self.visible = panelMode() === "none"
                     panelMode.subscribe((mode: string) => {
                         self.visible = mode === "none"
@@ -264,7 +264,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <button
                         class="apps-button"
                         onClicked={() => togglePanelMode("apps")}
-                        setup={(self: any) => {
+                        $={(self: any) => {
                             const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(appsIcon, 14, 14, true)
                             const icon = (Gtk as any).Image.new_from_pixbuf(pixbuf)
                             self.set_image(icon)
@@ -276,7 +276,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <label
                         class="clock-label"
                         label={time()}
-                        setup={(self: any) => {
+                        $={(self: any) => {
                             self.visible = panelMode() === "none"
                             panelMode.subscribe((mode: string) => {
                                 self.visible = mode === "none"
@@ -289,7 +289,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <button
                         class="notifications-button"
                         onClicked={() => togglePanelMode("notifications")}
-                        setup={(self: any) => {
+                        $={(self: any) => {
                             const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(notificationsIcon, 14, 14, true)
                             const icon = (Gtk as any).Image.new_from_pixbuf(pixbuf)
                             self.set_image(icon)
@@ -310,7 +310,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 
             <box
                 class="shell-content"
-                setup={(self: any) => {
+                $={(self: any) => {
                     self.visible = panelMode() !== "none"
                     panelMode.subscribe((mode: string) => {
                         self.visible = mode !== "none"
@@ -319,7 +319,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 vertical
             >
                 <box
-                    setup={(self: any) => {
+                    $={(self: any) => {
                         self.visible = panelMode() === "apps"
                         panelMode.subscribe((mode: string) => {
                             self.visible = mode === "apps"
@@ -330,7 +330,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <entry
                         class="apps-input"
                         placeholderText="Search app..."
-                        setup={(self: any) => {
+                        $={(self: any) => {
                             appsEntryRef = self
                             panelMode.subscribe((mode: string) => {
                                 if (mode === "apps") {
@@ -346,7 +346,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <box
                         class="apps-menu-scroll"
                         vexpand
-                        setup={(self: any) => {
+                        $={(self: any) => {
                             self.get_children?.().forEach((child: any) => self.remove(child))
 
                             const scroll = (Gtk as any).ScrolledWindow.new(null, null)
@@ -406,7 +406,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 </box>
 
                 <box
-                    setup={(self: any) => {
+                    $={(self: any) => {
                         self.visible = panelMode() === "notifications"
                         panelMode.subscribe((mode: string) => {
                             self.visible = mode === "notifications"
@@ -416,7 +416,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 />
 
                 <box
-                    setup={(self: any) => {
+                    $={(self: any) => {
                         self.visible = panelMode() === "wallpaper"
                         panelMode.subscribe((mode: string) => {
                             self.visible = mode === "wallpaper"
@@ -427,7 +427,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <label class="wallpaper-title" label="Select wallpapers" />
                     <box
                         class="wallpaper-block"
-                        setup={(self: any) => {
+                        $={(self: any) => {
                             self.get_children?.().forEach((child: any) => self.remove(child))
                             const files = listPictureFiles()
                             const scroll = (Gtk as any).ScrolledWindow.new(null, null)
@@ -534,7 +534,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     />
                 </box>
                 <box
-                    setup={(self: any) => {
+                    $={(self: any) => {
                         self.visible = panelMode() === "session"
                         panelMode.subscribe((mode: string) => {
                             self.visible = mode === "session"

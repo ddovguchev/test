@@ -27,7 +27,7 @@ export default function Launcher(gdkmonitor: Gdk.Monitor) {
         gdkmonitor={gdkmonitor}
         anchor={TOP | BOTTOM | LEFT | RIGHT}
         exclusivity={Astal.Exclusivity.IGNORE}
-        setup={(self: any) => {
+        $={(self: any) => {
             self.visible = false
             launcherVisible.subscribe(() => {
                 self.visible = launcherVisible()

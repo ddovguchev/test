@@ -11,7 +11,7 @@ export default function PanelOverlay(gdkmonitor: Gdk.Monitor) {
         gdkmonitor={gdkmonitor}
         anchor={TOP | LEFT | RIGHT}
         exclusivity={Astal.Exclusivity.IGNORE}
-        setup={(self: any) => {
+        $={(self: any) => {
             self.visible = false
             panelMode.subscribe((mode: string) => {
                 const ctx = self.get_style_context?.()
