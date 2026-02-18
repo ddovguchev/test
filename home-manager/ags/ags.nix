@@ -98,7 +98,7 @@ in
     };
     Service = {
       Type = "simple";
-      ExecStart = "${agsStartScript}";
+      ExecStart = "${agsStartScript}/bin/ags-start";
       Restart = "on-failure";
       RestartSec = 5;
       Environment = "PATH=%h/.nix-profile/bin:/run/current-system/sw/bin";
