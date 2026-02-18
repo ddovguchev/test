@@ -12,11 +12,18 @@
         gaps_out = 16;
         border_size = 2;
       };
+      # Настройки для уменьшения ghosting при скролле (NVIDIA + high refresh)
+      misc = {
+        vfr = true;
+        vrr = 0;
+        max_fps = 200;
+      };
       decoration = {
         blur = {
           enabled = true;
           size = 10;
           passes = 3;
+          new_optimizations = true;
         };
       };
       input = {
