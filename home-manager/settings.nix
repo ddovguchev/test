@@ -1,4 +1,3 @@
-# Integrated from dotfiles - no references to dotfiles folder
 { pkgs, ... }:
 rec {
   username = "hikari";
