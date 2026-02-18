@@ -129,7 +129,7 @@ let
       exit 0
     fi
 
-    cd "''${AGS_CONFIG:-$HOME/.config/ags}" && exec "${bin}" run "$@"
+    cd "''${AGS_CONFIG:-$HOME/.config/ags}" && exec "${bin}" run --gtk 3 "$@"
   '';
   agsScripts = pkgs.runCommand "ags-scripts" { } ''
     mkdir -p $out/bin
