@@ -52,14 +52,12 @@ fi
 
 if command -v nix &> /dev/null; then
   echo -e "${BLUE}📝 Formatting Nix files...${NC}"
-  if nix run .#formatter -- . 2>/dev/null; then
+  if command -v nixpkgs-fmt &> /dev/null; then
+    nixpkgs-fmt . 2>/dev/null || true
+  elif nix run .#formatter -- . 2>/dev/null; then
     :
   elif nix fmt . 2>/dev/null; then
     :
-  elif command -v nixpkgs-fmt &> /dev/null; then
-    nixpkgs-fmt . 2>/dev/null || true
-  else
-    echo -e "${YELLOW}⚠️  No formatter available, skipping${NC}"
   fi
   echo ""
 fi
@@ -72,8 +70,6 @@ if sudo nixos-rebuild $ACTION --flake .#$HOST; then
   echo -e "${GREEN}✅ NixOS configuration successfully applied!${NC}"
   echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
   echo ""
-  echo -e "${YELLOW}💡 Tip: Press F12 to switch between English and Russian keyboards${NC}"
-  
   if [[ "$ACTION" == "boot" ]]; then
     echo -e "${YELLOW}💡 Configuration will be available on next boot${NC}"
   fi

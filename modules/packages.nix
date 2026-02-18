@@ -16,6 +16,7 @@
     pavucontrol
     ffmpeg
     swww
+    nixpkgs-fmt
   ];
   virtualisation.docker.enable = lib.mkDefault true;
   virtualisation.docker.rootless = {
