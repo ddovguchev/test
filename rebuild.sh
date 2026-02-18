@@ -2,8 +2,6 @@
 
 set -euo pipefail
 
-git pull
-
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -15,55 +13,6 @@ NC='\033[0m' # No Color
 ACTION="switch"
 HOST="nixos"
 DRY_RUN=false
-
-# Parse arguments
-while [[ $# -gt 0 ]]; do
-  case $1 in
-    -a|--action)
-      ACTION="$2"
-      shift 2
-      ;;
-    -h|--host)
-      HOST="$2"
-      shift 2
-      ;;
-    -d|--dry-run)
-      DRY_RUN=true
-      shift
-      ;;
-    -t|--test)
-      ACTION="test"
-      shift
-      ;;
-    -b|--boot)
-      ACTION="boot"
-      shift
-      ;;
-    --help)
-      echo "Usage: $0 [OPTIONS]"
-      echo ""
-      echo "Options:"
-      echo "  -a, --action ACTION    Rebuild action: switch (default), boot, test, or build"
-      echo "  -h, --host HOST        Host configuration (default: nixos)"
-      echo "  -d, --dry-run          Show what would be done without executing"
-      echo "  -t, --test             Alias for --action test"
-      echo "  -b, --boot             Alias for --action boot"
-      echo "  --help                 Show this help message"
-      echo ""
-      echo "Examples:"
-      echo "  $0                     # Rebuild and switch (default)"
-      echo "  $0 --test              # Build and test without switching"
-      echo "  $0 --boot              # Build and add to boot menu"
-      echo "  $0 --dry-run           # Show what would be done"
-      exit 0
-      ;;
-    *)
-      echo -e "${RED}Error: Unknown option: $1${NC}"
-      echo "Use --help for usage information"
-      exit 1
-      ;;
-  esac
-done
 
 cd "$(dirname "$0")"
 
@@ -101,7 +50,6 @@ if [[ $DRY_RUN == true ]]; then
   exit 0
 fi
 
-# Format nix files before rebuild
 if command -v nix &> /dev/null; then
   echo -e "${BLUE}📝 Formatting Nix files...${NC}"
   nix fmt . 2>/dev/null || echo -e "${YELLOW}⚠️  nix fmt not available, skipping${NC}"
