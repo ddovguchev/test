@@ -84,8 +84,25 @@ in
     enable = true;
     configDir = agsConfig;
     extraPackages = with pkgs.astal; [ wireplumber notifd ];
-    systemd.enable = true;
+    systemd.enable = false;  # баг модуля: "expected ']' but got '"'" в unit
   };
 
   home.packages = [ agsStartScript ];
+
+  # Свой systemd service вместо сломанного в модуле AGS
+  systemd.user.services.ags = {
+    Unit = {
+      Description = "AGS bar";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session-pre.target" ];
+    };
+    Service = {
+      ExecStart = "${agsBin}/bin/ags run --gtk 3";
+      Restart = "on-failure";
+      KillMode = "mixed";
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
 }
