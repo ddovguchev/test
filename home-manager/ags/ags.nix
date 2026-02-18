@@ -99,7 +99,8 @@ in
     Service = {
       Type = "simple";
       ExecStart = [
-        "/bin/sh" "-c"
+        "/bin/sh"
+        "-c"
         ''
           for _ in $(seq 1 25); do
             [ -f "$HOME/.config/ags/app.ts" ] && break
