@@ -55,15 +55,23 @@ in
     enable = true;
     configDir = agsConfig;
     extraPackages = with pkgs.astal; [ wireplumber notifd ];
-    systemd.enable = true;
+    systemd.enable = false;  # We define our own service with --gtk 3
   };
 
-  # Override AGS service: --gtk 3, run from config dir, wait for Hyprland
+  # Custom AGS service: --gtk 3, run from config dir, wait for Hyprland
   systemd.user.services.ags = {
-    Unit.After = lib.mkForce [ "graphical-session.target" "hyprland-session.target" ];
-    Service = {
-      ExecStart = lib.mkForce "${config.programs.ags.finalPackage}/bin/ags run --gtk 3";
-      WorkingDirectory = lib.mkForce "%h/.config/ags";
+    Unit = {
+      Description = "AGS - Astal/GTK shell bar";
+      After = [ "graphical-session.target" "hyprland-session.target" ];
+      PartOf = [ "graphical-session.target" ];
     };
+    Service = {
+      Type = "simple";
+      ExecStart = "${config.programs.ags.finalPackage}/bin/ags run --gtk 3";
+      WorkingDirectory = "%h/.config/ags";
+      Restart = "on-failure";
+      KillMode = "mixed";
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
   };
 }
