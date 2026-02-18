@@ -90,7 +90,8 @@ in
 
   home.packages = [ agsStartScript ];
 
-  # Свой systemd service вместо сломанного в модуле AGS
+  # Свой systemd service (модуль: systemd.enable = false из-за бага)
+  # Запуск как в hm-module: ags run без -d — конфиг из ~/.config/ags (configDir)
   systemd.user.services.ags = {
     Unit = {
       Description = "AGS bar";
@@ -98,8 +99,7 @@ in
       After = [ "graphical-session-pre.target" ];
     };
     Service = {
-      WorkingDirectory = "${agsConfig}";
-      ExecStart = "${pkgs.runtimeShell} -c 'sleep 2; exec ${agsBin}/bin/ags run -d \"${agsConfig}\" app.ts -g 3'";
+      ExecStart = "${pkgs.runtimeShell} -c 'sleep 2; exec ${agsBin}/bin/ags run -g 3'";
       Restart = "on-failure";
       RestartSec = 2;
       KillMode = "mixed";
