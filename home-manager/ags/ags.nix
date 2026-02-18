@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 let
   cfg = ./config;
+  system = pkgs.stdenv.hostPlatform.system;
+  agsPkg = inputs.ags.packages.${system}.default;
+  astalGjs = agsPkg.jsPackage;
   astalDeps = [
     pkgs.astal.astal3
     pkgs.astal.io
@@ -26,7 +29,6 @@ let
     ]))
     systemDataDirs
   ];
-  astalGjs = "${pkgs.astal.gjs}/share/astal/gjs";
   palette = import ../theme/palette.nix;
   styleScss = builtins.replaceStrings
     [
@@ -76,17 +78,19 @@ let
         cat > $out/package.json <<'EOF'
     {
       "name": "astal-shell",
+      "type": "module",
       "dependencies": {
-        "astal": "${astalGjs}"
+        "astal": "file:DUMMY"
       }
     }
     EOF
 
-        ln -s ${astalGjs} $out/node_modules/astal
+        ln -sf ${astalGjs} $out/node_modules/astal
+        ln -sf ${astalGjs} $out/node_modules/ags
   '';
   wrapped = pkgs.runCommand "ags-wrapped" { buildInputs = [ pkgs.makeWrapper ]; } ''
     mkdir -p $out/bin
-    makeWrapper ${pkgs.ags}/bin/ags $out/bin/ags \
+    makeWrapper ${agsPkg}/bin/ags $out/bin/ags \
       --set GI_TYPELIB_PATH "${typelib}" \
       --set GSETTINGS_SCHEMA_DIR "${schema}" \
       --prefix XDG_DATA_DIRS : "${gsettingsData}:${data}"
