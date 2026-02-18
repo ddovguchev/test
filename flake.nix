@@ -38,6 +38,7 @@
     };
   };
   outputs = { self, nixpkgs, home-manager, flake-utils, stylix, sops-nix, nixvim, ags, astal, zen-browser, winapps, ... }:
+<<<<<<< HEAD
     let
       system = "x86_64-linux";
     in
@@ -66,6 +67,53 @@
             nixpkgs.config.allowUnfree = true;
             nixpkgs.overlays = [
               (final: prev: { astal = astal.packages.${final.system}; })
+=======
+  let
+    system = "x86_64-linux";
+  in
+  {
+    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+      inherit system;
+      specialArgs = { inherit self astal; };
+      modules = [
+        stylix.nixosModules.stylix
+        # sops-nix.nixosModules.sops  # Enable when secrets are configured
+        ./modules/stylix-theme.nix
+        ./hardware-configuration.nix
+        ./modules/boot.nix
+        ./modules/networking.nix
+        ./modules/users.nix
+        ./modules/keyboard.nix
+        ./modules/nvidia.nix
+        ./modules/hyprland.nix
+        ./modules/audio.nix
+        ./modules/packages.nix
+        ./modules/gaming/steam.nix
+        ./modules/gaming/nethack.nix
+        home-manager.nixosModules.home-manager
+        ({ config, pkgs, self, astal, ... }: {
+          system.stateVersion = "25.11";
+          nixpkgs.config.allowUnfree = true;
+          nixpkgs.overlays = [
+            (final: prev: { astal = astal.packages.${final.stdenv.hostPlatform.system}; })
+          ];
+          time.timeZone = "Europe/Minsk";
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.backupFileExtension = "bak";
+          home-manager.extraSpecialArgs = {
+            inherit self;
+            inputs = { inherit stylix sops-nix nixvim ags zen-browser winapps; };
+            settings = import ./home-manager/settings.nix { inherit pkgs; };
+          };
+          home-manager.users.hikari = { pkgs, config, inputs, settings, ... }: {
+            home.stateVersion = "25.11";
+            programs.home-manager.enable = true;
+            imports = [
+              ./home-manager/home-manager.nix
+              inputs.zen-browser.homeModules.twilight
+              inputs.nixvim.homeModules.nixvim
+>>>>>>> refs/remotes/origin/master
             ];
             time.timeZone = "Europe/Minsk";
             home-manager.useGlobalPkgs = true;
