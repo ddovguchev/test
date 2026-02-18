@@ -65,7 +65,7 @@
           system.stateVersion = "25.11";
           nixpkgs.config.allowUnfree = true;
           nixpkgs.overlays = [
-            (final: prev: { astal = astal.packages.${final.system}; })
+            (final: prev: { astal = astal.packages.${final.stdenv.hostPlatform.system}; })
           ];
           time.timeZone = "Europe/Minsk";
           home-manager.useGlobalPkgs = true;
