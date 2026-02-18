@@ -88,13 +88,13 @@ EOF
     export GI_TYPELIB_PATH="${typelib}"
     export GSETTINGS_SCHEMA_DIR="${schema}:''${GSETTINGS_SCHEMA_DIR:-}"
     export XDG_DATA_DIRS="${gsettingsData}:${data}:''${XDG_DATA_DIRS:-}"
-    if [ "''${1:-}" = "run" ]; then shift; exec "${bin}" run "$@"; else exec "${bin}" "$@"; fi
+    if [ "''${1:-}" = "run" ]; then shift; exec "${bin}" run --gtk 3 "$@"; else exec "${bin}" "$@"; fi
   '';
   agsRunSh = pkgs.writeShellScript "ags-run" ''
     export GI_TYPELIB_PATH="${typelib}"
     export GSETTINGS_SCHEMA_DIR="${schema}:''${GSETTINGS_SCHEMA_DIR:-}"
     export XDG_DATA_DIRS="${gsettingsData}:${data}:''${XDG_DATA_DIRS:-}"
-    cd "''${AGS_CONFIG:-$HOME/.config/ags}" && exec "${bin}" run "$@"
+    cd "''${AGS_CONFIG:-$HOME/.config/ags}" && exec "${bin}" run --gtk 3 "$@"
   '';
   agsScripts = pkgs.runCommand "ags-scripts" {} ''
     mkdir -p $out/bin
