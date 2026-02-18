@@ -20,8 +20,6 @@ const SRC = (() => {
 const appsIcon = `${SRC}/assets/icons/apps-svgrepo-com.svg`
 const notificationsIcon = `${SRC}/assets/icons/notification-box-svgrepo-com.svg`
 const time = createPoll("", 1000, "date +'%H:%M'")
-const activeWorkspace = createPoll("1", 500, "sh -c 'hyprctl activeworkspace -j 2>/dev/null | grep -o \"\\\"id\\\":[0-9]*\" | head -1 | cut -d: -f2 || echo 1'")
-const publicIp = createPoll("—", 60000, "sh -c 'curl -s -m 3 ifconfig.me 2>/dev/null || echo —'")
 
 function getApps() {
     return Gio.AppInfo
@@ -272,7 +270,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     })
                 }}
             >
-                <box class="bar-left">
+                <box>
                     <button
                         class="apps-button"
                         onClicked={() => togglePanelMode("apps")}
@@ -287,30 +285,15 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     />
                     <label class="clock-label" label={time()} $={(self: any) => time.subscribe((v: string) => { self.set_label?.(v) })} />
                 </box>
-                <box class="bar-center">
-                    <box
-                        class="workspaces-indicator"
-                        $={(self: any) => {
-                            self.get_children?.().forEach((c: any) => self.remove?.(c))
-                            for (let id = 1; id <= 9; id++) {
-                                const btn = (Gtk as any).Button.new_with_label(String(id))
-                                btn.get_style_context?.()?.add_class("workspace-btn")
-                                const update = () => {
-                                    const active = String(activeWorkspace()).trim() || "1"
-                                    const ctx = btn.get_style_context?.()
-                                    if (ctx) {
-                                        ctx.remove_class("active")
-                                        if (String(id) === active) ctx.add_class("active")
-                                    }
-                                }
-                                update()
-                                activeWorkspace.subscribe(update)
-                                btn.connect?.("clicked", () => GLib.spawn_command_line_async(`hyprctl dispatch workspace ${id}`))
-                                self.add?.(btn)
-                            }
-                            self.show_all?.()
-                        }}
-                    />
+                <box />
+                <box>
+                    <button
+                        class="wallpaper-button"
+                        onClicked={() => togglePanelMode("wallpaper")}
+                        halign={Gtk.Align.CENTER}
+                    >
+                        🖼
+                    </button>
                     <button
                         class="notifications-button"
                         onClicked={() => togglePanelMode("notifications")}
@@ -323,9 +306,6 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         }}
                         halign={Gtk.Align.CENTER}
                     />
-                </box>
-                <box class="bar-right">
-                    <label class="public-ip-label" label={publicIp()} $={(self: any) => publicIp.subscribe((v: string) => { self.set_label?.(v) })} />
                     <button
                         class="session-button"
                         onClicked={() => togglePanelMode("session")}
@@ -338,6 +318,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 
             <box
                 class="shell-content"
+                vexpand
                 $={(self: any) => {
                     self.visible = panelMode() !== "none"
                     panelMode.subscribe((mode: string) => {
