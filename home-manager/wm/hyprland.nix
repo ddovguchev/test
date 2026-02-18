@@ -1,5 +1,5 @@
 # Simplified Hyprland - based on original working config
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   wayland.windowManager.hyprland = {
     enable = true;
@@ -22,9 +22,11 @@
         kb_layout = "us,ru";
         kb_options = "grp:alt_shift_toggle";
       };
-      exec-once = [
-        "swww-daemon"
-      ];
+      exec-once = lib.mkAfter (
+        [ "swww-daemon" ]
+        ++ lib.optional config.programs.ags.enable
+          "${config.programs.ags.finalPackage}/bin/ags run --gtk 3 &"
+      );
       bind = [
         "$mod, F, exec, firefox"
         "$mod, T, exec, kitty"

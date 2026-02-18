@@ -58,11 +58,11 @@ in
     systemd.enable = false;  # We define our own service with --gtk 3
   };
 
-  # Custom AGS service: --gtk 3, run from config dir, wait for Hyprland
+  # AGS systemd service (optional - exec-once in Hyprland is primary)
   systemd.user.services.ags = {
     Unit = {
       Description = "AGS - Astal/GTK shell bar";
-      After = [ "graphical-session.target" "hyprland-session.target" ];
+      After = [ "graphical-session.target" ];
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
@@ -70,7 +70,8 @@ in
       ExecStart = "${config.programs.ags.finalPackage}/bin/ags run --gtk 3";
       WorkingDirectory = "%h/.config/ags";
       Restart = "on-failure";
-      KillMode = "mixed";
+      RestartSec = 3;
+      Environment = "PATH=%h/.nix-profile/bin:/run/current-system/sw/bin";
     };
     Install.WantedBy = [ "graphical-session.target" ];
   };
