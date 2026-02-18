@@ -3,7 +3,7 @@
 {
   wayland.windowManager.hyprland = {
     enable = true;
-    systemd.enable = true;  # Экспорт WAYLAND_DISPLAY в systemd
+    systemd.enable = true; # Экспорт WAYLAND_DISPLAY в systemd
     settings = {
       "$mod" = "SUPER";
       # 2560x1080 @ 200Hz (пустое имя = первый монитор; для нескольких — укажи имя, напр. DP-4)
