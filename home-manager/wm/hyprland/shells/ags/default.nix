@@ -1,7 +1,7 @@
 { inputs, pkgs, settings, lib, config, ... }: let
     details = settings.themeDetails;
     asztal = pkgs.callPackage ../../../../ags-config/default.nix
-        { inherit inputs; system = pkgs.system; };
+        { inherit inputs; system = pkgs.stdenv.hostPlatform.system; };
     agsColors = {
         wallpaper = details.wallpaper;
         theme = {
@@ -40,6 +40,9 @@ in {
     imports = [ inputs.ags.homeManagerModules.default ];
     home.packages = with pkgs; [
         asztal
+        (pkgs.writeShellScriptBin "ags-run" ''
+          exec ${pkgs.ags}/bin/ags run --gtk 4 "$@"
+        '')
         bun
         fd
         dart-sass
