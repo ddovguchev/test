@@ -16,7 +16,6 @@
       misc = {
         vfr = true;
         vrr = 0;
-        max_fps = 200;
       };
       decoration = {
         blur = {
