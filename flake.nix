@@ -19,9 +19,14 @@
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    astal = {
+      url = "github:Aylur/astal";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     ags = {
       url = "github:Aylur/ags";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.astal.follows = "astal";
     };
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
@@ -32,15 +37,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, nixpkgs, home-manager, flake-utils, stylix, sops-nix, nixvim, ags, zen-browser, winapps, ... }:
+  outputs = { self, nixpkgs, home-manager, flake-utils, stylix, sops-nix, nixvim, ags, astal, zen-browser, winapps, ... }:
   let
     system = "x86_64-linux";
-    pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
   in
   {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       inherit system;
-      specialArgs = { inherit self; };
+      specialArgs = { inherit self astal; };
       modules = [
         stylix.nixosModules.stylix
         # sops-nix.nixosModules.sops  # Enable when secrets are configured
@@ -57,9 +61,12 @@
         ./modules/gaming/steam.nix
         ./modules/gaming/nethack.nix
         home-manager.nixosModules.home-manager
-        ({ config, pkgs, self, ... }: {
+        ({ config, pkgs, self, astal, ... }: {
           system.stateVersion = "25.11";
           nixpkgs.config.allowUnfree = true;
+          nixpkgs.overlays = [
+            (final: prev: { astal = astal.packages.${final.system}; })
+          ];
           time.timeZone = "Europe/Minsk";
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;

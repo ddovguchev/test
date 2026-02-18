@@ -52,7 +52,15 @@ fi
 
 if command -v nix &> /dev/null; then
   echo -e "${BLUE}📝 Formatting Nix files...${NC}"
-  nix fmt . 2>/dev/null || echo -e "${YELLOW}⚠️  nix fmt not available, skipping${NC}"
+  if nix run .#formatter -- . 2>/dev/null; then
+    :
+  elif nix fmt . 2>/dev/null; then
+    :
+  elif command -v nixpkgs-fmt &> /dev/null; then
+    nixpkgs-fmt . 2>/dev/null || true
+  else
+    echo -e "${YELLOW}⚠️  No formatter available, skipping${NC}"
+  fi
   echo ""
 fi
 

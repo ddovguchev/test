@@ -107,14 +107,15 @@ in
   systemd.user.services.ags = {
     Unit = {
       Description = "Astal/AGS shell";
-      After = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" "hyprland-session.target" ];
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
       Type = "simple";
       ExecStart = "${config.home.profileDirectory}/bin/ags-run";
       Restart = "on-failure";
-      RestartSec = 2;
+      RestartSec = 3;
+      Environment = "PATH=${config.home.profileDirectory}/bin:/run/current-system/sw/bin";
     };
     Install = {
       WantedBy = [ "graphical-session.target" ];

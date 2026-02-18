@@ -37,6 +37,9 @@
     # Shell
     ./shells/zsh.nix
 
+    # AGS bar (Astal - original working config)
+    ./ags/ags.nix
+
     # WM
     ./wm/hyprland.nix
 
