@@ -9,7 +9,6 @@ import { APPS_ICON, NOTIFICATIONS_ICON } from "./shared/icons"
 import { getModeSize } from "./shared/mode"
 import { getApps, createAppImage } from "./services/apps"
 import { listPictureFiles, applyWallpaper } from "./services/wallpapers"
-import { getWorkspaceDotsLabel, listWorkspaceCards, switchWorkspace } from "./services/workspaces"
 import { runSessionAction } from "./services/session"
 import { setupVisibleWhenMode, setupVisibleWhenNone, setupVisibleWhenPanelOpen } from "./panelVisibility"
 import { clockTime } from "./shared/state"
@@ -101,7 +100,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 panelMode.subscribe((mode: string) => {
                     const ctx = self.get_style_context?.()
                     if (ctx) {
-                        ["mode-none", "mode-apps", "mode-wallpaper", "mode-session", "mode-notifications", "mode-workspaces"].forEach((c) => ctx.remove_class(c))
+                        ["mode-none", "mode-apps", "mode-wallpaper", "mode-session", "mode-notifications"].forEach((c) => ctx.remove_class(c))
                         ctx.add_class(`mode-${mode}`)
                     }
                     const target = getModeSize(gdkmonitor, mode)
@@ -156,24 +155,12 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 </box>
                 <box halign={Gtk.Align.CENTER}>
                     <button
-                        class="workspaces-button"
-                        onClicked={() => togglePanelMode("workspaces")}
-                        $={(self: any) => {
-                            const refresh = () => {
-                                self.set_label?.(getWorkspaceDotsLabel())
-                                if (!self.set_label) self.label = getWorkspaceDotsLabel()
-                            }
-                            refresh()
-                            const timerId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1200, () => {
-                                refresh()
-                                return true
-                            })
-                            self.connect?.("destroy", () => {
-                                if (timerId) GLib.source_remove(timerId)
-                            })
-                        }}
+                        class="wallpaper-button"
+                        onClicked={() => togglePanelMode("wallpaper")}
                         halign={Gtk.Align.CENTER}
-                    />
+                    >
+                        🖼
+                    </button>
                     <button
                         class="notifications-button"
                         onClicked={() => togglePanelMode("notifications")}
@@ -210,11 +197,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     <entry
                         class="apps-input"
                         placeholderText="Search app..."
-                        onChanged={(self: any) => {
-                            appsQuery = String(self.text ?? "").toLowerCase()
-                            rerenderApps?.()
-                        }}
                         $={(self: any) => {
+                            self.connect?.("changed", () => {
+                                appsQuery = String(self.text ?? "").toLowerCase()
+                                rerenderApps?.()
+                            })
                             appsEntryRef = self
                             panelMode.subscribe((mode: string) => {
                                 if (mode === "apps") {
@@ -421,80 +408,13 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     />
                 </box>
                 <box
-                    $={(self: any) => setupVisibleWhenMode(self, "workspaces")}
-                    vertical
-                >
-                    <label class="workspace-title" label="Workspaces" />
-                    <box
-                        class="workspace-block"
-                        $={(self: any) => {
-                            self.get_children?.().forEach((child: any) => self.remove(child))
-                            const items = listWorkspaceCards()
-
-                            if (items.length === 0) {
-                                const empty = (Gtk as any).Label.new("No workspaces found")
-                                empty.get_style_context?.()?.add_class("workspace-empty")
-                                self.add(empty)
-                                self.show_all?.()
-                                return
-                            }
-
-                            const scroll = (Gtk as any).ScrolledWindow.new(null, null)
-                            const hPolicy = (Gtk as any).PolicyType.AUTOMATIC ?? 1
-                            const vPolicy = (Gtk as any).PolicyType.NEVER ?? 2
-                            scroll.set_policy?.(hPolicy, vPolicy)
-                            scroll.set_hexpand?.(true)
-                            scroll.set_vexpand?.(true)
-
-                            const row = (Gtk as any).Box.new((Gtk as any).Orientation.HORIZONTAL, 12)
-                            items.forEach((workspace: any) => {
-                                const button = (Gtk as any).Button.new()
-                                button.get_style_context?.()?.add_class("workspace-tile")
-                                if (workspace.active) button.get_style_context?.()?.add_class("active")
-
-                                const card = (Gtk as any).Box.new((Gtk as any).Orientation.VERTICAL, 6)
-                                card.get_style_context?.()?.add_class("workspace-card")
-
-                                const title = (Gtk as any).Label.new(`Workspace ${workspace.id}`)
-                                title.get_style_context?.()?.add_class("workspace-tile-header")
-                                title.set_xalign?.(0)
-                                card.pack_start?.(title, false, false, 0)
-
-                                const preview = (Gtk as any).Box.new((Gtk as any).Orientation.VERTICAL, 3)
-                                preview.get_style_context?.()?.add_class("workspace-preview")
-                                const previewItems = workspace.apps.length > 0
-                                    ? workspace.apps.slice(0, 4)
-                                    : ["Empty"]
-
-                                previewItems.forEach((item: string) => {
-                                    const appLabel = (Gtk as any).Label.new(item)
-                                    appLabel.get_style_context?.()?.add_class("workspace-app")
-                                    appLabel.set_xalign?.(0)
-                                    appLabel.set_ellipsize?.(3)
-                                    appLabel.set_max_width_chars?.(26)
-                                    preview.pack_start?.(appLabel, false, false, 0)
-                                })
-
-                                card.pack_start?.(preview, true, true, 0)
-                                button.add(card)
-                                button.connect("clicked", () => switchWorkspace(workspace.id))
-                                row.pack_start?.(button, false, false, 0)
-                            })
-
-                            scroll.add(row)
-                            self.add(scroll)
-                            self.show_all?.()
-                        }}
-                    />
-                </box>
-                <box
                     $={(self: any) => setupVisibleWhenMode(self, "session")}
                     vertical
                 >
                     <box class="session-title-row">
                         <label class="session-title" label="Session" />
                     </box>
-                    <box class="session-actions" spacing={8} halign={Gtk.Align.START}>
+                    <box class="session-actions" halign={Gtk.Align.START}>
                         <button class="session-action lock" onClicked={() => runSessionAction("lock-screen")}>
                             Lock
                         </button>

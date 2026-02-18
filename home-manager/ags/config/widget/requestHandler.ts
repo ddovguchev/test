@@ -8,7 +8,6 @@ export function handleAppRequest(request: string): RequestResult {
         case "apps":
         case "notifications":
         case "wallpaper":
-        case "workspaces":
         case "session":
             togglePanelMode(request as PanelMode)
             return "ok"
