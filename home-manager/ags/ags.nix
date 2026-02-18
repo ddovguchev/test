@@ -24,30 +24,30 @@ let
     ]
     (builtins.readFile "${cfg}/style.scss");
   agsConfig = pkgs.runCommand "ags-config" { } ''
-    mkdir -p $out/widget $out/assets
-    cp ${cfg}/app.ts $out/app.ts
-    cp ${cfg}/tsconfig.json $out/tsconfig.json
-    cp ${cfg}/env.d.ts $out/env.d.ts
-    cp ${cfg}/.gitignore $out/.gitignore 2>/dev/null || true
-    cp -r ${cfg}/assets/. $out/assets/
-    cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
-    cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
-    cp ${cfg}/widget/launcherState.ts $out/widget/launcherState.ts
+        mkdir -p $out/widget $out/assets
+        cp ${cfg}/app.ts $out/app.ts
+        cp ${cfg}/tsconfig.json $out/tsconfig.json
+        cp ${cfg}/env.d.ts $out/env.d.ts
+        cp ${cfg}/.gitignore $out/.gitignore 2>/dev/null || true
+        cp -r ${cfg}/assets/. $out/assets/
+        cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
+        cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
+        cp ${cfg}/widget/launcherState.ts $out/widget/launcherState.ts
 
-    cat > $out/style.scss <<'EOF'
-${styleScss}
-EOF
+        cat > $out/style.scss <<'EOF'
+    ${styleScss}
+    EOF
 
-    cat > $out/package.json <<'EOF'
-{
-  "name": "astal-shell",
-  "private": true,
-  "type": "module",
-  "dependencies": {
-    "astal": "file:~/.local/share/ags"
-  }
-}
-EOF
+        cat > $out/package.json <<'EOF'
+    {
+      "name": "astal-shell",
+      "private": true,
+      "type": "module",
+      "dependencies": {
+        "astal": "file:~/.local/share/ags"
+      }
+    }
+    EOF
   '';
 in
 {
