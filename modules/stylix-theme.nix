@@ -1,9 +1,11 @@
 # Integrated from dotfiles themes - stylix config
 { pkgs, lib, config, ... }:
 let
+  # Обои: catppuccin-mocha (совпадает с темой)
+  defaultWallpaper = "${pkgs.nixos-artwork.wallpapers.catppuccin-mocha}/share/backgrounds/nixos/nixos-wallpaper-catppuccin-mocha.png";
   details = {
     themeName = "catppuccin-mocha";
-    wallpaper = ../home-manager/assets/wallpapers/evening-sky.png;
+    wallpaper = defaultWallpaper;
     override = { base00 = "11111b"; };
     opacity = 0.8;
     font = "Fira Code Nerd Font";

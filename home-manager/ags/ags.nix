@@ -1,7 +1,9 @@
-# AGS bar - uses official home-manager module
+# AGS bar - полная настройка для запуска
 { config, pkgs, lib, inputs, ... }:
 let
   cfg = ./config;
+  system = pkgs.stdenv.hostPlatform.system;
+  astalJs = inputs.ags.packages.${system}.default.jsPackage;
   palette = import ../theme/palette.nix;
   styleScss = builtins.replaceStrings
     [
@@ -24,30 +26,57 @@ let
     ]
     (builtins.readFile "${cfg}/style.scss");
   agsConfig = pkgs.runCommand "ags-config" { } ''
-        mkdir -p $out/widget $out/assets
-        cp ${cfg}/app.ts $out/app.ts
-        cp ${cfg}/tsconfig.json $out/tsconfig.json
-        cp ${cfg}/env.d.ts $out/env.d.ts
-        cp ${cfg}/.gitignore $out/.gitignore 2>/dev/null || true
-        cp -r ${cfg}/assets/. $out/assets/
-        cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
-        cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
-        cp ${cfg}/widget/launcherState.ts $out/widget/launcherState.ts
+    mkdir -p $out/widget $out/assets $out/node_modules
+    ln -s ${astalJs} $out/node_modules/astal
+    cp ${cfg}/app.ts $out/app.ts
+    cp ${cfg}/tsconfig.json $out/tsconfig.json
+    cp ${cfg}/env.d.ts $out/env.d.ts
+    cp ${cfg}/.gitignore $out/.gitignore 2>/dev/null || true
+    cp -r ${cfg}/assets/. $out/assets/
+    cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
+    cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
+    cp ${cfg}/widget/launcherState.ts $out/widget/launcherState.ts
 
-        cat > $out/style.scss <<'EOF'
-    ${styleScss}
-    EOF
+    cat > $out/style.scss <<'EOF'
+${styleScss}
+EOF
 
-        cat > $out/package.json <<'EOF'
-    {
-      "name": "astal-shell",
-      "private": true,
-      "type": "module",
-      "dependencies": {
-        "astal": "file:~/.local/share/ags"
-      }
-    }
-    EOF
+    cat > $out/package.json <<'EOF'
+{
+  "name": "astal-shell",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "astal": "file:~/.local/share/ags"
+  }
+}
+EOF
+  '';
+  agsBin = config.programs.ags.finalPackage;
+  # Скрипт запуска: ждёт Wayland и конфиг, затем запускает ags
+  agsStartScript = pkgs.writeShellScript "ags-start" ''
+    export XDG_CONFIG_HOME="''${XDG_CONFIG_HOME:-$HOME/.config}"
+    export XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+    CONFIG_DIR="$XDG_CONFIG_HOME/ags"
+
+    # Ждём Wayland (макс 10 сек)
+    for _ in $(seq 1 50); do
+      [ -n "''${WAYLAND_DISPLAY:-}" ] && break
+      sleep 0.2
+    done
+
+    # Ждём появления конфига (макс 10 сек)
+    for _ in $(seq 1 25); do
+      [ -f "$CONFIG_DIR/app.ts" ] && break
+      sleep 0.4
+    done
+
+    if [ ! -f "$CONFIG_DIR/app.ts" ]; then
+      echo "AGS: config not found at $CONFIG_DIR" >&2
+      exit 1
+    fi
+
+    cd "$CONFIG_DIR" && exec ${agsBin}/bin/ags run --gtk 3 "$@"
   '';
 in
 {
@@ -55,10 +84,12 @@ in
     enable = true;
     configDir = agsConfig;
     extraPackages = with pkgs.astal; [ wireplumber notifd ];
-    systemd.enable = false; # We define our own service with --gtk 3
+    systemd.enable = false;
   };
 
-  # AGS systemd service (optional - exec-once in Hyprland is primary)
+  home.packages = [ agsStartScript ];
+
+  # Systemd как fallback (после graphical-session)
   systemd.user.services.ags = {
     Unit = {
       Description = "AGS - Astal/GTK shell bar";
@@ -67,10 +98,9 @@ in
     };
     Service = {
       Type = "simple";
-      ExecStart = "${config.programs.ags.finalPackage}/bin/ags run --gtk 3";
-      WorkingDirectory = "%h/.config/ags";
+      ExecStart = "${agsStartScript}";
       Restart = "on-failure";
-      RestartSec = 3;
+      RestartSec = 5;
       Environment = "PATH=%h/.nix-profile/bin:/run/current-system/sw/bin";
     };
     Install.WantedBy = [ "graphical-session.target" ];

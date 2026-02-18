@@ -13,7 +13,7 @@ rec {
 
   themeDetails = {
     themeName = "catppuccin-mocha";
-    wallpaper = ./assets/wallpapers/evening-sky.png;
+    wallpaper = "${pkgs.nixos-artwork.wallpapers.catppuccin-mocha}/share/backgrounds/nixos/nixos-wallpaper-catppuccin-mocha.png";
     override = { base00 = "11111b"; };
     btopTheme = "catppuccin";
     opacity = 0.8;
