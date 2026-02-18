@@ -58,11 +58,12 @@ in
     systemd.enable = true;
   };
 
-  # Override AGS service: --gtk 3 (config uses astal/gtk3), run from config dir
+  # Override AGS service: --gtk 3, run from config dir, wait for Hyprland
   systemd.user.services.ags = {
+    Unit.After = lib.mkForce [ "graphical-session.target" "hyprland-session.target" ];
     Service = {
-      ExecStart = "${config.programs.ags.finalPackage}/bin/ags run --gtk 3";
-      WorkingDirectory = "%h/.config/ags";
+      ExecStart = lib.mkForce "${config.programs.ags.finalPackage}/bin/ags run --gtk 3";
+      WorkingDirectory = lib.mkForce "%h/.config/ags";
     };
   };
 }
