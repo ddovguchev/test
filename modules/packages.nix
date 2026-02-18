@@ -8,8 +8,8 @@ let
     else
       [ ];
   cursorPkg =
-    if lib.hasAttrByPath [ "cursor" ] pkgs then
-      [ pkgs.cursor ]
+    if lib.hasAttrByPath [ "code-cursor" ] pkgs then
+      [ pkgs.code-cursor ]
     else
       [ ];
   spicetifyPkg =
