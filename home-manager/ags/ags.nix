@@ -85,7 +85,7 @@ in
     enable = true;
     configDir = agsConfig;
     extraPackages = with pkgs.astal; [ wireplumber notifd ];
-    systemd.enable = false;  # баг модуля: "expected ']' but got '"'" в unit
+    systemd.enable = false; # баг модуля: "expected ']' but got '"'" в unit
   };
 
   home.packages = [ agsStartScript ];
