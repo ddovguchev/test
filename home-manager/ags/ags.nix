@@ -97,8 +97,9 @@ in
       After = [ "graphical-session-pre.target" ];
     };
     Service = {
-      ExecStart = "${agsBin}/bin/ags run --gtk 3";
+      ExecStart = "${agsStartScript}/bin/ags-start";
       Restart = "on-failure";
+      RestartSec = 2;
       KillMode = "mixed";
     };
     Install = {
