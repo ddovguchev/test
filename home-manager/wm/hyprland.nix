@@ -5,7 +5,8 @@
     enable = true;
     settings = {
       "$mod" = "SUPER";
-      monitor = ",preferred,auto,1";
+      # 2560x1080 @ 200Hz (пустое имя = первый монитор; для нескольких — укажи имя, напр. DP-4)
+      monitor = ",2560x1080@200,0x0,1";
       general = {
         gaps_in = 8;
         gaps_out = 16;

@@ -37,6 +37,6 @@ rec {
   };
 
   profileDetails = {
-    hyprlandMonitors = [ ",preferred,auto,1" ];
+    hyprlandMonitors = [ ",2560x1080@200,0x0,1" ];
   };
 }
