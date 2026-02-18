@@ -5,7 +5,7 @@ in
 {
   programs.kitty = {
     enable = true;
-    font = {
+    font = {e
       name = "JetBrainsMono Nerd Font";
       size = 11.5;
     };
