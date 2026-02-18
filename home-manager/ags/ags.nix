@@ -28,6 +28,7 @@ let
   agsConfig = pkgs.runCommand "ags-config" { } ''
         mkdir -p $out/widget $out/assets $out/node_modules
         ln -s ${astalJs} $out/node_modules/astal
+        ln -s ${astalJs} $out/node_modules/ags
         cp ${cfg}/app.ts $out/app.ts
         cp ${cfg}/tsconfig.json $out/tsconfig.json
         cp ${cfg}/env.d.ts $out/env.d.ts

@@ -1,6 +1,7 @@
-import { App, Astal, Gtk } from "astal/gtk3"
-import type { Gdk } from "astal/gtk3"
-import { Variable } from "astal"
+import app from "ags/gtk3/app"
+import { Astal, Gtk } from "ags/gtk3"
+import type { Gdk } from "ags/gtk3"
+import { createPoll } from "ags/time"
 import GLib from "gi://GLib"
 import GdkPixbuf from "gi://GdkPixbuf"
 import Gio from "gi://Gio"
@@ -8,7 +9,7 @@ import { closePanel, panelMode, togglePanelMode } from "./launcherState"
 
 const appsIcon = `${SRC}/assets/icons/apps-svgrepo-com.svg`
 const notificationsIcon = `${SRC}/assets/icons/notification-box-svgrepo-com.svg`
-const time = Variable("").poll(1000, "date +'%I:%M %p'")
+const time = createPoll("", 1000, "date +'%I:%M %p'")
 
 function getApps() {
     return Gio.AppInfo
@@ -212,7 +213,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             if (panelMode() !== "none") closePanel()
             return false
         }}
-        application={App}>
+        application={app}>
         <box
             className="shell-panel mode-none"
             setup={(self: any) => {

@@ -37,7 +37,7 @@
     # Shell
     ./shells/zsh.nix
 
-    # AGS bar (Astal - original working config)
+    # AGS bar (home-manager/ags - совместим с ags v3)
     ./ags/ags.nix
 
     # WM

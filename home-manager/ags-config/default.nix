@@ -52,7 +52,11 @@ let
 
   desktop = writeShellScript name ''
     export PATH=$PATH:${addBins dependencies}
-    ${ags}/bin/ags -b ${name} -c ${config}/config.js $@
+    CONFIG_DIR="${config}"
+    case "$1" in
+      request|list|toggle|quit|inspect) exec ${ags}/bin/ags "$@" ;;
+      *) exec ${ags}/bin/ags run -d "$CONFIG_DIR" "$CONFIG_DIR/config.js" -g 4 "$@" ;;
+    esac
   '';
 
   config = stdenv.mkDerivation {

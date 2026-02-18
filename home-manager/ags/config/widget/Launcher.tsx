@@ -1,8 +1,9 @@
-import { App, Astal } from "astal/gtk3"
-import type { Gdk } from "astal/gtk3"
+import app from "ags/gtk3/app"
+import { Astal } from "ags/gtk3"
+import type { Gdk } from "ags/gtk3"
 import Gio from "gi://Gio"
 import type { AppInfo } from "gi://Gio"
-import { closeLauncher, launcherQuery, launcherVisible } from "./launcherState"
+import { closeLauncher, launcherQuery, launcherVisible, setLauncherQuery } from "./launcherState"
 
 const apps = Gio.AppInfo
     .get_all()
@@ -28,11 +29,11 @@ export default function Launcher(gdkmonitor: Gdk.Monitor) {
         exclusivity={Astal.Exclusivity.IGNORE}
         setup={(self: any) => {
             self.visible = false
-            launcherVisible.subscribe((visible: boolean) => {
-                self.visible = visible
+            launcherVisible.subscribe(() => {
+                self.visible = launcherVisible()
             })
         }}
-        application={App}>
+        application={app}>
         <box className="launcher-backdrop" vertical>
             <button className="launcher-dismiss" onClicked={closeLauncher} />
             <box className="launcher-panel" vertical>
@@ -40,7 +41,7 @@ export default function Launcher(gdkmonitor: Gdk.Monitor) {
                     className="launcher-search"
                     placeholderText="Search applications..."
                     text={launcherQuery()}
-                    onChanged={(self: any) => launcherQuery.set(self.text)}
+                    onChanged={(self: any) => setLauncherQuery(self.text)}
                 />
                 <scrolledwindow className="launcher-scroll" vexpand>
                     <flowbox className="launcher-grid">
