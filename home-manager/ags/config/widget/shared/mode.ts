@@ -1,4 +1,4 @@
-import type { Gdk } from "astal/gtk3"
+import type { Gdk } from "ags/gtk3"
 
 export function getModeSize(gdkmonitor: Gdk.Monitor, mode: string) {
     const geometry = (gdkmonitor as any)?.get_geometry?.()

@@ -1,7 +1,7 @@
 import GLib from "gi://GLib"
 import GdkPixbuf from "gi://GdkPixbuf"
 import Gio from "gi://Gio"
-import { Gtk } from "astal/gtk3"
+import { Gtk } from "ags/gtk3"
 import { ICON_THEME_SEARCH_PATHS } from "../shared/icons"
 
 export type AppEntry = {

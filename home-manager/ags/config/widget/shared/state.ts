@@ -1,3 +1,3 @@
-import { Variable } from "astal"
+import { createPoll } from "ags/time"
 
-export const clockTime = Variable("").poll(1000, "date +'%I:%M %p'")
+export const clockTime = createPoll("", 1000, "date +'%H:%M'")

@@ -1,16 +1,14 @@
 {
     "$schema": "https://json.schemastore.org/tsconfig",
     "compilerOptions": {
-        "experimentalDecorators": true,
+        "experimentalDecorators": false,
         "strict": true,
         "noEmit": true,
-        "target": "ES2022",
-        "module": "ES2022",
+        "target": "ES2020",
+        "module": "ES2020",
         "moduleResolution": "Bundler",
-        // "checkJs": true,
-        // "allowJs": true,
         "jsx": "react-jsx",
-        "jsxImportSource": "astal/gtk3"
+        "jsxImportSource": "ags/gtk3"
     },
     "include": [
         "**/*.ts",

@@ -1,5 +1,6 @@
-import { App, Astal, Gtk } from "astal/gtk3"
-import type { Gdk } from "astal/gtk3"
+import app from "ags/gtk3/app"
+import { Astal, Gtk } from "ags/gtk3"
+import type { Gdk } from "ags/gtk3"
 import GLib from "gi://GLib"
 import Gdk from "gi://Gdk"
 import GdkPixbuf from "gi://GdkPixbuf"
@@ -56,28 +57,15 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         return true
     }
 
-    const getModeSize = (mode: string) => {
-        const geometry = (gdkmonitor as any)?.get_geometry?.()
-        const monitorWidth = geometry?.width ?? 2560
-        const horizontalInset = 20
-        const fullWidth = Math.max(600, monitorWidth - horizontalInset)
-        if (mode === "apps") return { width: Math.round(monitorWidth * 0.6), height: 400 }
-        if (mode === "wallpaper") return { width: Math.max(1320, Math.round(monitorWidth * 0.5)), height: 280 }
-        if (mode === "workspaces") return { width: Math.max(1320, Math.round(monitorWidth * 0.56)), height: 300 }
-        if (mode === "session") return { width: Math.round(monitorWidth * 0.36), height: 190 }
-        if (mode === "notifications") return { width: Math.round(monitorWidth * 0.3), height: 180 }
-        return { width: fullWidth, height: 36 }
-    }
-
     return <window
         name="bar"
         namespace="bar"
-        className="Bar"
+        class="Bar"
         gdkmonitor={gdkmonitor}
         exclusivity={Astal.Exclusivity.EXCLUSIVE}
         anchor={TOP | LEFT | RIGHT}
         keymode={Astal.Keymode.ON_DEMAND}
-        setup={(self: any) => {
+        $={(self: any) => {
             self.set_can_focus?.(true)
             panelMode.subscribe((mode: string) => {
                 const active = mode !== "none"
@@ -100,10 +88,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             }
             return handleAppsTyping(event, keyval)
         }}
-        application={App}>
+        application={app}>
         <box
-            className="shell-panel mode-none"
-            setup={(self: any) => {
+            class="shell-panel mode-none"
+            $={(self: any) => {
                 const initial = getModeSize(gdkmonitor, panelMode())
                 let currentWidth = initial.width
                 let currentHeight = initial.height
@@ -111,7 +99,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 
                 self.set_size_request(initial.width, initial.height)
                 panelMode.subscribe((mode: string) => {
-                    self.className = `shell-panel mode-${mode}`
+                    const ctx = self.get_style_context?.()
+                    if (ctx) {
+                        ["mode-none", "mode-apps", "mode-wallpaper", "mode-session", "mode-notifications", "mode-workspaces"].forEach((c) => ctx.remove_class(c))
+                        ctx.add_class(`mode-${mode}`)
+                    }
                     const target = getModeSize(gdkmonitor, mode)
                     if (animationId !== 0) GLib.source_remove(animationId)
                     animationId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 16, () => {
@@ -135,16 +127,16 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             vertical
         >
             <centerbox
-                className="shell-top-row"
+                class="shell-top-row"
                 hexpand
                 halign={Gtk.Align.FILL}
-                setup={setupVisibleWhenNone}
+                $={setupVisibleWhenNone}
             >
                 <box halign={Gtk.Align.START}>
                     <button
-                        className="apps-button"
+                        class="apps-button"
                         onClicked={() => togglePanelMode("apps")}
-                        setup={(self: any) => {
+                        $={(self: any) => {
                             const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(APPS_ICON, 14, 14, true)
                             const icon = (Gtk as any).Image.new_from_pixbuf(pixbuf)
                             self.set_image(icon)
@@ -154,16 +146,19 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         halign={Gtk.Align.CENTER}
                     />
                     <label
-                        className="clock-label"
+                        class="clock-label"
                         label={clockTime()}
-                        setup={setupVisibleWhenNone}
+                        $={(self: any) => {
+                            setupVisibleWhenNone(self)
+                            clockTime.subscribe((v: string) => { self.set_label?.(v) })
+                        }}
                     />
                 </box>
                 <box halign={Gtk.Align.CENTER}>
                     <button
-                        className="workspaces-button"
+                        class="workspaces-button"
                         onClicked={() => togglePanelMode("workspaces")}
-                        setup={(self: any) => {
+                        $={(self: any) => {
                             const refresh = () => {
                                 self.set_label?.(getWorkspaceDotsLabel())
                                 if (!self.set_label) self.label = getWorkspaceDotsLabel()
@@ -180,9 +175,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         halign={Gtk.Align.CENTER}
                     />
                     <button
-                        className="notifications-button"
+                        class="notifications-button"
                         onClicked={() => togglePanelMode("notifications")}
-                        setup={(self: any) => {
+                        $={(self: any) => {
                             const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(NOTIFICATIONS_ICON, 14, 14, true)
                             const icon = (Gtk as any).Image.new_from_pixbuf(pixbuf)
                             self.set_image(icon)
@@ -194,7 +189,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 </box>
                 <box halign={Gtk.Align.END}>
                     <button
-                        className="session-button"
+                        class="session-button"
                         onClicked={() => togglePanelMode("session")}
                         halign={Gtk.Align.END}
                     >
@@ -204,22 +199,22 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             </centerbox>
 
             <box
-                className="shell-content"
-                setup={setupVisibleWhenPanelOpen}
+                class="shell-content"
+                $={setupVisibleWhenPanelOpen}
                 vertical
             >
                 <box
-                    setup={(self: any) => setupVisibleWhenMode(self, "apps")}
+                    $={(self: any) => setupVisibleWhenMode(self, "apps")}
                     vertical
                 >
                     <entry
-                        className="apps-input"
+                        class="apps-input"
                         placeholderText="Search app..."
                         onChanged={(self: any) => {
                             appsQuery = String(self.text ?? "").toLowerCase()
                             rerenderApps?.()
                         }}
-                        setup={(self: any) => {
+                        $={(self: any) => {
                             appsEntryRef = self
                             panelMode.subscribe((mode: string) => {
                                 if (mode === "apps") {
@@ -235,9 +230,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         }}
                     />
                     <box
-                        className="apps-menu-scroll"
+                        class="apps-menu-scroll"
                         vexpand
-                        setup={(self: any) => {
+                        $={(self: any) => {
                             const scroll = (Gtk as any).ScrolledWindow.new(null, null)
                             const hPolicy = (Gtk as any).PolicyType.NEVER ?? 2
                             const vPolicy = (Gtk as any).PolicyType.AUTOMATIC ?? 1
@@ -308,18 +303,18 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 </box>
 
                 <box
-                    setup={(self: any) => setupVisibleWhenMode(self, "notifications")}
+                    $={(self: any) => setupVisibleWhenMode(self, "notifications")}
                     vertical
                 />
 
                 <box
-                    setup={(self: any) => setupVisibleWhenMode(self, "wallpaper")}
+                    $={(self: any) => setupVisibleWhenMode(self, "wallpaper")}
                     vertical
                 >
-                    <label className="wallpaper-title" label="Select wallpapers" />
+                    <label class="wallpaper-title" label="Select wallpapers" />
                     <box
-                        className="wallpaper-block"
-                        setup={(self: any) => {
+                        class="wallpaper-block"
+                        $={(self: any) => {
                             self.get_children?.().forEach((child: any) => self.remove(child))
                             const files = listPictureFiles()
                             const scroll = (Gtk as any).ScrolledWindow.new(null, null)
@@ -426,13 +421,13 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     />
                 </box>
                 <box
-                    setup={(self: any) => setupVisibleWhenMode(self, "workspaces")}
+                    $={(self: any) => setupVisibleWhenMode(self, "workspaces")}
                     vertical
                 >
-                    <label className="workspace-title" label="Workspaces" />
+                    <label class="workspace-title" label="Workspaces" />
                     <box
-                        className="workspace-block"
-                        setup={(self: any) => {
+                        class="workspace-block"
+                        $={(self: any) => {
                             self.get_children?.().forEach((child: any) => self.remove(child))
                             const items = listWorkspaceCards()
 
@@ -493,26 +488,26 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     />
                 </box>
                 <box
-                    setup={(self: any) => setupVisibleWhenMode(self, "session")}
+                    $={(self: any) => setupVisibleWhenMode(self, "session")}
                     vertical
                 >
-                    <box className="session-title-row">
-                        <label className="session-title" label="Session" />
+                    <box class="session-title-row">
+                        <label class="session-title" label="Session" />
                     </box>
-                    <box className="session-actions" spacing={8} halign={Gtk.Align.START}>
-                        <button className="session-action lock" onClicked={() => runSessionAction("lock-screen")}>
+                    <box class="session-actions" spacing={8} halign={Gtk.Align.START}>
+                        <button class="session-action lock" onClicked={() => runSessionAction("lock-screen")}>
                             Lock
                         </button>
-                        <button className="session-action" onClicked={() => runSessionAction("logout")}>
+                        <button class="session-action" onClicked={() => runSessionAction("logout")}>
                             Logout
                         </button>
-                        <button className="session-action" onClicked={() => runSessionAction("sleep")}>
+                        <button class="session-action" onClicked={() => runSessionAction("sleep")}>
                             Sleep
                         </button>
-                        <button className="session-action" onClicked={() => runSessionAction("reboot")}>
+                        <button class="session-action" onClicked={() => runSessionAction("reboot")}>
                             Reboot
                         </button>
-                        <button className="session-action danger" onClicked={() => runSessionAction("poweroff")}>
+                        <button class="session-action danger" onClicked={() => runSessionAction("poweroff")}>
                             Poweroff
                         </button>
                     </box>
