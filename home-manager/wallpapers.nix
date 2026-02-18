@@ -10,19 +10,19 @@ let
   isSupportedImage = name:
     let lower = lib.toLower name;
     in
-      lib.hasSuffix ".jpg" lower
-      || lib.hasSuffix ".jpeg" lower
-      || lib.hasSuffix ".png" lower
-      || lib.hasSuffix ".webp" lower
-      || lib.hasSuffix ".bmp" lower;
+    lib.hasSuffix ".jpg" lower
+    || lib.hasSuffix ".jpeg" lower
+    || lib.hasSuffix ".png" lower
+    || lib.hasSuffix ".webp" lower
+    || lib.hasSuffix ".bmp" lower;
 
   wallpaperFiles = if wallpapersDir == null then [ ] else
-    builtins.filter
-      (name:
-        (builtins.readDir wallpapersDir)."${name}" == "regular"
-        && isSupportedImage name
-      )
-      (builtins.attrNames (builtins.readDir wallpapersDir));
+  builtins.filter
+    (name:
+      (builtins.readDir wallpapersDir)."${name}" == "regular"
+      && isSupportedImage name
+    )
+    (builtins.attrNames (builtins.readDir wallpapersDir));
 
   wallpaperTargets = builtins.listToAttrs (map
     (name: {

@@ -7,7 +7,7 @@
     ];
 
     workspace = [
-            "special,gapsin:24,gapsout:64"
-        ];
-    };
+      "special,gapsin:24,gapsout:64"
+    ];
+  };
 }

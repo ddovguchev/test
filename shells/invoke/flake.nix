@@ -7,22 +7,23 @@
   };
 
   outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = import nixpkgs { inherit system; };
-    in
-    {
-      devShells.default = pkgs.mkShell {
-        packages = [
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+      in
+      {
+        devShells.default = pkgs.mkShell {
+          packages = [
             # Installation.
             (pkgs.python311.withPackages (python-pkgs: [
-                python-pkgs.pip
-                python-pkgs.requests
-                python-pkgs.virtualenv
+              python-pkgs.pip
+              python-pkgs.requests
+              python-pkgs.virtualenv
             ]))
-        ];
+          ];
 
-        LD_LIBRARY_PATH =
-                "${pkgs.stdenv.cc.cc.lib}/lib/:${pkgs.libGL}/lib/:${pkgs.glib.out}/lib/:$LD_LIBRARY_PATH";
-      };
-    });
+          LD_LIBRARY_PATH =
+            "${pkgs.stdenv.cc.cc.lib}/lib/:${pkgs.libGL}/lib/:${pkgs.glib.out}/lib/:$LD_LIBRARY_PATH";
+        };
+      });
 }

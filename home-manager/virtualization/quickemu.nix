@@ -1,8 +1,8 @@
-{pkgs, ...}:
+{ pkgs, ... }:
 {
-    home.packages = with pkgs; [
-        quickemu
-    ];
+  home.packages = with pkgs; [
+    quickemu
+  ];
 
-    # home.file.".config/television/config.toml".source = ./config.toml;
+  # home.file.".config/television/config.toml".source = ./config.toml;
 }

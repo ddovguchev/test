@@ -1,8 +1,8 @@
-{...}:
+{ ... }:
 {
-    imports = [
-        ./winapps
-        ./quickemu.nix
-        # ./nemu.nix
-    ];
+  imports = [
+    ./winapps
+    ./quickemu.nix
+    # ./nemu.nix
+  ];
 }

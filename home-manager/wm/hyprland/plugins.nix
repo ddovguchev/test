@@ -1,7 +1,7 @@
 { config, pkgs, settings, lib, ... }:
 
 {
-    wayland.windowManager.hyprland.extraConfig = ''
+  wayland.windowManager.hyprland.extraConfig = ''
     plugin {
         dynamic-cursors {
             enabled = true
@@ -39,7 +39,7 @@
             }
         }
     }
-    '' + lib.optionalString settings.themeDetails.bordersPlusPlus ''
+  '' + lib.optionalString settings.themeDetails.bordersPlusPlus ''
     plugin {
       borders-plus-plus {
           add_borders = 2 # 0 - 9
@@ -55,5 +55,5 @@
           natural_rounding = yes
       }
     }
-    '';
+  '';
 }
