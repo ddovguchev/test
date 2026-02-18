@@ -14,7 +14,7 @@ in {
 
         exec-once = [
             "swww-daemon &"
-            "ags &"
+            "asztal &"
             "[workspace 2 silent] firefox"
             "[workspace 3 silent] kitty btop"
             "[workspace 3 silent] kitty ncmpcpp"

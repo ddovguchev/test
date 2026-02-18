@@ -8,7 +8,7 @@
       id = 0;
       isDefault = true;
       settings = {
-        "browser.startup.homepage" = "https://duckduckgo.com";
+        "browser.startup.homepage" = "https://google.com";
         "browser.search.suggest.enabled" = true;
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "privacy.trackingprotection.enabled" = true;

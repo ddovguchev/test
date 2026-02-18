@@ -23,7 +23,7 @@
             # Window/Session actions.
             "$mod, Q, killactive,"
             "$mod, W, fullscreen, 1"
-            "$mode SHIFT, W, fullscreen,"
+            "$mod SHIFT, W, fullscreen,"
             "$mod, E, togglefloating,"
             "$mod, delete, exit,"
 
@@ -44,7 +44,7 @@
 
             # Launcher
             # "$mod, A, exec, rofi -show drun -kb-cancel Super_L"
-            "$mod SHIFT, A, exec, ags -t launcher"
+            "$mod SHIFT, A, exec, asztal -t launcher"
 
             # Screenshot
             "$mod SHIFT, z, exec, wl-copy < $(grimshot --notify save area $XDG_PICTURES_DIR/Screenshots/$(TZ=utc date +'screenshot_%Y-%m-%d-%H%M%S.%3N.png'))"
@@ -78,16 +78,16 @@
             "$mod, TAB, focusmonitor, +1"
 
             # Switch workspaces.
-            "$mod, 1,exec,hyprworkspace 1"
-            "$mod, 2,exec,hyprworkspace 2"
-            "$mod, 3,exec,hyprworkspace 3"
-            "$mod, 4,exec,hyprworkspace 4"
-            "$mod, 5,exec,hyprworkspace 5"
-            "$mod, 6,exec,hyprworkspace 6"
-            "$mod, 7,exec,hyprworkspace 7"
-            "$mod, 8,exec,hyprworkspace 8"
-            "$mod, 9,exec,hyprworkspace 9"
-            "$mod, 0,exec,hyprworkspace 10"
+            "$mod, 1, workspace, 1"
+            "$mod, 2, workspace, 2"
+            "$mod, 3, workspace, 3"
+            "$mod, 4, workspace, 4"
+            "$mod, 5, workspace, 5"
+            "$mod, 6, workspace, 6"
+            "$mod, 7, workspace, 7"
+            "$mod, 8, workspace, 8"
+            "$mod, 9, workspace, 9"
+            "$mod, 0, workspace, 10"
 
             "$mod CTRL, h, workspace, r-1"
             "$mod, Left, workspace, r-1"

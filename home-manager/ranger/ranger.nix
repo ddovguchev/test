@@ -3,7 +3,7 @@
   programs.ranger = {
     enable = true;
     settings = {
-      defaultEditor = "vim";
+      defaultEditor = "nvim";
     };
   };
 }
