@@ -772,9 +772,6 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     }}
                     vertical
                 >
-                    <box className="session-title-row">
-                        <label className="session-title" label="Session" />
-                    </box>
                     <centerbox className="session-actions" hexpand>
                         <box className="session-actions-left">
                             <button className="session-action" onClicked={() => runSessionAction("lock-screen")}>

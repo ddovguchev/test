@@ -65,10 +65,7 @@ done
 
 cd "$(dirname "$0")"
 
-# Update repo only when this is a git checkout
-if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  git pull
-fi
+
 
 # Validate action
 case $ACTION in
