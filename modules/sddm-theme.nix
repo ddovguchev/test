@@ -1,7 +1,9 @@
+# If SDDM still freezes, set useDefaultTheme = true to switch to chili theme
 { lib, pkgs, ... }:
 let
-  themeName = "silent";
-  themeDir = "/share/sddm/themes/${themeName}";
+  useDefaultTheme = false;
+  themeName = if useDefaultTheme then "chili" else "silent";
+  themeDir = "/share/sddm/themes/silent";
   src = ../sddm/SilentSDDM;
 
   silentTheme = pkgs.stdenvNoCC.mkDerivation {
@@ -21,25 +23,27 @@ let
       cp "$src/qmldir" "$base/qmldir"
       cp "$src/metadata.desktop" "$base/metadata.desktop"
 
+      cp "$src/configs/minimal.conf" "$base/configs/minimal.conf"
       cp "$src/configs/rei.conf" "$base/configs/rei.conf"
       cp "$src/configs/silvia.conf" "$base/configs/silvia.conf"
-      cp "$src/backgrounds/rei.png" "$base/backgrounds/rei.png"
-      cp "$src/backgrounds/silvia.png" "$base/backgrounds/silvia.png"
-      cp "$src/backgrounds/rei.mp4" "$base/backgrounds/rei.mp4"
-      cp "$src/backgrounds/silvia.mp4" "$base/backgrounds/silvia.mp4"
 
-      # Keep the shipped default configuration aligned with our minimal set.
+      # Copy backgrounds only if they exist (optional - minimal.conf uses solid colors)
+      for f in rei.png silvia.png rei.mp4 silvia.mp4; do
+        [ -f "$src/backgrounds/$f" ] && cp "$src/backgrounds/$f" "$base/backgrounds/"
+      done
+
       substituteInPlace "$base/metadata.desktop" \
-        --replace-warn "ConfigFile=configs/default.conf" "ConfigFile=configs/rei.conf"
+        --replace-warn "ConfigFile=configs/default.conf" "ConfigFile=configs/minimal.conf"
 
       runHook postInstall
     '';
   };
-in
-{
-  environment.systemPackages = [ silentTheme ];
-
-  services.displayManager.sddm = {
+  sddmConfig = if useDefaultTheme then {
+    enable = true;
+    package = lib.mkDefault pkgs.kdePackages.sddm;
+    wayland.enable = true;
+    theme = themeName;
+  } else {
     enable = true;
     package = lib.mkDefault pkgs.kdePackages.sddm;
     wayland.enable = true;
@@ -53,9 +57,14 @@ in
     ];
     settings = {
       General = {
-        InputMethod = "qtvirtualkeyboard";
-        GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}${themeDir}/components/,QT_IM_MODULE=qtvirtualkeyboard";
+        # InputMethod removed - qtvirtualkeyboard can cause SDDM to freeze
+        GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}${themeDir}/components/";
       };
     };
   };
+in
+{
+  environment.systemPackages = lib.mkIf (!useDefaultTheme) [ silentTheme ];
+
+  services.displayManager.sddm = sddmConfig;
 }
