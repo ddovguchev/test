@@ -37,7 +37,7 @@
     # Shell
     ./shells/zsh.nix
 
-    # AGS bar (home-manager/ags - совместим с ags v3)
+    # AGS bar (home-manager/ags)
     ./ags/ags.nix
 
     # WM
