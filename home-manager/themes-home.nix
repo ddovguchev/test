@@ -4,6 +4,8 @@ let
   details = settings.themeDetails;
 in
 {
+  stylix.enableReleaseChecks = false;
+
   gtk = {
     enable = true;
     iconTheme = {

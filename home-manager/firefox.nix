@@ -1,5 +1,7 @@
-{ ... }:
+{ config, ... }:
 {
+  stylix.targets.firefox.profileNames = [ "hikari" ];
+
   programs.firefox = {
     enable = true;
     profiles.hikari = {

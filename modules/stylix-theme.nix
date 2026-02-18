@@ -1,5 +1,5 @@
 # Integrated from dotfiles themes - stylix config
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 let
   details = {
     themeName = "catppuccin-mocha";
@@ -40,4 +40,6 @@ in
       emoji = { package = details.fontPkg; name = details.font; };
     };
   };
+
+  stylix.enableReleaseChecks = false;
 }

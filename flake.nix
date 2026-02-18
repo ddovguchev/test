@@ -75,7 +75,7 @@
             imports = [
               ./home-manager/home-manager.nix
               inputs.zen-browser.homeModules.twilight
-              inputs.nixvim.homeManagerModules.nixvim
+              inputs.nixvim.homeModules.nixvim
             ];
           };
         })

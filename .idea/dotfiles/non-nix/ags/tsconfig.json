@@ -9,7 +9,7 @@
         "checkJs": true,
         "strict": true,
         "noImplicitAny": false,
-        "baseUrl": ".",
+        "baseUrl": "./",
         "typeRoots": [
             "./types",
             "./node_modules/@girs"

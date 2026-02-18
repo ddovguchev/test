@@ -95,11 +95,11 @@ home-manager switch --flake .
 
 ## Themes
 
-![Screen](./assets/catppuccin/overview.png)
+![Screen](assets/catppuccin/overview.png)
 
-![Screen2](./assets/nord/overview.png)
+![Screen2](assets/nord/overview.png)
 
-![Screen3](./assets/everforest/overview.png)
+![Screen3](assets/everforest/overview.png)
 
 ## Credits
 * [librephoenix/nixos-config](https://github.com/librephoenix/nixos-config?tab=readme-ov-file) - The repo structure is heavily inspired by this repo.

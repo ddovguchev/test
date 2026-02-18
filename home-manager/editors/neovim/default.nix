@@ -30,5 +30,8 @@
     ] ++ lib.optional (settings.themeDetails.themeName != null)
         ./colorscheme/${settings.theme}.nix;
 
-    programs.nixvim.enable = true;
+    programs.nixvim = {
+      enable = true;
+      version.enableNixpkgsReleaseCheck = false;
+    };
 }
