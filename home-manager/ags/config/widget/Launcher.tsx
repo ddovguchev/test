@@ -23,7 +23,7 @@ export default function Launcher(gdkmonitor: Gdk.Monitor) {
     const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
     return <window
-        className="LauncherOverlay"
+        class="LauncherOverlay"
         gdkmonitor={gdkmonitor}
         anchor={TOP | BOTTOM | LEFT | RIGHT}
         exclusivity={Astal.Exclusivity.IGNORE}
@@ -34,19 +34,19 @@ export default function Launcher(gdkmonitor: Gdk.Monitor) {
             })
         }}
         application={app}>
-        <box className="launcher-backdrop" vertical>
-            <button className="launcher-dismiss" onClicked={closeLauncher} />
-            <box className="launcher-panel" vertical>
+        <box class="launcher-backdrop" vertical>
+            <button class="launcher-dismiss" onClicked={closeLauncher} />
+            <box class="launcher-panel" vertical>
                 <entry
-                    className="launcher-search"
+                    class="launcher-search"
                     placeholderText="Search applications..."
                     text={launcherQuery()}
                     onChanged={(self: any) => setLauncherQuery(self.text)}
                 />
-                <scrolledwindow className="launcher-scroll" vexpand>
-                    <flowbox className="launcher-grid">
+                <scrolledwindow class="launcher-scroll" vexpand>
+                    <flowbox class="launcher-grid">
                         {apps.map((entry: any) => (
-                            <button className="app-tile" onClicked={() => launchApp(entry.app)}>
+                            <button class="app-tile" onClicked={() => launchApp(entry.app)}>
                                 <label label={entry.name} />
                             </button>
                         ))}

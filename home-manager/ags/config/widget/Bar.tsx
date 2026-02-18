@@ -196,7 +196,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
     return <window
         name="bar"
         namespace="bar"
-        className="Bar"
+        class="Bar"
         gdkmonitor={gdkmonitor}
         exclusivity={Astal.Exclusivity.EXCLUSIVE}
         anchor={TOP | LEFT | RIGHT}
@@ -215,7 +215,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         }}
         application={app}>
         <box
-            className="shell-panel mode-none"
+            class="shell-panel mode-none"
             setup={(self: any) => {
                 const initial = getModeSize(panelMode())
                 let currentWidth = initial.width
@@ -224,7 +224,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 
                 self.set_size_request(initial.width, initial.height)
                 panelMode.subscribe((mode: string) => {
-                    self.className = `shell-panel mode-${mode}`
+                    const ctx = self.get_style_context?.()
+                    if (ctx) {
+                        ["mode-none", "mode-apps", "mode-wallpaper", "mode-session", "mode-notifications"].forEach((c) => ctx.remove_class(c))
+                        ctx.add_class(`mode-${mode}`)
+                    }
                     const target = getModeSize(mode)
                     if (animationId !== 0) GLib.source_remove(animationId)
                     animationId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 16, () => {
@@ -248,7 +252,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             vertical
         >
             <centerbox
-                className="shell-top-row"
+                class="shell-top-row"
                 setup={(self: any) => {
                     self.visible = panelMode() === "none"
                     panelMode.subscribe((mode: string) => {
@@ -258,7 +262,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             >
                 <box>
                     <button
-                        className="apps-button"
+                        class="apps-button"
                         onClicked={() => togglePanelMode("apps")}
                         setup={(self: any) => {
                             const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(appsIcon, 14, 14, true)
@@ -270,7 +274,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         halign={Gtk.Align.CENTER}
                     />
                     <label
-                        className="clock-label"
+                        class="clock-label"
                         label={time()}
                         setup={(self: any) => {
                             self.visible = panelMode() === "none"
@@ -283,7 +287,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 <box />
                 <box>
                     <button
-                        className="notifications-button"
+                        class="notifications-button"
                         onClicked={() => togglePanelMode("notifications")}
                         setup={(self: any) => {
                             const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(notificationsIcon, 14, 14, true)
@@ -295,7 +299,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         halign={Gtk.Align.CENTER}
                     />
                     <button
-                        className="session-button"
+                        class="session-button"
                         onClicked={() => togglePanelMode("session")}
                         halign={Gtk.Align.CENTER}
                     >
@@ -305,7 +309,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             </centerbox>
 
             <box
-                className="shell-content"
+                class="shell-content"
                 setup={(self: any) => {
                     self.visible = panelMode() !== "none"
                     panelMode.subscribe((mode: string) => {
@@ -324,7 +328,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     vertical
                 >
                     <entry
-                        className="apps-input"
+                        class="apps-input"
                         placeholderText="Search app..."
                         setup={(self: any) => {
                             appsEntryRef = self
@@ -340,7 +344,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                         }}
                     />
                     <box
-                        className="apps-menu-scroll"
+                        class="apps-menu-scroll"
                         vexpand
                         setup={(self: any) => {
                             self.get_children?.().forEach((child: any) => self.remove(child))
@@ -420,9 +424,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     }}
                     vertical
                 >
-                    <label className="wallpaper-title" label="Select wallpapers" />
+                    <label class="wallpaper-title" label="Select wallpapers" />
                     <box
-                        className="wallpaper-block"
+                        class="wallpaper-block"
                         setup={(self: any) => {
                             self.get_children?.().forEach((child: any) => self.remove(child))
                             const files = listPictureFiles()
@@ -538,23 +542,23 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     }}
                     vertical
                 >
-                    <box className="session-title-row">
-                        <label className="session-title" label="Session" />
+                    <box class="session-title-row">
+                        <label class="session-title" label="Session" />
                     </box>
-                    <box className="session-actions" homogeneous>
-                        <button className="session-action" onClicked={() => runSessionAction("lock-screen")}>
+                    <box class="session-actions" homogeneous>
+                        <button class="session-action" onClicked={() => runSessionAction("lock-screen")}>
                             Lock
                         </button>
-                        <button className="session-action" onClicked={() => runSessionAction("logout")}>
+                        <button class="session-action" onClicked={() => runSessionAction("logout")}>
                             Logout
                         </button>
-                        <button className="session-action" onClicked={() => runSessionAction("sleep")}>
+                        <button class="session-action" onClicked={() => runSessionAction("sleep")}>
                             Sleep
                         </button>
-                        <button className="session-action" onClicked={() => runSessionAction("reboot")}>
+                        <button class="session-action" onClicked={() => runSessionAction("reboot")}>
                             Reboot
                         </button>
-                        <button className="session-action danger" onClicked={() => runSessionAction("poweroff")}>
+                        <button class="session-action danger" onClicked={() => runSessionAction("poweroff")}>
                             Poweroff
                         </button>
                     </box>
