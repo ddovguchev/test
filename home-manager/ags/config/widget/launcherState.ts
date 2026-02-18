@@ -1,34 +1,26 @@
-import { createState } from "ags"
+import { Variable } from "astal"
 
-export type PanelMode = "none" | "apps" | "notifications" | "wallpaper" | "session"
+export type PanelMode = "none" | "apps" | "notifications" | "wallpaper" | "workspaces" | "session"
 
-const [panelModeAccessor, setPanelModeState] = createState<PanelMode>("none")
-const [launcherQueryAccessor, setLauncherQueryState] = createState("")
-const [launcherVisibleAccessor, setLauncherVisibleState] = createState(false)
+export const panelMode = Variable<PanelMode>("none")
+export const launcherQuery = Variable("")
+export const launcherVisible = Variable(false)
 
-panelModeAccessor.subscribe(() => {
-    setLauncherVisibleState(panelModeAccessor() === "apps")
+panelMode.subscribe((mode: PanelMode) => {
+    launcherVisible.set(mode === "apps")
 })
 
-export const panelMode = panelModeAccessor
-export const launcherQuery = launcherQueryAccessor
-export const launcherVisible = launcherVisibleAccessor
-
 export function setPanelMode(mode: PanelMode) {
-    setPanelModeState(mode)
+    panelMode.set(mode)
 }
 
 export function togglePanelMode(mode: PanelMode) {
-    setPanelModeState(panelMode() === mode ? "none" : mode)
+    panelMode.set(panelMode() === mode ? "none" : mode)
 }
 
 export function closePanel() {
-    setPanelModeState("none")
-    setLauncherQueryState("")
-}
-
-export function setLauncherQuery(value: string) {
-    setLauncherQueryState(value)
+    panelMode.set("none")
+    launcherQuery.set("")
 }
 
 export const toggleLauncher = () => togglePanelMode("apps")

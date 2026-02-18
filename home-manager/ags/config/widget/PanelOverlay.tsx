@@ -1,34 +1,29 @@
-import app from "ags/gtk3/app"
-import { Astal, Gtk } from "ags/gtk3"
-import type { Gdk } from "ags/gtk3"
+import { App, Astal, Gtk } from "astal/gtk3"
+import type { Gdk } from "astal/gtk3"
 import { closePanel, panelMode } from "./launcherState"
 
 export default function PanelOverlay(gdkmonitor: Gdk.Monitor) {
     const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
 
     return <window
-        class="PanelOverlay mode-none"
+        className="PanelOverlay mode-none"
         gdkmonitor={gdkmonitor}
         anchor={TOP | LEFT | RIGHT}
         exclusivity={Astal.Exclusivity.IGNORE}
-        $={(self: any) => {
+        setup={(self: any) => {
             self.visible = false
             panelMode.subscribe((mode: string) => {
-                const ctx = self.get_style_context?.()
-                if (ctx) {
-                    ["mode-none", "mode-apps", "mode-wallpaper", "mode-session", "mode-notifications"].forEach((c) => ctx.remove_class(c))
-                    ctx.add_class(`mode-${mode}`)
-                }
+                self.className = `PanelOverlay mode-${mode}`
                 self.visible = mode !== "none"
             })
         }}
-        application={app}>
-        <box class="panel-root" halign={Gtk.Align.CENTER} vertical>
-            <box class="panel-header">
+        application={App}>
+        <box className="panel-root" halign={Gtk.Align.CENTER} vertical>
+            <box className="panel-header">
                 <label label="Panel" />
                 <button onClicked={closePanel}>Close</button>
             </box>
-            <box class="panel-content" vertical>
+            <box className="panel-content" vertical>
                 <label label="Content" />
             </box>
         </box>

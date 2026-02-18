@@ -1,9 +1,8 @@
-import app from "ags/gtk3/app"
-import { Astal } from "ags/gtk3"
-import type { Gdk } from "ags/gtk3"
+import { App, Astal } from "astal/gtk3"
+import type { Gdk } from "astal/gtk3"
 import Gio from "gi://Gio"
 import type { AppInfo } from "gi://Gio"
-import { closeLauncher, launcherQuery, launcherVisible, setLauncherQuery } from "./launcherState"
+import { closeLauncher, launcherQuery, launcherVisible } from "./launcherState"
 
 const apps = Gio.AppInfo
     .get_all()
@@ -23,30 +22,30 @@ export default function Launcher(gdkmonitor: Gdk.Monitor) {
     const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor
 
     return <window
-        class="LauncherOverlay"
+        className="LauncherOverlay"
         gdkmonitor={gdkmonitor}
         anchor={TOP | BOTTOM | LEFT | RIGHT}
         exclusivity={Astal.Exclusivity.IGNORE}
-        $={(self: any) => {
+        setup={(self: any) => {
             self.visible = false
-            launcherVisible.subscribe(() => {
-                self.visible = launcherVisible()
+            launcherVisible.subscribe((visible: boolean) => {
+                self.visible = visible
             })
         }}
-        application={app}>
-        <box class="launcher-backdrop" vertical>
-            <button class="launcher-dismiss" onClicked={closeLauncher} />
-            <box class="launcher-panel" vertical>
+        application={App}>
+        <box className="launcher-backdrop" vertical>
+            <button className="launcher-dismiss" onClicked={closeLauncher} />
+            <box className="launcher-panel" vertical>
                 <entry
-                    class="launcher-search"
+                    className="launcher-search"
                     placeholderText="Search applications..."
                     text={launcherQuery()}
-                    onChanged={(self: any) => setLauncherQuery(self.text)}
+                    onChanged={(self: any) => launcherQuery.set(self.text)}
                 />
-                <scrolledwindow class="launcher-scroll" vexpand>
-                    <flowbox class="launcher-grid">
+                <scrolledwindow className="launcher-scroll" vexpand>
+                    <flowbox className="launcher-grid">
                         {apps.map((entry: any) => (
-                            <button class="app-tile" onClicked={() => launchApp(entry.app)}>
+                            <button className="app-tile" onClicked={() => launchApp(entry.app)}>
                                 <label label={entry.name} />
                             </button>
                         ))}
