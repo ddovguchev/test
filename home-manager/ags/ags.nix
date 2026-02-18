@@ -98,7 +98,8 @@ in
       After = [ "graphical-session-pre.target" ];
     };
     Service = {
-      ExecStart = "${pkgs.runtimeShell} -c 'sleep 2; exec ${agsBin}/bin/ags run -d ${agsConfig} ${agsConfig}/app.ts -g 3'";
+      WorkingDirectory = "${agsConfig}";
+      ExecStart = "${pkgs.runtimeShell} -c 'sleep 2; exec ${agsBin}/bin/ags run -d \"${agsConfig}\" app.ts -g 3'";
       Restart = "on-failure";
       RestartSec = 2;
       KillMode = "mixed";
