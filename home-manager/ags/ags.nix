@@ -54,7 +54,7 @@ EOF
   '';
   agsBin = config.programs.ags.finalPackage;
   # Скрипт запуска: ждёт Wayland и конфиг, затем запускает ags
-  agsStartScript = pkgs.writeShellScript "ags-start" ''
+  agsStartScript = pkgs.writeScriptBin "ags-start" ''
     export XDG_CONFIG_HOME="''${XDG_CONFIG_HOME:-$HOME/.config}"
     export XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
     CONFIG_DIR="$XDG_CONFIG_HOME/ags"
