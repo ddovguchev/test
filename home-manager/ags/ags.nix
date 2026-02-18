@@ -84,7 +84,7 @@ in
   programs.ags = {
     enable = true;
     configDir = agsConfig;
-    extraPackages = with pkgs.astal; [ wireplumber notifd ];
+    extraPackages = with pkgs.astal; [ wireplumber notifd ] ++ [ pkgs.curl ];
     systemd.enable = false; # баг модуля: "expected ']' but got '"'" в unit
   };
 
