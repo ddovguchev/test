@@ -7,8 +7,32 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ags = {
+      url = "github:Aylur/ags";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    winapps = {
+      url = "github:winapps-org/winapps";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = { self, nixpkgs, home-manager, flake-utils, ... }:
+  outputs = { self, nixpkgs, home-manager, flake-utils, stylix, sops-nix, nixvim, ags, zen-browser, winapps, ... }:
   let
     system = "x86_64-linux";
     pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
@@ -16,7 +40,11 @@
   {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       inherit system;
+      specialArgs = { inherit self; };
       modules = [
+        stylix.nixosModules.stylix
+        # sops-nix.nixosModules.sops  # Enable when secrets are configured
+        ./modules/stylix-theme.nix
         ./hardware-configuration.nix
         ./modules/boot.nix
         ./modules/networking.nix
@@ -26,18 +54,31 @@
         ./modules/hyprland.nix
         ./modules/audio.nix
         ./modules/packages.nix
+        ./modules/gaming/steam.nix
+        ./modules/gaming/nethack.nix
         home-manager.nixosModules.home-manager
-        ({ config, pkgs, ... }: {
+        ({ config, pkgs, self, ... }: {
           system.stateVersion = "25.11";
           nixpkgs.config.allowUnfree = true;
           time.timeZone = "Europe/Minsk";
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.backupFileExtension = "bak";
-          home-manager.users.hikari = { pkgs, ... }: {
+          home-manager.extraSpecialArgs = {
+            inherit self;
+            inputs = { inherit stylix sops-nix nixvim ags zen-browser winapps; };
+          };
+          home-manager.users.hikari = { pkgs, config, inputs, ... }: let
+            settings = import ./home-manager/settings.nix { inherit pkgs; };
+          in {
             home.stateVersion = "25.11";
             programs.home-manager.enable = true;
-            imports = [ ./home-manager/home-manager.nix ];
+            _module.args.settings = settings;
+            imports = [
+              ./home-manager/home-manager.nix
+              inputs.zen-browser.homeModules.twilight
+              inputs.nixvim.homeManagerModules.nixvim
+            ];
           };
         })
       ];
