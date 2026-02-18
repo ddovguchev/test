@@ -51,25 +51,13 @@ let
     ]
     (builtins.readFile "${cfg}/style.scss");
   agsConfig = pkgs.runCommand "ags-config" { } ''
-        mkdir -p $out/widget/shared $out/widget/services $out/node_modules $out/assets
+        mkdir -p $out/widget $out/node_modules $out/assets
         cp ${cfg}/app.ts $out/app.ts
         cp ${cfg}/tsconfig.json $out/tsconfig.json
         cp ${cfg}/env.d.ts $out/env.d.ts
-        cp ${cfg}/.gitignore $out/.gitignore
-        cp -r ${cfg}/assets/. $out/assets/
+        cp ${cfg}/.gitignore $out/.gitignore 2>/dev/null || true
+        cp -r ${cfg}/assets/. $out/assets/ 2>/dev/null || true
         cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
-        cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
-        cp ${cfg}/widget/launcherState.ts $out/widget/launcherState.ts
-        cp ${cfg}/widget/panelVisibility.ts $out/widget/panelVisibility.ts
-        cp ${cfg}/widget/requestHandler.ts $out/widget/requestHandler.ts
-        cp ${cfg}/widget/shared/icons.ts $out/widget/shared/icons.ts
-        cp ${cfg}/widget/shared/mode.ts $out/widget/shared/mode.ts
-        cp ${cfg}/widget/shared/state.ts $out/widget/shared/state.ts
-        cp ${cfg}/widget/shared/shell.ts $out/widget/shared/shell.ts
-        cp ${cfg}/widget/services/apps.ts $out/widget/services/apps.ts
-        cp ${cfg}/widget/services/session.ts $out/widget/services/session.ts
-        cp ${cfg}/widget/services/wallpapers.ts $out/widget/services/wallpapers.ts
-        cp ${cfg}/widget/services/workspaces.ts $out/widget/services/workspaces.ts
 
         cat > $out/style.scss <<'EOF'
     ${styleScss}
@@ -129,7 +117,6 @@ let
       exit 0
     fi
 
-    sleep 2
     cd "''${AGS_CONFIG:-$HOME/.config/ags}" && exec "${bin}" run --gtk 3 "$@"
   '';
   agsScripts = pkgs.runCommand "ags-scripts" { } ''
