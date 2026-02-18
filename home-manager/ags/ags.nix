@@ -55,7 +55,7 @@ in
     enable = true;
     configDir = agsConfig;
     extraPackages = with pkgs.astal; [ wireplumber notifd ];
-    systemd.enable = false;  # We define our own service with --gtk 3
+    systemd.enable = false; # We define our own service with --gtk 3
   };
 
   # AGS systemd service (optional - exec-once in Hyprland is primary)
