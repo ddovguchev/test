@@ -89,7 +89,7 @@ in
 
   home.packages = [ agsStartScript ];
 
-  # Systemd: /bin/sh -c чтобы избежать 203/EXEC (shebang в nix store)
+  # Systemd: /bin/sh -c (список ломает unit file, используем одну строку)
   systemd.user.services.ags = {
     Unit = {
       Description = "AGS - Astal/GTK shell bar";
@@ -98,16 +98,7 @@ in
     };
     Service = {
       Type = "simple";
-      ExecStart = [
-        "/bin/sh" "-c"
-        ''
-          for _ in $(seq 1 25); do
-            [ -f "$HOME/.config/ags/app.ts" ] && break
-            sleep 0.4
-          done
-          cd "$HOME/.config/ags" && exec ${agsBin}/bin/ags run --gtk 3
-        ''
-      ];
+      ExecStart = "/bin/sh -c 'for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25; do [ -f \"\$HOME/.config/ags/app.ts\" ] && break; sleep 0.4; done; cd \"\$HOME/.config/ags\" && exec ${agsBin}/bin/ags run --gtk 3'";
       Restart = "on-failure";
       RestartSec = 5;
       Environment = [ "PATH=%h/.nix-profile/bin:/run/current-system/sw/bin" ];
