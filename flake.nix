@@ -38,9 +38,10 @@
             time.timeZone = "Europe/Minsk";
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = {
-              inherit inputs;
-            };
+          home-manager.extraSpecialArgs = {
+            inherit inputs;
+            flakeRoot = self;
+          };
             home-manager.backupFileExtension = "bak";
             home-manager.users.hikari = { pkgs, ... }: {
               home.stateVersion = "25.11";

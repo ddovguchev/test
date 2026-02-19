@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, flakeRoot ? null, ... }:
 let
-  cfg = ./config;
+  # Use flake root path when available - ensures config is from the actual project
+  cfg = if flakeRoot != null
+    then (flakeRoot + "/home-manager/ags/config")
+    else ./config;
   astalDeps = [
     pkgs.astal.astal3
     pkgs.astal.io
@@ -48,16 +51,19 @@ let
       palette.ags.panelBorder
     ]
     (builtins.readFile "${cfg}/style.scss");
-  agsConfig = pkgs.runCommand "ags-config" { } ''
+  agsConfig = pkgs.runCommand "ags-config" {
+    src = cfg;
+    # Ensures config changes trigger rebuild
+  } ''
         mkdir -p $out/widget $out/node_modules $out/assets
-        cp ${cfg}/app.ts $out/app.ts
-        cp ${cfg}/tsconfig.json $out/tsconfig.json
-        cp ${cfg}/env.d.ts $out/env.d.ts
-        cp ${cfg}/.gitignore $out/.gitignore
-        cp -r ${cfg}/assets/. $out/assets/
-        cp ${cfg}/widget/Bar.tsx $out/widget/Bar.tsx
-        cp ${cfg}/widget/Launcher.tsx $out/widget/Launcher.tsx
-        cp ${cfg}/widget/launcherState.ts $out/widget/launcherState.ts
+        cp $src/app.ts $out/app.ts
+        cp $src/tsconfig.json $out/tsconfig.json
+        cp $src/env.d.ts $out/env.d.ts
+        cp $src/.gitignore $out/.gitignore 2>/dev/null || true
+        cp -r $src/assets/. $out/assets/
+        cp $src/widget/Bar.tsx $out/widget/Bar.tsx
+        cp $src/widget/Launcher.tsx $out/widget/Launcher.tsx
+        cp $src/widget/launcherState.ts $out/widget/launcherState.ts
 
         cat > $out/style.scss <<'EOF'
     ${styleScss}
@@ -94,11 +100,17 @@ let
     export XDG_DATA_DIRS="${gsettingsData}:${data}:''${XDG_DATA_DIRS:-}"
     cd "''${AGS_CONFIG:-$HOME/.config/ags}" && exec "${bin}" run "$@"
   '';
+  agsRebuildSh = pkgs.writeShellScript "ags-rebuild" ''
+    echo "Restarting AGS to apply config changes..."
+    systemctl --user restart ags.service
+    echo "Done. If navbar still unchanged, run: nixos-rebuild switch --flake .  (or home-manager switch)"
+  '';
   agsScripts = pkgs.runCommand "ags-scripts" { } ''
     mkdir -p $out/bin
     cp ${agsSh} $out/bin/ags
     cp ${agsRunSh} $out/bin/ags-run
-    chmod +x $out/bin/ags $out/bin/ags-run
+    cp ${agsRebuildSh} $out/bin/ags-rebuild
+    chmod +x $out/bin/ags $out/bin/ags-run $out/bin/ags-rebuild
   '';
 in
 {

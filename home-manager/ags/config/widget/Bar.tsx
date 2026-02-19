@@ -1,3 +1,4 @@
+// AGS Bar - navbar layout: spacer left, content right (apps, time, workspaces, notifications, session, IP)
 import { App, Astal, Gtk } from "astal/gtk3"
 import type { Gdk } from "astal/gtk3"
 import { Variable } from "astal"
