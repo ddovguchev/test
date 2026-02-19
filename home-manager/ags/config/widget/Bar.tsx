@@ -166,9 +166,9 @@ function switchWorkspace(id: number) {
     closePanel()
 }
 
-function runSessionAction(action: "lock-screen" | "logout" | "sleep" | "reboot" | "poweroff") {
+function runSessionAction(action: "lock-screeneerrrr" | "logout" | "sleep" | "reboot" | "poweroff") {
     const commands: Record<string, string> = {
-        "lock-screen": "sh -lc 'command -v hyprlock >/dev/null && hyprlock || command -v swaylock >/dev/null && swaylock -f || loginctl lock-session'",
+        "lock-screeneerrrr": "sh -lc 'command -v hyprlock >/dev/null && hyprlock || command -v swaylock >/dev/null && swaylock -f || loginctl lock-session'",
         "logout": "hyprctl dispatch exit",
         "sleep": "systemctl suspend",
         "reboot": "systemctl reboot",
