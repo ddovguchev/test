@@ -6,8 +6,9 @@
   # Enable lm_sensors program (automatically loads kernel modules and makes commands available)
   programs.lm_sensors.enable = lib.mkDefault true;
 
-  # Add fancontrol package
+  # Add lm_sensors and fancontrol packages explicitly
   environment.systemPackages = with pkgs; [
+    lm_sensors
     fancontrol
   ];
 
