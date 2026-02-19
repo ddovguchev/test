@@ -303,7 +303,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         if (mode === "apps") return { width: Math.round(monitorWidth * 0.6), height: 400 }
         if (mode === "wallpaper") return { width: Math.max(1320, Math.round(monitorWidth * 0.5)), height: 280 }
         if (mode === "workspaces") return { width: Math.max(1320, Math.round(monitorWidth * 0.56)), height: 300 }
-        if (mode === "session") return { width: Math.round(monitorWidth * 0.36), height: 190 }
+        if (mode === "session") return { width: 260, height: 64 }
         if (mode === "notifications") return { width: Math.round(monitorWidth * 0.3), height: 180 }
         return { width: fullWidth, height: 36 }
     }
@@ -382,6 +382,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     })
                 }}
             >
+                <box hexpand={true} />
+                <box />
                 <box>
                     <button
                         className="apps-button"
@@ -405,9 +407,6 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                             })
                         }}
                     />
-                </box>
-                <box />
-                <box>
                     <button
                         className="workspaces-button"
                         onClicked={() => togglePanelMode("workspaces")}
@@ -446,6 +445,31 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     >
                         ⏻
                     </button>
+                    <label
+                        className="public-ip-label"
+                        label="—"
+                        setup={(self: any) => {
+                            const update = () => {
+                                try {
+                                    const [ok, stdout] = GLib.spawn_command_line_sync("sh -c 'curl -s --max-time 5 ifconfig.me 2>/dev/null || curl -s --max-time 5 icanhazip.com 2>/dev/null || echo \"—\"'")
+                                    if (ok && stdout) {
+                                        const ip = new TextDecoder().decode(stdout as Uint8Array).trim()
+                                        self.set_label?.(ip || "—")
+                                        if (!self.set_label) self.label = ip || "—"
+                                    }
+                                } catch {
+                                    self.set_label?.("—")
+                                }
+                            }
+                            update()
+                            const id = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 60000, () => {
+                                update()
+                                return true
+                            })
+                            self.connect?.("destroy", () => id && GLib.source_remove(id))
+                        }}
+                        halign={Gtk.Align.CENTER}
+                    />
                 </box>
             </centerbox>
 
@@ -764,36 +788,64 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                     />
                 </box>
                 <box
+                    className="session-block"
                     setup={(self: any) => {
                         self.visible = panelMode() === "session"
                         panelMode.subscribe((mode: string) => {
                             self.visible = mode === "session"
                         })
                     }}
-                    vertical
                 >
-                    <centerbox className="session-actions" hexpand>
-                        <box className="session-actions-left">
-                            <button className="session-action" onClicked={() => runSessionAction("lock-screen")}>
-                                Lock
-                            </button>
-                            <button className="session-action" onClicked={() => runSessionAction("logout")}>
-                                Logout
-                            </button>
-                            <button className="session-action" onClicked={() => runSessionAction("sleep")}>
-                                Sleep
-                            </button>
-                            <button className="session-action" onClicked={() => runSessionAction("reboot")}>
-                                Reboot
-                            </button>
-                        </box>
-                        <box />
-                        <box className="session-actions-right">
-                            <button className="session-action danger" onClicked={() => runSessionAction("poweroff")}>
-                                Poweroff
-                            </button>
-                        </box>
-                    </centerbox>
+                    <button
+                        className="session-action session-action-icon"
+                        onClicked={() => runSessionAction("lock-screen")}
+                        setup={(self: any) => {
+                            const icon = (Gtk as any).Image.new_from_icon_name("system-lock-screen-symbolic", (Gtk as any).IconSize.BUTTON)
+                            self.set_image(icon)
+                            self.set_always_show_image?.(true)
+                            self.set_label?.("")
+                        }}
+                    />
+                    <button
+                        className="session-action session-action-icon"
+                        onClicked={() => runSessionAction("logout")}
+                        setup={(self: any) => {
+                            const icon = (Gtk as any).Image.new_from_icon_name("system-log-out-symbolic", (Gtk as any).IconSize.BUTTON)
+                            self.set_image(icon)
+                            self.set_always_show_image?.(true)
+                            self.set_label?.("")
+                        }}
+                    />
+                    <button
+                        className="session-action session-action-icon"
+                        onClicked={() => runSessionAction("sleep")}
+                        setup={(self: any) => {
+                            const icon = (Gtk as any).Image.new_from_icon_name("system-suspend-symbolic", (Gtk as any).IconSize.BUTTON)
+                            self.set_image(icon)
+                            self.set_always_show_image?.(true)
+                            self.set_label?.("")
+                        }}
+                    />
+                    <button
+                        className="session-action session-action-icon"
+                        onClicked={() => runSessionAction("reboot")}
+                        setup={(self: any) => {
+                            const icon = (Gtk as any).Image.new_from_icon_name("system-reboot-symbolic", (Gtk as any).IconSize.BUTTON)
+                            self.set_image(icon)
+                            self.set_always_show_image?.(true)
+                            self.set_label?.("")
+                        }}
+                    />
+                    <button
+                        className="session-action session-action-icon danger"
+                        onClicked={() => runSessionAction("poweroff")}
+                        setup={(self: any) => {
+                            const icon = (Gtk as any).Image.new_from_icon_name("system-shutdown-symbolic", (Gtk as any).IconSize.BUTTON)
+                            self.set_image(icon)
+                            self.set_always_show_image?.(true)
+                            self.set_label?.("")
+                        }}
+                    />
                 </box>
             </box>
         </box>

@@ -105,8 +105,13 @@ window.Bar {
         opacity: 0.95;
     }
 
+    .session-block {
+        padding: 8px 12px;
+    }
+
     .session-action {
         min-height: 44px;
+        min-width: 44px;
         border-radius: 10px;
         border: none;
         box-shadow: none;
@@ -115,17 +120,22 @@ window.Bar {
         margin-right: 8px;
     }
 
+    .session-action:last-child {
+        margin-right: 0;
+    }
+
+    .session-action-icon {
+        min-width: 40px;
+        min-height: 40px;
+        padding: 8px;
+
+        image {
+            -gtk-icon-size: 22px;
+        }
+    }
+
     .session-action.danger {
         background: rgba(180, 60, 70, 0.35);
-    }
-
-    .session-actions {
-        min-height: 46px;
-    }
-
-    .session-actions-left button:last-child,
-    .session-actions-right button:last-child {
-        margin-right: 0;
     }
 
     .wallpaper-title {
