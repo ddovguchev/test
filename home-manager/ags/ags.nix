@@ -1,9 +1,6 @@
-{ config, pkgs, lib, flakeRoot ? null, ... }:
+{ config, pkgs, lib, ... }:
 let
-  # Use flake root path when available - ensures config is from the actual project
-  cfg = if flakeRoot != null
-    then (flakeRoot + "/home-manager/ags/config")
-    else ./config;
+  cfg = ./config;
   astalDeps = [
     pkgs.astal.astal3
     pkgs.astal.io
@@ -100,49 +97,15 @@ let
     export XDG_DATA_DIRS="${gsettingsData}:${data}:''${XDG_DATA_DIRS:-}"
     cd "''${AGS_CONFIG:-$HOME/.config/ags}" && exec "${bin}" run "$@"
   '';
-  agsSyncSh = pkgs.writeShellScript "ags-sync-config" ''
-    CONFIG_SRC="''${HOME}/nixos-flake/home-manager/ags/config"
-    if [ ! -d "$CONFIG_SRC" ]; then
-      CONFIG_SRC="${cfg}"
-    fi
-    CONFIG_DST="''${HOME}/.config/ags"
-    rm -rf "$CONFIG_DST"
-    mkdir -p "$CONFIG_DST"/{widget,assets,node_modules}
-
-    sed -e "s|__FG_COLOR__|${palette.ags.barFg}|g" \
-        -e "s|__BAR_BG__|${palette.ags.barBgOpacity}|g" \
-        -e "s|__BAR_BORDER__|${palette.ags.barBorder}|g" \
-        -e "s|__BAR_SHADOW__|${palette.ags.barShadow}|g" \
-        -e "s|__PANEL_BG__|${palette.ags.panelBg}|g" \
-        -e "s|__PANEL_TEXT__|${palette.ags.launcherText}|g" \
-        -e "s|__PANEL_BORDER__|${palette.ags.panelBorder}|g" \
-        "$CONFIG_SRC/style.scss" > "$CONFIG_DST/style.scss"
-
-    cp "$CONFIG_SRC/app.ts" "$CONFIG_DST/"
-    cp "$CONFIG_SRC/widget/Bar.tsx" "$CONFIG_DST/widget/"
-    cp "$CONFIG_SRC/widget/Launcher.tsx" "$CONFIG_DST/widget/"
-    cp "$CONFIG_SRC/widget/launcherState.ts" "$CONFIG_DST/widget/"
-    cp -r "$CONFIG_SRC/assets/." "$CONFIG_DST/assets/"
-    cp "$CONFIG_SRC/tsconfig.json" "$CONFIG_DST/" 2>/dev/null || true
-    cp "$CONFIG_SRC/env.d.ts" "$CONFIG_DST/" 2>/dev/null || true
-    ln -sfn ${astalGjs} "$CONFIG_DST/node_modules/astal"
-    echo '{"name":"ags","dependencies":{"astal":"${astalGjs}"}}' > "$CONFIG_DST/package.json"
-  '';
-  agsRebuildSh = pkgs.writeShellScript "ags-rebuild" ''
-    echo "Syncing AGS config and restarting..."
-    ${agsSyncSh}
-    systemctl --user restart ags.service
-    echo "Done."
-  '';
   agsScripts = pkgs.runCommand "ags-scripts" { } ''
     mkdir -p $out/bin
     cp ${agsSh} $out/bin/ags
     cp ${agsRunSh} $out/bin/ags-run
-    cp ${agsRebuildSh} $out/bin/ags-rebuild
-    chmod +x $out/bin/ags $out/bin/ags-run $out/bin/ags-rebuild
+    chmod +x $out/bin/ags $out/bin/ags-run
   '';
 in
 {
+  xdg.configFile."ags".source = agsConfig;
   home.packages = [ agsScripts ];
   systemd.user.services.ags = {
     Unit = {
@@ -152,7 +115,6 @@ in
     };
     Service = {
       Type = "simple";
-      ExecStartPre = "${agsSyncSh}";
       ExecStart = "${config.home.profileDirectory}/bin/ags-run";
       Restart = "on-failure";
       RestartSec = 2;

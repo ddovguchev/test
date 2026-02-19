@@ -1,4 +1,3 @@
-// AGS Bar - navbar layout: spacer left, content right (apps, time, workspaces, notifications, session, IP)
 import { App, Astal, Gtk } from "astal/gtk3"
 import type { Gdk } from "astal/gtk3"
 import { Variable } from "astal"
@@ -51,35 +50,28 @@ const iconThemeSearchPaths = [
 let iconThemeInitialized = false
 
 function listPictureFiles() {
-    const scanDirs = [
-        `${GLib.get_home_dir()}/Pictures`,
-        `${GLib.get_home_dir()}/.config/ags/assets/wallpapers`
-    ]
+    const scanDir = `${GLib.get_home_dir()}/Pictures`
     const files = new Set<string>()
-
-    scanDirs.forEach((scanDir) => {
-        try {
-            const dir = Gio.File.new_for_path(scanDir)
-            const enumerator = dir.enumerate_children(
-                "standard::name,standard::type",
-                Gio.FileQueryInfoFlags.NONE,
-                null
-            )
-            let info
-            while ((info = enumerator.next_file(null)) !== null) {
-                if (info.get_file_type() !== Gio.FileType.REGULAR) continue
-                const name = info.get_name()
-                const lower = name.toLowerCase()
-                if (supportedImageExt.some((ext) => lower.endsWith(ext))) {
-                    files.add(`${scanDir}/${name}`)
-                }
+    try {
+        const dir = Gio.File.new_for_path(scanDir)
+        const enumerator = dir.enumerate_children(
+            "standard::name,standard::type",
+            Gio.FileQueryInfoFlags.NONE,
+            null
+        )
+        let info
+        while ((info = enumerator.next_file(null)) !== null) {
+            if (info.get_file_type() !== Gio.FileType.REGULAR) continue
+            const name = info.get_name()
+            const lower = name.toLowerCase()
+            if (supportedImageExt.some((ext) => lower.endsWith(ext))) {
+                files.add(`${scanDir}/${name}`)
             }
-            enumerator.close(null)
-        } catch {
-            // ignore inaccessible directory
         }
-    })
-
+        enumerator.close(null)
+    } catch {
+        // ignore
+    }
     return Array.from(files).sort()
 }
 
