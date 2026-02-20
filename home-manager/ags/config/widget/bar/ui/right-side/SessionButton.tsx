@@ -1,5 +1,5 @@
 import { Gtk } from "astal/gtk3"
-import { togglePanelMode } from "../../../../shared/config"
+import { togglePanelMode } from "../../../launcherState"
 
 export function SessionButton() {
     return (

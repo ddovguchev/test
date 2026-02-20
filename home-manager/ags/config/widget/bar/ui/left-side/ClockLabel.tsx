@@ -1,5 +1,5 @@
 import { Variable } from "astal"
-import { panelMode } from "../../../../shared/config"
+import { panelMode } from "../../../launcherState"
 
 const time = Variable("").poll(1000, "date +'%I:%M %p'")
 

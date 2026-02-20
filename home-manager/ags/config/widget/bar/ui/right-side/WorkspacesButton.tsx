@@ -1,6 +1,6 @@
 import GLib from "gi://GLib"
 import { Gtk } from "astal/gtk3"
-import { togglePanelMode } from "../../../../shared/config"
+import { togglePanelMode } from "../../../launcherState"
 
 function getWorkspaceDotsLabel() {
     const runJsonCommand = (command: string) => {

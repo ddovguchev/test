@@ -1,7 +1,7 @@
-import { panelMode } from "../../../shared/config"
 import { LeftSide } from "./left-side/LeftSide"
 import { CenterSide } from "./center-side/CenterSide"
 import { RightSide } from "./right-side/RightSide"
+import { panelMode } from "../../launcherState"
 
 export function Navbar() {
     return (

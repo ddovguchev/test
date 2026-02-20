@@ -61,6 +61,7 @@ let
         cp $src/widget/Bar.tsx $out/widget/Bar.tsx
         cp $src/widget/Launcher.tsx $out/widget/Launcher.tsx
         cp $src/widget/launcherState.ts $out/widget/launcherState.ts
+        cp -r $src/widget/bar $out/widget/bar
 
         cat > $out/style.scss <<'EOF'
     ${styleScss}

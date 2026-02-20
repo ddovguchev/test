@@ -1,15 +1,9 @@
-import { App, Astal, Gtk } from "astal/gtk3"
-import type { Gdk } from "astal/gtk3"
-import { Variable } from "astal"
+import { App, Astal, Gdk, Gtk } from "astal/gtk3"
 import GLib from "gi://GLib"
-import Gdk from "gi://Gdk"
 import GdkPixbuf from "gi://GdkPixbuf"
 import Gio from "gi://Gio"
-import { closePanel, panelMode, togglePanelMode } from "./launcherState"
-
-const appsIcon = `${SRC}/assets/icons/apps-svgrepo-com.svg`
-const notificationsIcon = `${SRC}/assets/icons/notification-box-svgrepo-com.svg`
-const time = Variable("").poll(1000, "date +'%I:%M %p'")
+import { closePanel, panelMode } from "./launcherState"
+import { Navbar } from "./bar/ui/Navbar"
 
 function getApps() {
     return Gio.AppInfo
@@ -32,9 +26,6 @@ function getApps() {
                 && !name.includes("helm")
                 && !name.includes("nvim")
                 && !name.includes("nvidia")
-                && !id.includes("helm")
-                && !id.includes("nvim")
-                && !id.includes("nvidia")
         })
         .sort((a: any, b: any) => a.name.localeCompare(b.name))
 }
@@ -367,105 +358,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             hexpand={true}
             vertical
         >
-            <centerbox
-                className="shell-top-row"
-                setup={(self: any) => {
-                    self.visible = panelMode() === "none"
-                    panelMode.subscribe((mode: string) => {
-                        self.visible = mode === "none"
-                    })
-                }}
-            >
-                <box hexpand={true} />
-                <box />
-                <box>
-                    <button
-                        className="apps-button"
-                        onClicked={() => togglePanelMode("apps")}
-                        setup={(self: any) => {
-                            const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(appsIcon, 14, 14, true)
-                            const icon = (Gtk as any).Image.new_from_pixbuf(pixbuf)
-                            self.set_image(icon)
-                            self.set_always_show_image?.(true)
-                            self.set_label("")
-                        }}
-                        halign={Gtk.Align.CENTER}
-                    />
-                    <label
-                        className="clock-label"
-                        label={time()}
-                        setup={(self: any) => {
-                            self.visible = panelMode() === "none"
-                            panelMode.subscribe((mode: string) => {
-                                self.visible = mode === "none"
-                            })
-                        }}
-                    />
-                    <button
-                        className="workspaces-button"
-                        onClicked={() => togglePanelMode("workspaces")}
-                        setup={(self: any) => {
-                            const refresh = () => {
-                                self.set_label?.(getWorkspaceDotsLabel())
-                                if (!self.set_label) self.label = getWorkspaceDotsLabel()
-                            }
-                            refresh()
-                            const timerId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1200, () => {
-                                refresh()
-                                return true
-                            })
-                            self.connect?.("destroy", () => {
-                                if (timerId) GLib.source_remove(timerId)
-                            })
-                        }}
-                        halign={Gtk.Align.CENTER}
-                    />
-                    <button
-                        className="notifications-button"
-                        onClicked={() => togglePanelMode("notifications")}
-                        setup={(self: any) => {
-                            const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(notificationsIcon, 14, 14, true)
-                            const icon = (Gtk as any).Image.new_from_pixbuf(pixbuf)
-                            self.set_image(icon)
-                            self.set_always_show_image?.(true)
-                            self.set_label("")
-                        }}
-                        halign={Gtk.Align.CENTER}
-                    />
-                    <button
-                        className="session-button"
-                        onClicked={() => togglePanelMode("session")}
-                        halign={Gtk.Align.CENTER}
-                    >
-                        ⏻
-                    </button>
-                    <label
-                        className="public-ip-label"
-                        label="—"
-                        setup={(self: any) => {
-                            const update = () => {
-                                try {
-                                    const [ok, stdout] = GLib.spawn_command_line_sync("sh -c 'curl -s --max-time 5 ifconfig.me 2>/dev/null || curl -s --max-time 5 icanhazip.com 2>/dev/null || echo \"—\"'")
-                                    if (ok && stdout) {
-                                        const ip = new TextDecoder().decode(stdout as Uint8Array).trim()
-                                        self.set_label?.(ip || "—")
-                                        if (!self.set_label) self.label = ip || "—"
-                                    }
-                                } catch {
-                                    self.set_label?.("—")
-                                }
-                            }
-                            update()
-                            const id = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 60000, () => {
-                                update()
-                                return true
-                            })
-                            self.connect?.("destroy", () => id && GLib.source_remove(id))
-                        }}
-                        halign={Gtk.Align.CENTER}
-                    />
-                </box>
-            </centerbox>
+            <Navbar />
 
             <box
                 className="shell-content"

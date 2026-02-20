@@ -1,6 +1,6 @@
 import { Gtk } from "astal/gtk3"
 import GdkPixbuf from "gi://GdkPixbuf"
-import { togglePanelMode } from "../../../../shared/config"
+import { togglePanelMode } from "../../../launcherState"
 
 const notificationsIcon = `${SRC}/assets/icons/notification-box-svgrepo-com.svg`
 

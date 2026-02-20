@@ -14,16 +14,8 @@
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     modesetting.enable = lib.mkDefault true;
-    open = true;
-    package =
-      let nvidiaPackages = config.boot.kernelPackages.nvidiaPackages;
-      in
-      if nvidiaPackages ? production then
-        nvidiaPackages.production
-      else if nvidiaPackages ? stable then
-        nvidiaPackages.stable
-      else
-        nvidiaPackages.latest;
+    # RTX 5060 Ti требует открытые модули ядра (open kernel modules)
+    open = true;  # ОБЯЗАТЕЛЬНО для RTX 5060 Ti (Blackwell)
     powerManagement.enable = lib.mkDefault true;
     nvidiaSettings = lib.mkDefault true;
   };
