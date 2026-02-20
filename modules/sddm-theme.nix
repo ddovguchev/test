@@ -4,7 +4,7 @@ let
   useDefaultTheme = false;
   themeName = if useDefaultTheme then "chili" else "silent";
   themeDir = "/share/sddm/themes/silent";
-  src = ../sddm/SilentSDDM;
+  src = ./sddm;
 
   silentTheme = pkgs.stdenvNoCC.mkDerivation {
     pname = "silent-sddm-minimal";
