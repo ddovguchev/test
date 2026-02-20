@@ -67,6 +67,8 @@ in
         enabled = false;
       };
       exec-once = [
+        "xdg-desktop-portal-gtk"
+        "xdg-desktop-portal-hyprland"
         "swww-daemon"
       ] ++ lib.optional hasXwaylandVideoBridge "xwaylandvideobridge";
       bind = [
@@ -108,13 +110,9 @@ in
       ];
       layerrule = [
         "blur,^(Bar)$"
-        "ignorezero,^(Bar)$"
         "blur,bar"
-        "ignorezero,bar"
         "blur,^(bar)$"
-        "ignorezero,^(bar)$"
         "blur,ags"
-        "ignorezero,ags"
       ];
     };
   };

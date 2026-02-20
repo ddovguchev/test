@@ -131,7 +131,8 @@ window.Bar {
         padding: 8px;
 
         image {
-            -gtk-icon-size: 22px;
+            min-width: 22px;
+            min-height: 22px;
         }
     }
 
