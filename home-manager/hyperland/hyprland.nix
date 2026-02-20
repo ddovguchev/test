@@ -98,22 +98,21 @@ in
         "$mod SHIFT, 8, movetoworkspace, 8"
         "$mod SHIFT, 9, movetoworkspace, 9"
       ];
-      windowrulev2 = [
-        "opacity 0.92 0.88,class:^(.*)$"
-        "pin,class:^(com\\.github\\.Aylur\\.ags)$"
-        "float,class:^(com\\.github\\.Aylur\\.ags)$"
-        "noborder,class:^(com\\.github\\.Aylur\\.ags)$"
-        "float,title:^(Picture-in-Picture|Picture in Picture|Picture-in-picture)$"
-        "pin,title:^(Picture-in-Picture|Picture in Picture|Picture-in-picture)$"
-        "size 480 270,title:^(Picture-in-Picture|Picture in Picture|Picture-in-picture)$"
-        "move 100%-w-20 100%-h-20,title:^(Picture-in-Picture|Picture in Picture|Picture-in-picture)$"
-      ];
-      layerrule = [
-        "blur,^(Bar)$"
-        "blur,bar"
-        "blur,^(bar)$"
-        "blur,ags"
+      windowrule = [
+        "match:class .*, opacity 0.92 0.88"
+        "match:class com\\.github\\.Aylur\\.ags, pin on"
+        "match:class com\\.github\\.Aylur\\.ags, float on"
+        "match:class com\\.github\\.Aylur\\.ags, border_size 0"
+        "match:title Picture-in-Picture, float on"
+        "match:title Picture-in-Picture, pin on"
+        "match:title Picture-in-Picture, size 480 270"
+        "match:title Picture-in-Picture, move 100%-w-20 100%-h-20"
       ];
     };
+    extraConfig = ''
+      blurls = Bar
+      blurls = bar
+      blurls = ags
+    '';
   };
 }
