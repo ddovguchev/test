@@ -7,6 +7,7 @@ declare global {
       window: Record<string, unknown>;
       box: Record<string, unknown>;
       centerbox: Record<string, unknown>;
+      button: Record<string, unknown> & { onClicked?: string };
       label: Record<string, unknown> & {
         label?: string | { (): string; subscribe(cb: () => void): () => void };
       };

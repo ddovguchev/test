@@ -26,6 +26,15 @@ declare module "astal/gtk4" {
     Exclusivity: { EXCLUSIVE: number };
   };
   namespace JSX {
+    interface IntrinsicElements {
+      window: Record<string, unknown>;
+      box: Record<string, unknown>;
+      centerbox: Record<string, unknown>;
+      button: Record<string, unknown> & { onClicked?: string };
+      label: Record<string, unknown> & {
+        label?: TReactiveLabel;
+      };
+    }
     interface ILabelAttributes {
       label?: TReactiveLabel;
     }
