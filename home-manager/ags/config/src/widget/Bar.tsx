@@ -1,6 +1,7 @@
 import app from "astal/gtk4/app";
 import { Astal, type Gdk } from "astal/gtk4";
 import Clock from "./Clock";
+import SysMonitor from "./SysMonitor";
 
 export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
   const { TOP, LEFT, RIGHT } = Astal.WindowAnchor;
@@ -20,7 +21,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           <Clock />
         </box>
         <box hexpand halign={3} orientation={0}>
-          <Clock />
+          <SysMonitor />
         </box>
         <box hexpand halign={3} orientation={0}>
           <Clock />
