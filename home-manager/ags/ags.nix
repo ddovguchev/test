@@ -25,6 +25,11 @@ let
       box-shadow: 0 1px 3px $bar-shadow;
     }
 
+    window.Bar .bar {
+      padding: 0 8px;
+      spacing: 4px;
+    }
+
     /* Workspace buttons: active state */
     .workspace-active {
       background: rgba(224, 226, 232, 0.2);
@@ -35,6 +40,10 @@ let
     .apps-logo-btn {
       border: none;
       box-shadow: none;
+    }
+
+    .nix-logo {
+      font-size: 18px;
     }
 
     popover.apps-menu,

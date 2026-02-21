@@ -1,6 +1,5 @@
 import app from "astal/gtk4/app";
 import { Astal, type Gdk } from "astal/gtk4";
-import Gtk from "gi://Gtk?version=4.0";
 import GLib from "gi://GLib?version=2.0";
 import { createPoll } from "astal/time";
 import Clock from "./Clock";
@@ -72,35 +71,33 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
       application={app}
     >
       <box cssName="bar" orientation={0}>
-        <centerbox>
-          <box halign={1} orientation={0}>
-            <Clock />
-          </box>
-          <box orientation={0}>
-            <menubutton cssName="bar-btn apps-logo-btn">
-              <popover cssName="apps-menu">
-                <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
-              </popover>
-              <Gtk.Image iconName="nix-snowflake" />
-            </menubutton>
-            <menubutton cssName="bar-btn">
-              <popover cssName="notifications-menu">
-                <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
-              </popover>
-              <label label="Notifications" />
-            </menubutton>
-            <menubutton cssName="bar-btn">
-              <popover cssName="power-menu">
-                <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
-              </popover>
-              <label label="Power" />
-            </menubutton>
-          </box>
-          <box halign={3} orientation={0}>
-            <SysMonitor />
-            <Workspaces />
-          </box>
-        </centerbox>
+        <box halign={1} orientation={0}>
+          <Clock />
+          <menubutton cssName="bar-btn apps-logo-btn">
+            <popover cssName="apps-menu">
+              <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
+            </popover>
+            <label label="❄" cssName="nix-logo" />
+          </menubutton>
+        </box>
+        <box hexpand halign={3} orientation={0}>
+          <SysMonitor />
+          <menubutton cssName="bar-btn">
+            <popover cssName="notifications-menu">
+              <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
+            </popover>
+            <label label="Notifications" />
+          </menubutton>
+        </box>
+        <box halign={3} orientation={0}>
+          <Workspaces />
+          <menubutton cssName="bar-btn">
+            <popover cssName="power-menu">
+              <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
+            </popover>
+            <label label="Power" />
+          </menubutton>
+        </box>
       </box>
     </window>
   ) as JSX.Element;
