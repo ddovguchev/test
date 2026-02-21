@@ -25,7 +25,7 @@ let
       border-bottom: 1px solid $bar-border;
       box-shadow: 0 1px 3px $bar-shadow;
 
-      >.bar-row {
+      >.bar {
         min-width: 100%;
         display: flex;
       }
@@ -33,6 +33,7 @@ let
       .bar-left,
       .bar-center,
       .bar-right {
+        flex: 1;
         display: flex;
         align-items: center;
       }
