@@ -33,6 +33,18 @@ let
       border-radius: 6px;
     }
 
+    /* Bar buttons - clickable area */
+    window.Bar .bar-btn {
+      padding: 6px 10px;
+      min-height: 24px;
+    }
+
+    /* NixOS icon - small */
+    .nixos-btn image {
+      min-width: 14px;
+      min-height: 14px;
+    }
+
     /* Menu overlay: 500x500 block centered, flows from navbar */
     window.MenuOverlay {
       margin-top: $navbar-gap;
@@ -78,6 +90,7 @@ in
     extraPackages = with pkgs; [
       astalPkgs.wireplumber
       astalPkgs.notifd
+      nixos-icons
     ];
   };
 

@@ -1,5 +1,6 @@
 import app from "astal/gtk4/app";
 import { Astal, type Gdk } from "astal/gtk4";
+import Gtk from "gi://Gtk?version=4.0";
 import GLib from "gi://GLib?version=2.0";
 import { createPoll } from "astal/time";
 import Clock from "./Clock";
@@ -74,8 +75,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
         <label label="     " />
         <box halign={1} orientation={0}>
           <Clock />
-          <button cssName="bar-btn" onClicked={runCmd("ags --toggle-window menuoverlay")}>
-            <label label="Apps" />
+          <button cssName="bar-btn nixos-btn" onClicked={runCmd("ags --toggle-window menuoverlay")}>
+            <Gtk.Image iconName="nix-snowflake" />
           </button>
         </box>
         <box hexpand halign={3} orientation={0}>
