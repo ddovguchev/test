@@ -2,6 +2,7 @@
 {
   fonts.fontconfig.enable = false;
   imports = [
+    inputs.ags.homeManagerModules.default
     inputs.spicetify-nix.homeManagerModules.default
     ./ags/ags.nix
     ./firefox/firefox.nix

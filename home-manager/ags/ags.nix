@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 let
   cfg = ./config;
   palette = import ../theme/palette.nix;
@@ -34,104 +34,27 @@ let
       .bar-right { justify-content: flex-end; }
     }
   '';
-  astalDeps = [
-    pkgs.astal.astal4
-    pkgs.astal.io
-    pkgs.astal.wireplumber
-    pkgs.astal.notifd
-  ];
-  typelibDeps = astalDeps ++ [ pkgs.gtk4 pkgs.graphene ];
-  typelib = lib.makeSearchPath "lib/girepository-1.0" typelibDeps;
-  schema = lib.makeSearchPath "share/glib-2.0/schemas" astalDeps;
-  gsettingsData = lib.concatStringsSep ":" (map (p: "${p}/share/gsettings-schemas/${p.name}") astalDeps);
-  systemDataDirs = lib.concatStringsSep ":" [
-    "/run/current-system/sw/share"
-    "/etc/profiles/per-user/${config.home.username}/share"
-    "${config.home.profileDirectory}/share"
-    "${config.home.homeDirectory}/.nix-profile/share"
-    "/usr/local/share"
-    "/usr/share"
-  ];
-  data = lib.concatStringsSep ":" [
-    (lib.makeSearchPath "share" (astalDeps ++ [
-      pkgs.hicolor-icon-theme
-      pkgs.adwaita-icon-theme
-      pkgs.gnome-icon-theme
-    ]))
-    systemDataDirs
-  ];
-  astalGjs = "${pkgs.astal.gjs}/share/astal/gjs";
-  # Copy source only (no bundle): nixpkgs astal.gjs bakes in Astal 3.0, causing
-  # "cannot load version 3.0" when runtime has 4.0. Running from source uses
-  # GI_TYPELIB_PATH at runtime (astal4 only).
   agsConfig = pkgs.runCommand "ags-config" {
     nativeBuildInputs = [ pkgs.coreutils ];
   } ''
-    mkdir -p $out/src/widget $out/src/assets $out/node_modules
+    mkdir -p $out/src/widget $out/src/assets
     cp ${cfg}/src/app.ts ${cfg}/src/env.d.ts ${cfg}/src/tsconfig.json $out/src/
     cp ${styleScss} $out/src/style.scss
     cp ${cfg}/src/widget/Bar.tsx $out/src/widget/
     cp -r ${cfg}/src/assets/. $out/src/assets/ 2>/dev/null || true
-    echo '{"name":"astal-shell","dependencies":{"astal":"${astalGjs}"}}' > $out/package.json
-    ln -s ${astalGjs} $out/node_modules/astal
+    echo "import './src/app'" > $out/app.ts
   '';
-  wrapped = pkgs.runCommand "ags-wrapped" { buildInputs = [ pkgs.makeWrapper ]; } ''
-    mkdir -p $out/bin
-    makeWrapper ${pkgs.ags}/bin/ags $out/bin/ags \
-      --set GI_TYPELIB_PATH "${typelib}" \
-      --set GSETTINGS_SCHEMA_DIR "${schema}" \
-      --prefix XDG_DATA_DIRS : "${gsettingsData}:${data}"
-  '';
-  bin = "${wrapped}/bin/ags";
-  agsSh = pkgs.writeShellScript "ags" ''
-    export GI_TYPELIB_PATH="${typelib}"
-    export GSETTINGS_SCHEMA_DIR="${schema}:''${GSETTINGS_SCHEMA_DIR:-}"
-    export XDG_DATA_DIRS="${gsettingsData}:${data}:''${XDG_DATA_DIRS:-}"
-    if [ "''${1:-}" = "run" ]; then shift; exec "${bin}" run "$@"; else exec "${bin}" "$@"; fi
-  '';
-  agsRunSh = pkgs.writeShellScript "ags-run" ''
-    export GI_TYPELIB_PATH="${typelib}"
-    export GSETTINGS_SCHEMA_DIR="${schema}:''${GSETTINGS_SCHEMA_DIR:-}"
-    export XDG_DATA_DIRS="${gsettingsData}:${data}:''${XDG_DATA_DIRS:-}"
-    export XDG_CURRENT_DESKTOP="''${XDG_CURRENT_DESKTOP:-Hyprland}"
-    export XDG_SESSION_TYPE="''${XDG_SESSION_TYPE:-wayland}"
-    config="''${AGS_CONFIG:-$HOME/.config/ags}"
-    cd "$config" || exit 1
-    if [ -f "dist/bundle.js" ]; then
-      exec "${bin}" run dist/bundle.js "$@"
-    else
-      exec "${bin}" run src/app.ts "$@"
-    fi
-  '';
-  agsScripts = pkgs.runCommand "ags-scripts" { } ''
-    mkdir -p $out/bin
-    cp ${agsSh} $out/bin/ags
-    cp ${agsRunSh} $out/bin/ags-run
-    chmod +x $out/bin/ags $out/bin/ags-run
-  '';
+  system = pkgs.stdenv.hostPlatform.system;
+  astalPkgs = inputs.astal.packages.${system};
 in
 {
-  xdg.configFile."ags".source = agsConfig;
-  home.packages = [ agsScripts ];
-  systemd.user.services.ags = {
-    Unit = {
-      Description = "Astal/AGS shell";
-      After = [ "graphical-session.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      Type = "simple";
-      ExecStart = "${config.home.profileDirectory}/bin/ags-run";
-      Restart = "on-failure";
-      RestartSec = 2;
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
-  home.sessionVariables = {
-    GI_TYPELIB_PATH = typelib;
-    GSETTINGS_SCHEMA_DIR = schema;
-    XDG_DATA_DIRS = "${gsettingsData}:${data}";
+  programs.ags = {
+    enable = true;
+    configDir = agsConfig;
+    systemd.enable = true;
+    extraPackages = with pkgs; [
+      astalPkgs.wireplumber
+      astalPkgs.notifd
+    ];
   };
 }
