@@ -31,23 +31,24 @@ let
       border-radius: 6px;
     }
 
-    /* Popover: same look as navbar, centered, flow from navbar */
-    popover.bar-menu {
+    popover.apps-menu,
+    popover.notifications-menu,
+    popover.power-menu {
       margin-top: -1px;
     }
 
-    popover.bar-menu contents {
+    popover.apps-menu contents,
+    popover.notifications-menu contents,
+    popover.power-menu contents {
       background: $bar-bg-opacity;
       color: $bar-fg;
-      font-weight: bold;
       border: 1px solid $bar-border;
       border-top: none;
       border-radius: 0 0 $bar-rounding $bar-rounding;
-      box-shadow: 0 1px 3px $bar-shadow;
-      -gtk-icon-shadow: none;
+      box-shadow: 0 4px 12px $bar-shadow;
       padding: 8px;
-      min-width: 500px;
-      min-height: 500px;
+      min-width: 120px;
+      min-height: 80px;
     }
   '';
   system = pkgs.stdenv.hostPlatform.system;

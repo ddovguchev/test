@@ -71,27 +71,37 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
       application={app}
     >
       <box cssName="bar" orientation={0}>
+        <label label="     " />
         <box halign={1} orientation={0}>
           <Clock />
-        </box>
-        <box hexpand halign={2} orientation={0}>
-          <menubutton cssName="bar-btn bar-menu-trigger">
-            <popover cssName="bar-menu">
-              <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
+          <menubutton cssName="bar-btn">
+            <popover cssName="apps-menu">
+              <box orientation={1} cssName="bar-menu-content" />
             </popover>
-            <label label="☰" />
+            <label label="Apps" />
           </menubutton>
         </box>
-        <box halign={3} orientation={0}>
+        <box hexpand halign={3} orientation={0}>
           <SysMonitor />
-          <button cssName="bar-btn">
+          <menubutton cssName="bar-btn">
+            <popover cssName="notifications-menu">
+              <box orientation={1} cssName="bar-menu-content" />
+            </popover>
             <label label="Notifications" />
-          </button>
-          <Workspaces />
-          <button cssName="bar-btn">
-            <label label="Power" />
-          </button>
+          </menubutton>
         </box>
+        <box hexpand halign={3} orientation={0}>
+          <Workspaces />
+        </box>
+        <box halign={2} orientation={0}>
+          <menubutton cssName="bar-btn">
+            <popover cssName="power-menu">
+              <box orientation={1} cssName="bar-menu-content" />
+            </popover>
+            <label label="Power" />
+          </menubutton>
+        </box>
+        <label label="     " />
       </box>
     </window>
   ) as JSX.Element;

@@ -1,34 +1,11 @@
-$fg-color: #e0e2e8;
-$bg-color: #101418;
+$fg-color: #{"@theme_fg_color"};
+$bg-color: #{"@theme_bg_color"};
 
 window.Bar {
   background: $bg-color;
   color: $fg-color;
   min-height: 32px;
   font-weight: bold;
-
-  .bar-spacer,
-  box#bar-spacer {
-    min-width: 10px;
-  }
-
-  .bar-left {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding-left: 20px;
-    margin-left: 20px;
-  }
-
-  .bar-center {
-    justify-content: center;
-  }
-
-  .bar-right {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
 
   .bar-btn,
   button#bar-btn,
@@ -44,23 +21,24 @@ window.Bar {
   }
 }
 
-  /* Popover: same as navbar, centered */
-  popover.bar-menu {
-    margin-top: -1px;
-  }
+popover.apps-menu,
+popover.notifications-menu,
+popover.power-menu {
+  margin-top: -1px;
+}
 
-  popover.bar-menu contents {
-    background: $bg-color;
-    color: $fg-color;
-    font-weight: bold;
-    border: 1px solid $fg-color;
-    border-top: none;
-    border-radius: 0 0 14px 14px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-    min-width: 500px;
-    min-height: 500px;
-    padding: 8px;
-  }
+popover.apps-menu contents,
+popover.notifications-menu contents,
+popover.power-menu contents {
+  background: $bg-color;
+  border: 1px solid $fg-color;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 8px;
+  min-width: 120px;
+  min-height: 80px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
 
 window.AppMenu {
   background: $bg-color;
