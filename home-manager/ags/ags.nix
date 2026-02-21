@@ -67,9 +67,9 @@ let
     XDG_DATA_DIRS = "${gsettingsData}:${data}";
   } ''
     buildDir=$TMPDIR/ags-build
-    mkdir -p $buildDir/node_modules $buildDir/src/widget $buildDir/src/assets
-    cp ${cfg}/src/app.ts ${cfg}/src/env.d.ts ${styleScss} $buildDir/src/style.scss
-    cp ${cfg}/src/tsconfig.json $buildDir/src/
+    mkdir -p $buildDir/src $buildDir/node_modules $buildDir/src/widget $buildDir/src/assets
+    cp ${cfg}/src/app.ts ${cfg}/src/env.d.ts ${cfg}/src/tsconfig.json $buildDir/src/
+    cp ${styleScss} $buildDir/src/style.scss
     cp ${cfg}/src/widget/Bar.tsx $buildDir/src/widget/
     cp -r ${cfg}/src/assets/. $buildDir/src/assets/ 2>/dev/null || true
     echo '{"name":"astal-shell","dependencies":{"astal":"${astalGjs}"}}' > $buildDir/package.json
