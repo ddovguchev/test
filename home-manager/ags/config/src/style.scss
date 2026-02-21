@@ -1,0 +1,25 @@
+$fg-color: #{"@theme_fg_color"};
+$bg-color: #{"@theme_bg_color"};
+
+window.Bar {
+  background: $bg-color;
+  color: $fg-color;
+  min-height: 32px;
+  font-weight: bold;
+
+  >.bar-row {
+    min-width: 100%;
+    display: flex;
+  }
+
+  .bar-left,
+  .bar-center,
+  .bar-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .bar-left { justify-content: flex-start; }
+  .bar-center { justify-content: center; }
+  .bar-right { justify-content: flex-end; }
+}
