@@ -1,10 +1,11 @@
 { config, pkgs, lib, ... }:
+
 {
   services.pipewire = {
-    enable = lib.mkDefault true;
-    pulse.enable = lib.mkDefault true;
-    alsa.enable = lib.mkDefault true;
-    jack.enable = lib.mkDefault false;
+    enable = true;
+    pulse.enable = true;
+    alsa.enable = true;
   };
-  security.rtkit.enable = lib.mkDefault true;
+
+  security.rtkit.enable = true;
 }

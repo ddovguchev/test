@@ -57,7 +57,6 @@ let
     ];
     settings = {
       General = {
-        # InputMethod removed - qtvirtualkeyboard can cause SDDM to freeze
         GreeterEnvironment = "QML2_IMPORT_PATH=${silentTheme}${themeDir}/components/";
       };
     };
