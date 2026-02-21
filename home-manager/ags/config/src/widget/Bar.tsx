@@ -71,27 +71,27 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
       application={app}
     >
       <box cssName="bar" orientation={0}>
-        <centerbox>
-          <box halign={1} orientation={0}>
-            <Clock />
-          </box>
+        <box halign={1} orientation={0}>
+          <Clock />
+        </box>
+        <box hexpand halign={2} orientation={0}>
           <menubutton cssName="bar-btn bar-menu-trigger">
             <popover cssName="bar-menu">
               <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
             </popover>
             <label label="☰" />
           </menubutton>
-          <box halign={3} orientation={0}>
-            <SysMonitor />
-            <button cssName="bar-btn">
-              <label label="Notifications" />
-            </button>
-            <Workspaces />
-            <button cssName="bar-btn">
-              <label label="Power" />
-            </button>
-          </box>
-        </centerbox>
+        </box>
+        <box halign={3} orientation={0}>
+          <SysMonitor />
+          <button cssName="bar-btn">
+            <label label="Notifications" />
+          </button>
+          <Workspaces />
+          <button cssName="bar-btn">
+            <label label="Power" />
+          </button>
+        </box>
       </box>
     </window>
   ) as JSX.Element;
