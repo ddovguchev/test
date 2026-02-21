@@ -88,8 +88,6 @@ in
     };
 
     extraConfig = ''
-      layerrule = match:namespace gtk4-layer-shell, blur on
-      layerrule = match:namespace gtk4-layer-shell, ignorealpha 0
       blurls = com\\.github\\.Aylur\\.ags
     '';
   };
