@@ -87,9 +87,9 @@ in
     };
 
     extraConfig = ''
-      # AGS uses gtk-layer-shell (layer), not a regular window — use layerrule for blur
-      layerrule = blur, gtk-layer-shell
-      layerrule = ignorezero, gtk-layer-shell
+      # AGS uses gtk-layer-shell (layer) — layerrule needs rule value then namespace
+      layerrule = blur on, gtk-layer-shell
+      layerrule = ignorealpha 0, gtk-layer-shell
       # Fallback: if AGS ever appears as a window
       blurls = com\\.github\\.Aylur\\.ags
     '';
