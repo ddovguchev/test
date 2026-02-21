@@ -1,21 +1,9 @@
 import app from "astal/gtk4/app";
 import { Astal, type Gdk } from "astal/gtk4";
-import Gtk from "gi://Gtk?version=4.0";
-import Gio from "gi://Gio";
 import GLib from "gi://GLib?version=2.0";
 import { createPoll } from "astal/time";
 import Clock from "./Clock";
 import SysMonitor from "./SysMonitor";
-
-function NixLogo(): JSX.Element {
-  const iconPath = GLib.build_filenamev([GLib.get_current_dir(), "src", "assets", "icons", "nix-snowflake.svg"]);
-  const hasFile = GLib.file_test(iconPath, GLib.FileTest.EXISTS);
-  if (hasFile) {
-    const gfile = Gio.File.new_for_path(iconPath);
-    return <Gtk.Picture file={gfile} contentFit={Gtk.ContentFit.CONTAIN} /> as JSX.Element;
-  }
-  return <Gtk.Image iconName="nix-snowflake" /> as JSX.Element;
-}
 
 function runCmd(cmd: string): () => void {
   return () => {
@@ -83,27 +71,28 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
       application={app}
     >
       <box cssName="bar" orientation={0}>
-        <Clock />
-        <menubutton cssName="bar-btn apps-logo-btn">
-          <popover cssName="apps-menu">
-            <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
-          </popover>
-          <NixLogo />
-        </menubutton>
-        <SysMonitor />
-        <menubutton cssName="bar-btn">
-          <popover cssName="notifications-menu">
-            <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
-          </popover>
-          <label label="Notifications" />
-        </menubutton>
-        <Workspaces />
-        <menubutton cssName="bar-btn">
-          <popover cssName="power-menu">
-            <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
-          </popover>
-          <label label="Power" />
-        </menubutton>
+        <label label="     " />
+        <box halign={1} orientation={0}>
+          <Clock />
+          <button cssName="bar-btn" onClicked={runCmd("ags --toggle-window menuoverlay")}>
+            <label label="Apps" />
+          </button>
+        </box>
+        <box hexpand halign={3} orientation={0}>
+          <SysMonitor />
+          <button cssName="bar-btn">
+            <label label="Notifications" />
+          </button>
+        </box>
+        <box hexpand halign={3} orientation={0}>
+          <Workspaces />
+        </box>
+        <box halign={2} orientation={0}>
+          <button cssName="bar-btn">
+            <label label="Power" />
+          </button>
+        </box>
+        <label label="     " />
       </box>
     </window>
   ) as JSX.Element;

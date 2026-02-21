@@ -7,6 +7,34 @@ window.Bar {
   min-height: 32px;
   font-weight: bold;
 
+  .bar-spacer,
+  box#bar-spacer {
+    min-width: 10px;
+  }
+
+  >.bar-row {
+    min-width: 100%;
+    display: flex;
+  }
+
+  .bar-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 20px;
+    margin-left: 20px;
+  }
+
+  .bar-center {
+    justify-content: center;
+  }
+
+  .bar-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
   .bar-btn,
   button#bar-btn,
   menubutton.bar-btn {
@@ -19,33 +47,23 @@ window.Bar {
     background: rgba(255, 255, 255, 0.15);
     border-radius: 6px;
   }
-
-  .apps-logo-btn {
-    border: none;
-    box-shadow: none;
-  }
 }
 
-popover.apps-menu,
-popover.notifications-menu,
-popover.power-menu {
-  margin-top: -1px;
+window.MenuOverlay {
+  margin: 10px;
+  margin-bottom: 0;
 }
 
-popover.apps-menu contents,
-popover.notifications-menu contents,
-popover.power-menu contents,
-popover.background contents {
-  background-color: $bg-color;
+.menu-overlay-block {
+  background: $bg-color;
   color: $fg-color;
-  font-weight: bold;
   border: 1px solid $fg-color;
   border-top: none;
   border-radius: 0 0 14px 14px;
-  padding: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   min-width: 500px;
   min-height: 500px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  margin-top: 42px;
 }
 
 window.AppMenu {

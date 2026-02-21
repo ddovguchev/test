@@ -4,72 +4,59 @@ let
   palette = import ../theme/palette.nix;
   layout = import ../theme/layout.nix;
   styleScss = pkgs.writeText "ags-style.scss" ''
+    $bar-fg: ${palette.ags.barFg};
+    $bar-bg: ${palette.ags.barBg};
+    $bar-bg-opacity: ${palette.ags.barBgOpacity};
+    $bar-border: ${palette.ags.barBorder};
+    $bar-shadow: ${palette.ags.barShadow};
+    $navbar-gap: ${toString layout.navbarGap}px;
+    $bar-height: ${toString layout.barHeight}px;
+    $bar-rounding: ${toString layout.barRounding}px;
+    $navbar-height: ${toString (layout.navbarGap + layout.barHeight)}px;
+
     window.Bar {
-      background: ${palette.ags.barBgOpacity};
-      color: ${palette.ags.barFg};
-      min-height: ${toString layout.barHeight}px;
-      margin: ${toString layout.navbarGap}px;
+      background: $bar-bg-opacity;
+      color: $bar-fg;
+      min-height: $bar-height;
+      margin: $navbar-gap;
       margin-bottom: 0;
       font-weight: bold;
-      border-radius: ${toString layout.barRounding}px;
+      border-radius: $bar-rounding;
       -gtk-icon-shadow: none;
-      border-bottom: 1px solid ${palette.ags.barBorder};
-      box-shadow: 0 1px 3px ${palette.ags.barShadow};
+      border-bottom: 1px solid $bar-border;
+      box-shadow: 0 1px 3px $bar-shadow;
     }
 
-    window.Bar .bar {
-      padding: 0 8px;
-      spacing: 4px;
-    }
-
-    /* Bar buttons: flat, no background */
-    window.Bar .bar-btn,
-    window.Bar menubutton.bar-btn {
-      background: transparent;
-      border: none;
-      box-shadow: none;
-    }
-
+    /* Workspace buttons: active state */
     .workspace-active {
       background: rgba(224, 226, 232, 0.2);
       border-radius: 6px;
     }
 
-    .apps-logo-btn image,
-    .apps-logo-btn picture {
-      min-width: 14px;
-      min-height: 14px;
+    /* Menu overlay: 500x500 block centered, flows from navbar */
+    window.MenuOverlay {
+      margin-top: $navbar-gap;
+      margin-left: $navbar-gap;
+      margin-right: $navbar-gap;
+      margin-bottom: 0;
     }
 
-    popover.apps-menu,
-    popover.notifications-menu,
-    popover.power-menu {
-      margin-top: -1px;
-    }
-
-    /* Popover: dark background like navbar - literal values for GTK */
-    popover.apps-menu contents,
-    popover.notifications-menu contents,
-    popover.power-menu contents,
-    popover.background contents {
-      background-color: ${palette.ags.barBgOpacity};
-      color: ${palette.ags.barFg};
-      font-weight: bold;
-      border: 1px solid ${palette.ags.barBorder};
+    .menu-overlay-block {
+      background: $bar-bg-opacity;
+      color: $bar-fg;
+      border: 1px solid $bar-border;
       border-top: none;
-      border-radius: 0 0 ${toString layout.barRounding}px ${toString layout.barRounding}px;
-      box-shadow: 0 1px 3px ${palette.ags.barShadow};
-      -gtk-icon-shadow: none;
-      padding: 8px;
+      border-radius: 0 0 $bar-rounding $bar-rounding;
+      box-shadow: 0 8px 24px $bar-shadow;
       min-width: 500px;
       min-height: 500px;
+      margin-top: $navbar-height;
     }
   '';
   system = pkgs.stdenv.hostPlatform.system;
   astalPkgs = inputs.astal.packages.${system};
   agsPkg = inputs.ags.packages.${system}.default;
   astalJs = agsPkg.jsPackage or (throw "ags package has no jsPackage");
-  nixosIcons = pkgs.nixos-icons;
   agsConfig = pkgs.runCommand "ags-config" {
     nativeBuildInputs = [ pkgs.coreutils ];
   } ''
@@ -78,9 +65,6 @@ let
     cp ${styleScss} $out/src/style.scss
     cp -r ${cfg}/src/widget/. $out/src/widget/
     cp -r ${cfg}/src/assets/. $out/src/assets/ 2>/dev/null || true
-    mkdir -p $out/src/assets/icons
-    icon=$(find ${nixosIcons} -name "nix-snowflake.svg" 2>/dev/null | head -1)
-    [ -n "$icon" ] && cp "$icon" $out/src/assets/icons/ || true
     echo "import './src/app'" > $out/app.ts
     ln -s ${astalJs} $out/node_modules/astal
     echo '{"name":"ags-config","type":"module"}' > $out/package.json
@@ -94,7 +78,6 @@ in
     extraPackages = with pkgs; [
       astalPkgs.wireplumber
       astalPkgs.notifd
-      nixos-icons
     ];
   };
 
