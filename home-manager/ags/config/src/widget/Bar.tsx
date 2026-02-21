@@ -29,16 +29,16 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
       <box cssName="bar" orientation={0}>
         <label label="     " />
         <box halign={1} orientation={0}>
+          <Clock />
           <button cssName="bar-btn">
             <label label="Apps" />
           </button>
-          <Clock />
         </box>
         <box hexpand halign={3} orientation={0}>
+          <SysMonitor />
           <button cssName="bar-btn">
             <label label="Notifications" />
           </button>
-          <SysMonitor />
         </box>
         <box hexpand halign={3} orientation={0}>
           <button cssName="bar-btn" onClicked={runCmd("hyprctl dispatch workspace 1")}>
@@ -56,10 +56,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           <button cssName="bar-btn" onClicked={runCmd("hyprctl dispatch workspace 5")}>
             <label label="5" />
           </button>
-          <Clock />
         </box>
         <box halign={2} orientation={0}>
-          <Clock />
           <button cssName="bar-btn" onClicked={runCmd("wlogout")}>
             <label label="Power" />
           </button>
