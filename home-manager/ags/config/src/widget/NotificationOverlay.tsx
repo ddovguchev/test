@@ -15,7 +15,7 @@ export default function NotificationOverlay(gdkmonitor: Gdk.Monitor): JSX.Elemen
     >
       <centerbox>
         <box />
-        <box cssName="menu-overlay-block" orientation={1} widthRequest={800} heightRequest={400}>
+        <box cssName="menu-overlay-block" orientation={1} widthRequest={900} heightRequest={600}>
           <label label="Notifications" cssName="appmenu-title" />
         </box>
         <box />

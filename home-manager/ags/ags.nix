@@ -27,10 +27,15 @@ let
       box-shadow: 0 1px 3px $bar-shadow;
     }
 
-    /* Workspace buttons: active state */
+    /* Workspace indicator: active state */
     .workspace-active {
-      background: rgba(224, 226, 232, 0.2);
+      background: rgba(224, 226, 232, 0.25);
       border-radius: 6px;
+      border: 1px solid rgba(224, 226, 232, 0.4);
+    }
+
+    window.Bar .bar-btn.workspace-active {
+      font-weight: bold;
     }
 
     /* Bar buttons - clickable area */
@@ -65,8 +70,8 @@ let
       border-top: none;
       border-radius: 0 0 $bar-rounding $bar-rounding;
       box-shadow: 0 8px 24px $bar-shadow;
-      min-width: 800px;
-      min-height: 400px;
+      min-width: 900px;
+      min-height: 600px;
       margin-top: $navbar-height;
       padding: 12px;
     }
