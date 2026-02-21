@@ -49,21 +49,19 @@ window.Bar {
   }
 }
 
-  /* Popovers: 500x500 blocks */
-  popover.apps-menu,
-  popover.notifications-menu,
-  popover.power-menu {
+  /* Popover: same as navbar, centered */
+  popover.bar-menu {
     margin-top: -1px;
   }
 
-  popover.apps-menu contents,
-  popover.notifications-menu contents,
-  popover.power-menu contents {
+  popover.bar-menu contents {
     background: $bg-color;
+    color: $fg-color;
+    font-weight: bold;
     border: 1px solid $fg-color;
     border-top: none;
     border-radius: 0 0 14px 14px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
     min-width: 500px;
     min-height: 500px;
     padding: 8px;

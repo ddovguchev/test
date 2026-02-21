@@ -31,22 +31,20 @@ let
       border-radius: 6px;
     }
 
-    /* Popovers: 500x500 blocks, flow from navbar */
-    popover.apps-menu,
-    popover.notifications-menu,
-    popover.power-menu {
+    /* Popover: same look as navbar, centered, flow from navbar */
+    popover.bar-menu {
       margin-top: -1px;
     }
 
-    popover.apps-menu contents,
-    popover.notifications-menu contents,
-    popover.power-menu contents {
+    popover.bar-menu contents {
       background: $bar-bg-opacity;
       color: $bar-fg;
+      font-weight: bold;
       border: 1px solid $bar-border;
       border-top: none;
       border-radius: 0 0 $bar-rounding $bar-rounding;
-      box-shadow: 0 8px 24px $bar-shadow;
+      box-shadow: 0 1px 3px $bar-shadow;
+      -gtk-icon-shadow: none;
       padding: 8px;
       min-width: 500px;
       min-height: 500px;
