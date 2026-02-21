@@ -15,8 +15,12 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
       application={app}
     >
       <box cssName="bar">
-        <box cssName="bar-left" />
-        <box cssName="bar-center" />
+        <box cssName="bar-left">
+          <Clock />
+        </box>
+        <box cssName="bar-center">
+          <Clock />
+        </box>
         <box cssName="bar-right">
           <Clock />
         </box>
