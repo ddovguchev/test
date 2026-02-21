@@ -1,6 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
+  layout = import ../theme/layout.nix;
   hasXwaylandVideoBridge =
     lib.hasAttrByPath [ "plasma6Packages" "xwaylandvideobridge" ] pkgs
     || lib.hasAttrByPath [ "kdePackages" "xwaylandvideobridge" ] pkgs;
@@ -19,7 +20,7 @@ in
 
       general = {
         gaps_in = 0;
-        gaps_out = 10;
+        gaps_out = layout.navbarGap;
         border_size = 0;
       };
 

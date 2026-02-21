@@ -2,17 +2,21 @@
 let
   cfg = ./config;
   palette = import ../theme/palette.nix;
+  layout = import ../theme/layout.nix;
   styleScss = pkgs.writeText "ags-style.scss" ''
     $bar-fg: ${palette.ags.barFg};
     $bar-bg: ${palette.ags.barBg};
     $bar-bg-opacity: ${palette.ags.barBgOpacity};
     $bar-border: ${palette.ags.barBorder};
     $bar-shadow: ${palette.ags.barShadow};
+    $navbar-gap: ${toString layout.navbarGap}px;
+    $bar-height: ${toString layout.barHeight}px;
 
     window.Bar {
       background: $bar-bg-opacity;
       color: $bar-fg;
-      min-height: 32px;
+      min-height: $bar-height;
+      margin: $navbar-gap $navbar-gap 0 $navbar-gap;
       font-weight: bold;
       border-bottom: 1px solid $bar-border;
       box-shadow: 0 2px 8px $bar-shadow;
