@@ -10,13 +10,13 @@ window.Bar {
   >.bar-row {
     min-width: 100%;
     display: flex;
-    filter: blur(10px);
   }
 
   .bar-left {
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    padding-left: 20px;
   }
 
   .bar-center {
