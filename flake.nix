@@ -28,6 +28,7 @@
           ./modules/nvidia.nix
           ./modules/hyprland.nix
           ./modules/audio.nix
+          ./modules/user-services.nix
           ./modules/packages.nix
           ./modules/sddm-theme.nix
           home-manager.nixosModules.home-manager
