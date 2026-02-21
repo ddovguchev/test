@@ -78,6 +78,7 @@ in
         "match:class com\\.github\\.Aylur\\.ags, pin on"
         "match:class com\\.github\\.Aylur\\.ags, float on"
         "match:class com\\.github\\.Aylur\\.ags, border_size 0"
+        "match:class com\\.github\\.Aylur\\.ags, opacity 1 1"
         "match:title Picture-in-Picture, float on"
         "match:title Picture-in-Picture, pin on"
         "match:title Picture-in-Picture, size 480 270"

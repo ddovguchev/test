@@ -6,6 +6,7 @@ window.Bar {
   color: $fg-color;
   min-height: 32px;
   font-weight: bold;
+  filter: blur(4px);
 
   >.bar-row {
     min-width: 100%;
