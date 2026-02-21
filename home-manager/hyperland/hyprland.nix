@@ -30,7 +30,7 @@ in
         inactive_opacity = 1.0;
         blur = {
           enabled = true;
-          size = 10;
+          size = 20;
           passes = 3;
           ignore_opacity = true;
           new_optimizations = true;
@@ -86,9 +86,8 @@ in
     };
 
     extraConfig = ''
-      blurls = Bar
-      blurls = bar
-      blurls = ags
+      # AGS bar: match exact window class so Hyprland applies blur behind it
+      blurls = com\\.github\\.Aylur\\.ags
     '';
   };
 }
