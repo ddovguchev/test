@@ -6,6 +6,7 @@ declare global {
     interface IntrinsicElements {
       window: Record<string, unknown>;
       box: Record<string, unknown>;
+      centerbox: Record<string, unknown>;
       label: Record<string, unknown> & {
         label?: string | { (): string; subscribe(cb: () => void): () => void };
       };

@@ -27,20 +27,7 @@ let
 
       >.bar {
         min-width: 100%;
-        display: flex;
       }
-
-      .bar-left,
-      .bar-center,
-      .bar-right {
-        flex: 1;
-        display: flex;
-        align-items: center;
-      }
-
-      .bar-left { justify-content: flex-start; }
-      .bar-center { justify-content: center; }
-      .bar-right { justify-content: flex-end; }
     }
   '';
   system = pkgs.stdenv.hostPlatform.system;
