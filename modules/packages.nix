@@ -1,11 +1,10 @@
 { config, pkgs, lib, ... }:
 
 let
+  # взять первый существующий атрибут из списка путей, иначе null
   firstAttr = paths:
-    let
-      xs = builtins.filter (p: lib.hasAttrByPath p pkgs) paths;
-    in
-      if xs == [] then null else lib.getAttrFromPath (builtins.head xs) pkgs;
+    let xs = builtins.filter (p: lib.hasAttrByPath p pkgs) paths;
+    in if xs == [] then null else lib.getAttrFromPath (builtins.head xs) pkgs;
 
   xwaylandVideoBridge = firstAttr [
     [ "plasma6Packages" "xwaylandvideobridge" ]
@@ -31,8 +30,9 @@ in
 {
   programs.steam = {
     enable = true;
-    gamescopeSessions.enable = true;
+    gamescopeSession.enable = true; # <-- без s
   };
+
   programs.gamemode.enable = true;
 
   environment.systemPackages =
@@ -49,7 +49,7 @@ in
 
       # apps
       jetbrains.idea kitty ranger firefox spotify blender insomnia obs-studio
-      steam burpsuite metasploit mangohub
+      steam burpsuite metasploit mangohud
 
       # network
       wireguard-tools wireshark gns3-gui teams-for-linux telegram-desktop
