@@ -15,7 +15,7 @@ let
     $navbar-height: ${toString (layout.navbarGap + layout.barHeight)}px;
 
     window.Bar {
-      background: $bar-bg-opacity;
+      background: $bar-bg;
       color: $bar-fg;
       min-height: $bar-height;
       margin: $navbar-gap;
@@ -45,6 +45,12 @@ let
       min-height: 14px;
     }
 
+    /* Separator between clock and nixos */
+    .bar-separator {
+      margin: 0 8px;
+      opacity: 0.5;
+    }
+
     /* Menu overlay: 500x500 block centered, flows from navbar */
     window.MenuOverlay {
       margin-top: $navbar-gap;
@@ -54,7 +60,7 @@ let
     }
 
     .menu-overlay-block {
-      background: $bar-bg-opacity;
+      background: $bar-bg;
       color: $bar-fg;
       border: 1px solid $bar-border;
       border-top: none;

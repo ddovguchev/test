@@ -75,6 +75,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
         <label label="     " />
         <box halign={1} orientation={0}>
           <Clock />
+          <label label="│" cssName="bar-separator" />
           <button cssName="bar-btn nixos-btn" onClicked={runCmd("ags --toggle-window menuoverlay")}>
             <Gtk.Image iconName="nix-snowflake" />
           </button>
