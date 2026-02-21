@@ -85,12 +85,10 @@ in
         "match:title Picture-in-Picture, move 100%-w-20 100%-h-20"
       ];
 
-      # AGS bar is a layer — blur by namespace. Run: hyprctl layers (see namespace in output)
+      # AGS bar: layerrule = rule, namespace (no value after blur/ignorezero)
       layerrule = [
-        "blur on, gtk-layer-shell"
-        "ignorealpha 0, gtk-layer-shell"
-        "blur on, ags"
-        "ignorealpha 0, ags"
+        "blur, gtk4-layer-shell"
+        "ignorezero, gtk4-layer-shell"
       ];
     };
 
