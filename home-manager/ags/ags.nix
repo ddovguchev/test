@@ -63,7 +63,7 @@ let
     }
 
     .menu-item:hover {
-      background: alpha($bar-fg, 0.12);
+      background: rgba(224, 226, 232, 0.12);
     }
 
     .workspaces-grid {
