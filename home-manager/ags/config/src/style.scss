@@ -36,36 +36,33 @@ window.Bar {
   }
 
   .bar-btn,
-  button#bar-btn {
+  button#bar-btn,
+  menubutton.bar-btn {
     margin: 0 4px;
     padding: 4px 8px;
     border-radius: 6px;
   }
 
-  .bar-root {
-    min-height: 32px;
-  }
-
-  .panel-revealer {
-    transition: height 200ms ease-out;
-  }
-
-  .apps-panel,
-  .notif-panel,
-  .power-panel {
+  /* Floating menus: same look as navbar, smooth junction with bar */
+  popover.bar-menu,
+  popover.apps-menu,
+  popover.notifications-menu,
+  popover.power-menu,
+  .bar-menu-content {
     background: $bg-color;
-    padding: 8px;
-    border-radius: 0 0 8px 8px;
     border: 1px solid $fg-color;
     border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 8px;
+    margin: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  .panel-header {
-    margin-bottom: 8px;
-  }
-
-  .panel-title {
-    font-size: 1.1em;
-    font-weight: bold;
+  popover.bar-menu contents,
+  popover.apps-menu contents,
+  popover.notifications-menu contents,
+  popover.power-menu contents {
+    border-radius: 0 0 12px 12px;
+    background: $bg-color;
   }
 }

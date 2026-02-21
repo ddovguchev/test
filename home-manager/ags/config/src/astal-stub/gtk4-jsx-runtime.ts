@@ -9,6 +9,8 @@ declare global {
       centerbox: Record<string, unknown>;
       revealer: Record<string, unknown> & { reveal_child?: boolean | unknown };
       button: Record<string, unknown> & { onClicked?: string | (() => void) };
+      menubutton: Record<string, unknown>;
+      popover: Record<string, unknown>;
       label: Record<string, unknown> & {
         label?: string | { (): string; subscribe(cb: () => void): () => void };
       };

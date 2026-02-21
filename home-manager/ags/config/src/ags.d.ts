@@ -32,6 +32,8 @@ declare module "astal/gtk4" {
       centerbox: Record<string, unknown>;
       revealer: Record<string, unknown> & { reveal_child?: boolean | unknown };
       button: Record<string, unknown> & { onClicked?: string | (() => void) };
+      menubutton: Record<string, unknown>;
+      popover: Record<string, unknown>;
       label: Record<string, unknown> & {
         label?: TReactiveLabel;
       };
