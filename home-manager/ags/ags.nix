@@ -25,6 +25,10 @@ let
       border-bottom: 1px solid $bar-border;
       box-shadow: 0 1px 3px $bar-shadow;
     }
+    window.Bar box#clock-wrap,
+    window.Bar .clock-wrap {
+      min-width: 80px;
+    }
     window.Bar label.clock {
       min-width: 80px;
     }
