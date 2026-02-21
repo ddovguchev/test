@@ -16,7 +16,6 @@ let
       background: $bar-bg-opacity;
       color: $bar-fg;
       min-height: $bar-height;
-      min-width: 100%;
       margin: $navbar-gap;
       margin-bottom: 0;
       font-weight: bold;
@@ -24,10 +23,6 @@ let
       -gtk-icon-shadow: none;
       border-bottom: 1px solid $bar-border;
       box-shadow: 0 1px 3px $bar-shadow;
-    }
-
-    window.Bar > box {
-      min-width: 100%;
     }
 
     /* Workspace buttons: active state */
