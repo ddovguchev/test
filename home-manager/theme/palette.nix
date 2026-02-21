@@ -1,4 +1,4 @@
-{
+let
   kitty = {
     cursor = "#e0e2e8";
     cursorText = "#c2c7ce";
@@ -26,18 +26,30 @@
     color15 = "#e7e7e7";
   };
 
+  # Navbar uses kitty theme (same fg/bg/accent) so bar matches terminal
+  navbar = {
+    fg = kitty.foreground;
+    bg = kitty.background;
+    bgOpacity = "rgba(18, 24, 38, 0.62)";
+    border = kitty.url;
+    shadow = "rgba(0, 0, 0, 0.45)";
+  };
+in
+{
+  inherit kitty navbar;
+
   ags = {
-    barFg = "#e0e2e8";
-    barBg = "#101418";
-    barBgOpacity = "rgba(18, 24, 38, 0.62)";
-    barBorder = "#99ccfa";
-    barShadow = "rgba(0, 0, 0, 0.45)";
+    barFg = navbar.fg;
+    barBg = navbar.bg;
+    barBgOpacity = navbar.bgOpacity;
+    barBorder = navbar.border;
+    barShadow = navbar.shadow;
     panelBg = "rgba(18, 24, 38, 0.72)";
-    panelBorder = "#4c4c4c";
+    panelBorder = kitty.color0;
     launcherOverlay = "rgba(16, 20, 24, 0.35)";
     launcherPanel = "rgba(38, 38, 38, 0.72)";
     launcherTile = "rgba(76, 76, 76, 0.45)";
     launcherTileHover = "rgba(153, 204, 250, 0.32)";
-    launcherText = "#f0f0f0";
+    launcherText = kitty.color7;
   };
 }
