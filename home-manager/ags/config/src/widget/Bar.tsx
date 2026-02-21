@@ -76,7 +76,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           <Clock />
           <menubutton cssName="bar-btn">
             <popover cssName="apps-menu">
-              <box orientation={1} cssName="bar-menu-content" />
+              <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
             </popover>
             <label label="Apps" />
           </menubutton>
@@ -85,7 +85,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           <SysMonitor />
           <menubutton cssName="bar-btn">
             <popover cssName="notifications-menu">
-              <box orientation={1} cssName="bar-menu-content" />
+              <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
             </popover>
             <label label="Notifications" />
           </menubutton>
@@ -96,7 +96,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
         <box halign={2} orientation={0}>
           <menubutton cssName="bar-btn">
             <popover cssName="power-menu">
-              <box orientation={1} cssName="bar-menu-content" />
+              <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
             </popover>
             <label label="Power" />
           </menubutton>

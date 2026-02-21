@@ -42,13 +42,15 @@ let
     popover.power-menu contents {
       background: $bar-bg-opacity;
       color: $bar-fg;
+      font-weight: bold;
       border: 1px solid $bar-border;
       border-top: none;
       border-radius: 0 0 $bar-rounding $bar-rounding;
-      box-shadow: 0 4px 12px $bar-shadow;
+      box-shadow: 0 1px 3px $bar-shadow;
+      -gtk-icon-shadow: none;
       padding: 8px;
-      min-width: 120px;
-      min-height: 80px;
+      min-width: 500px;
+      min-height: 500px;
     }
   '';
   system = pkgs.stdenv.hostPlatform.system;
