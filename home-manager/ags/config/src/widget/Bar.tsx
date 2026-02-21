@@ -1,5 +1,6 @@
 import app from "astal/gtk4/app";
 import { Astal, type Gdk } from "astal/gtk4";
+import Gtk from "gi://Gtk?version=4.0";
 import GLib from "gi://GLib?version=2.0";
 import { createPoll } from "astal/time";
 import Clock from "./Clock";
@@ -80,7 +81,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
               <popover cssName="apps-menu">
                 <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
               </popover>
-              <icon icon="nix-snowflake" />
+              <Gtk.Image iconName="nix-snowflake" />
             </menubutton>
             <menubutton cssName="bar-btn">
               <popover cssName="notifications-menu">

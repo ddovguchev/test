@@ -36,8 +36,8 @@ popover.apps-menu contents,
 popover.notifications-menu contents,
 popover.power-menu contents,
 popover.background contents {
-  background-color: $bg-color !important;
-  color: $fg-color !important;
+  background-color: $bg-color;
+  color: $fg-color;
   font-weight: bold;
   border: 1px solid $fg-color;
   border-top: none;

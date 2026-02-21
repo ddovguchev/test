@@ -14,7 +14,6 @@ declare global {
       label: Record<string, unknown> & {
         label?: string | { (): string; subscribe(cb: () => void): () => void };
       };
-      icon: Record<string, unknown> & { icon?: string };
     }
   }
 }

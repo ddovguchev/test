@@ -48,8 +48,8 @@ let
     popover.notifications-menu contents,
     popover.power-menu contents,
     popover.background contents {
-      background-color: $bar-bg-opacity !important;
-      color: $bar-fg !important;
+      background-color: $bar-bg-opacity;
+      color: $bar-fg;
       font-weight: bold;
       border: 1px solid $bar-border;
       border-top: none;
