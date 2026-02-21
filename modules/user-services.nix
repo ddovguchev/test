@@ -10,7 +10,7 @@
         ExecStart = "${config.home.profileDirectory}/bin/ags";
         Restart = "on-failure";
       };
-      Install = { WantedBy = [ "default.target" ]; };
+      wantedBy = [ "default.target" ];
     };
 
     swww-daemon = {
@@ -22,7 +22,7 @@
         ExecStart = "${pkgs.swww}/bin/swww-daemon";
         Restart = "on-failure";
       };
-      Install = { WantedBy = [ "default.target" ]; };
+      wantedBy = [ "default.target" ];
     };
   };
 }
