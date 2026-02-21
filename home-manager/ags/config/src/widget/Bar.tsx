@@ -32,7 +32,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
         <label label="     " />
         <box halign={1} orientation={0}>
           <Clock />
-          <button cssName="bar-btn">
+          <button cssName="bar-btn" onClicked={runCmd("ags --toggle-window appmenu")}>
             <label label="Apps" />
           </button>
         </box>
