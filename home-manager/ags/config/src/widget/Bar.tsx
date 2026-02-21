@@ -7,7 +7,9 @@ import SysMonitor from "./SysMonitor";
 function runCmd(cmd: string): () => void {
   return () => {
     try {
-      Gio.Subprocess.new(["sh", "-c", cmd], Gio.SubprocessFlags.NONE);
+      // NixOS: ensure PATH when run under systemd (hyprctl, wlogout in /run/current-system/sw/bin)
+      const fullCmd = `export PATH="/run/current-system/sw/bin:/usr/bin:$PATH"; ${cmd}`;
+      Gio.Subprocess.new(["sh", "-c", fullCmd], Gio.SubprocessFlags.NONE);
     } catch (e) {
       console.error("runCmd", cmd, e);
     }
