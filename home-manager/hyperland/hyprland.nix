@@ -88,6 +88,7 @@ in
 
     };
     extraConfig = ''
+      blurls = gtk4-layer-shell
       blurls = Bar
       blurls = bar
       blurls = ags
