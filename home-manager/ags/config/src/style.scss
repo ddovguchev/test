@@ -7,6 +7,12 @@ window.Bar {
   min-height: 32px;
   font-weight: bold;
 
+  box#bar,
+  .bar {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   >.bar-row {
     min-width: 100%;
     display: flex;
