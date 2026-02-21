@@ -35,7 +35,7 @@ let
     }
   '';
   astalDeps = [
-    pkgs.astal.astal3
+    pkgs.astal.astal4
     pkgs.astal.io
     pkgs.astal.wireplumber
     pkgs.astal.notifd
