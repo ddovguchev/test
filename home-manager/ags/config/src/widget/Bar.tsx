@@ -86,8 +86,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
             <label label="Notifications" />
           </button>
         </box>
-        <box halign={3} orientation={0}>
+        <box hexpand halign={3} orientation={0}>
           <Workspaces />
+        </box>
+        <box halign={2} orientation={0}>
           <button cssName="bar-btn" onClicked={runCmd("ags --toggle-window powermenu")}>
             <label label="Power" />
           </button>
