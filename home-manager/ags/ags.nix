@@ -61,23 +61,19 @@ let
     systemDataDirs
   ];
   astalGjs = "${pkgs.astal.gjs}/share/astal/gjs";
+  # Copy source only (no bundle): nixpkgs astal.gjs bakes in Astal 3.0, causing
+  # "cannot load version 3.0" when runtime has 4.0. Running from source uses
+  # GI_TYPELIB_PATH at runtime (astal4 only).
   agsConfig = pkgs.runCommand "ags-config" {
-    nativeBuildInputs = [ pkgs.ags ];
-    GI_TYPELIB_PATH = typelib;
-    GSETTINGS_SCHEMA_DIR = schema;
-    XDG_DATA_DIRS = "${gsettingsData}:${data}";
+    nativeBuildInputs = [ pkgs.coreutils ];
   } ''
-    buildDir=$TMPDIR/ags-build
-    mkdir -p $buildDir/src $buildDir/node_modules $buildDir/src/widget $buildDir/src/assets
-    cp ${cfg}/src/app.ts ${cfg}/src/env.d.ts ${cfg}/src/tsconfig.json $buildDir/src/
-    cp ${styleScss} $buildDir/src/style.scss
-    cp ${cfg}/src/widget/Bar.tsx $buildDir/src/widget/
-    cp -r ${cfg}/src/assets/. $buildDir/src/assets/ 2>/dev/null || true
-    echo '{"name":"astal-shell","dependencies":{"astal":"${astalGjs}"}}' > $buildDir/package.json
-    ln -s ${astalGjs} $buildDir/node_modules/astal
-    cd $buildDir && ags bundle src/app.ts dist/bundle.js -r .
-    mkdir -p $out
-    cp -r $buildDir/dist $out/
+    mkdir -p $out/src/widget $out/src/assets $out/node_modules
+    cp ${cfg}/src/app.ts ${cfg}/src/env.d.ts ${cfg}/src/tsconfig.json $out/src/
+    cp ${styleScss} $out/src/style.scss
+    cp ${cfg}/src/widget/Bar.tsx $out/src/widget/
+    cp -r ${cfg}/src/assets/. $out/src/assets/ 2>/dev/null || true
+    echo '{"name":"astal-shell","dependencies":{"astal":"${astalGjs}"}}' > $out/package.json
+    ln -s ${astalGjs} $out/node_modules/astal
   '';
   wrapped = pkgs.runCommand "ags-wrapped" { buildInputs = [ pkgs.makeWrapper ]; } ''
     mkdir -p $out/bin
@@ -104,7 +100,7 @@ let
     if [ -f "dist/bundle.js" ]; then
       exec "${bin}" run dist/bundle.js "$@"
     else
-      exec "${bin}" run "$@"
+      exec "${bin}" run src/app.ts "$@"
     fi
   '';
   agsScripts = pkgs.runCommand "ags-scripts" { } ''
