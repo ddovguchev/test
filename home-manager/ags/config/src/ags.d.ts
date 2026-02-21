@@ -23,13 +23,14 @@ declare module "astal/gtk4" {
   export const Astal: {
     Window: new (props: unknown) => unknown;
     WindowAnchor: { TOP: number; BOTTOM: number; LEFT: number; RIGHT: number };
-    Exclusivity: { EXCLUSIVE: number };
+    Exclusivity: { EXCLUSIVE: number; NORMAL: number };
   };
   namespace JSX {
     interface IntrinsicElements {
       window: Record<string, unknown>;
-      box: Record<string, unknown>;
+      box: Record<string, unknown> & { widthRequest?: number; heightRequest?: number };
       centerbox: Record<string, unknown>;
+      revealer: Record<string, unknown> & { ref?: { current: unknown }; reveal_child?: boolean };
       button: Record<string, unknown> & { onClicked?: string | (() => void) };
       label: Record<string, unknown> & {
         label?: TReactiveLabel;

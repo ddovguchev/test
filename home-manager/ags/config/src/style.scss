@@ -41,4 +41,31 @@ window.Bar {
     padding: 4px 8px;
     border-radius: 6px;
   }
+
+  .bar-root {
+    min-height: 32px;
+  }
+
+  .panel-revealer {
+    transition: height 200ms ease-out;
+  }
+
+  .apps-panel,
+  .notif-panel,
+  .power-panel {
+    background: $bg-color;
+    padding: 8px;
+    border-radius: 0 0 8px 8px;
+    border: 1px solid $fg-color;
+    border-top: none;
+  }
+
+  .panel-header {
+    margin-bottom: 8px;
+  }
+
+  .panel-title {
+    font-size: 1.1em;
+    font-weight: bold;
+  }
 }

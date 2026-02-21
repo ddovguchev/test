@@ -5,8 +5,9 @@ declare global {
     type Element = unknown;
     interface IntrinsicElements {
       window: Record<string, unknown>;
-      box: Record<string, unknown>;
+      box: Record<string, unknown> & { widthRequest?: number; heightRequest?: number };
       centerbox: Record<string, unknown>;
+      revealer: Record<string, unknown> & { ref?: { current: unknown }; reveal_child?: boolean };
       button: Record<string, unknown> & { onClicked?: string | (() => void) };
       label: Record<string, unknown> & {
         label?: string | { (): string; subscribe(cb: () => void): () => void };
