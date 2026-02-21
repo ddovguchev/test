@@ -9,7 +9,6 @@ Item {
     id: root
     state: Config.lockScreenDisplay ? "lockState" : "loginState"
 
-    // TODO: Add own translations: https://github.com/sddm/sddm/wiki/Localization
     TextConstants {
         id: textConstants
     }
@@ -161,7 +160,6 @@ Item {
                 visible: parent.displayColor || (backgroundVideo.visible && parent.placeholder.length === 0)
             }
 
-            // TODO: This is slow af. Removing the property bindings and doing everything at startup should help.
             Video {
                 id: backgroundVideo
                 anchors.fill: parent
@@ -192,7 +190,6 @@ Item {
                 }
             }
 
-            // Overkill, but fine...
             Component.onDestruction: {
                 if (backgroundVideo) {
                     backgroundVideo.stop();
@@ -201,7 +198,6 @@ Item {
             }
         }
         MultiEffect {
-            // Background effects
             id: backgroundEffect
             source: backgroundImage
             anchors.fill: parent

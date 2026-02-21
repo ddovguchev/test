@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-# Переходим в директорию флейка (если скрипт не там)
 cd "$(dirname "$0")/.."
 
 echo "Updating flake from Git..."

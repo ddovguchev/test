@@ -1,4 +1,3 @@
-# If SDDM still freezes, set useDefaultTheme = true to switch to chili theme
 { lib, pkgs, ... }:
 let
   useDefaultTheme = false;
@@ -64,6 +63,5 @@ let
 in
 {
   environment.systemPackages = lib.mkIf (!useDefaultTheme) [ silentTheme ];
-
   services.displayManager.sddm = sddmConfig;
 }

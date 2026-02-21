@@ -1,4 +1,5 @@
 { config, pkgs, lib, ... }:
+
 {
   networking.nftables.enable = true;
 

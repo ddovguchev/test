@@ -36,27 +36,20 @@ in
 
   environment.systemPackages =
     (with pkgs; [
-      # base
       git curl wget unzip ripgrep pciutils htop fastfetch nixpkgs-fmt mangohud protonup-ng
 
-      # dev
       nodejs_22 nodePackages.typescript go gcc terraform terragrunt
       kubectl k9s helm ansible tmux neovim
 
-      # containers/virt
       docker docker-compose qemu
 
-      # apps
       jetbrains.idea kitty ranger firefox spotify blender insomnia obs-studio
       steam burpsuite metasploit
 
-      # network
       wireguard-tools wireshark gns3-gui teams-for-linux telegram-desktop
 
-      # wayland
       hyprlock grim slurp wf-recorder wl-screenrec pavucontrol ffmpeg swww
 
-      # astal
       astal.gjs astal.astal3 astal.io astal.wireplumber astal.notifd
     ])
     ++ [ vesktopWrapped ]
