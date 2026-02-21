@@ -4,4 +4,6 @@
   navbarGap = 10;
   # Bar row height (px) — AGS min-height, can be used for Hyprland reserved area
   barHeight = 32;
+  # Bar corner radius (px) — rounded bar
+  barRounding = 14;
 }

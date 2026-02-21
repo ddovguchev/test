@@ -11,6 +11,7 @@ let
     $bar-shadow: ${palette.ags.barShadow};
     $navbar-gap: ${toString layout.navbarGap}px;
     $bar-height: ${toString layout.barHeight}px;
+    $bar-rounding: ${toString layout.barRounding}px;
 
     window.Bar {
       background: $bar-bg-opacity;
@@ -18,7 +19,8 @@ let
       min-height: $bar-height;
       margin: $navbar-gap $navbar-gap 0 $navbar-gap;
       font-weight: bold;
-      backdrop-filter: blur(12px);
+      border-radius: $bar-rounding;
+      backdrop-filter: blur(20px);
       -gtk-icon-shadow: none;
       border-bottom: 1px solid $bar-border;
       box-shadow: 0 1px 3px $bar-shadow;
