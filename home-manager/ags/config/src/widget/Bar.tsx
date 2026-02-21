@@ -73,7 +73,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
     >
       <box cssName="bar" orientation={0}>
         <label label="     " />
-        <box halign={1} orientation={0}>
+        <box halign={1} orientation={0} spacing={12}>
           <Clock />
           <label label="│" cssName="bar-separator" />
           <button cssName="bar-btn nixos-btn" onClicked={runCmd("ags --toggle-window menuoverlay")}>

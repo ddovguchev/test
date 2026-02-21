@@ -47,8 +47,6 @@ let
 
     /* Separator between clock and nixos */
     .bar-separator {
-      margin: 0 14px;
-      padding: 0 2px;
       opacity: 0.5;
     }
 
