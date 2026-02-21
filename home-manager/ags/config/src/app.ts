@@ -4,8 +4,6 @@ import style from "./style.scss";
 import Bar from "./widget/Bar";
 import AppMenu from "./widget/AppMenu";
 import MenuOverlay from "./widget/MenuOverlay";
-import NotificationOverlay from "./widget/NotificationOverlay";
-import PowerMenu from "./widget/PowerMenu";
 
 app.start({
   css: style,
@@ -18,8 +16,6 @@ app.start({
     if (first) {
       AppMenu(first as Gdk.Monitor);
       MenuOverlay(first as Gdk.Monitor);
-      NotificationOverlay(first as Gdk.Monitor);
-      PowerMenu(first as Gdk.Monitor);
     }
   },
 });

@@ -72,29 +72,49 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
       application={app}
     >
       <box cssName="bar" orientation={0}>
-        <label label="     " />
         <box halign={1} orientation={0} spacing={12}>
           <Clock />
           <label label="│" cssName="bar-separator" />
-          <button cssName="bar-btn nixos-btn" onClicked={runCmd("ags --toggle-window menuoverlay")}>
+        </box>
+        <box hexpand halign={2} orientation={0} spacing={12}>
+          <menubutton cssName="bar-btn nixos-btn">
+            <popover cssName="bar-popover">
+              <box orientation={1} cssName="bar-popover-content" widthRequest={800} heightRequest={400}>
+                <label label="Apps" cssName="appmenu-title" />
+              </box>
+            </popover>
             <Gtk.Image iconName="nix-snowflake" />
-          </button>
-        </box>
-        <box hexpand halign={3} orientation={0}>
-          <SysMonitor />
-          <button cssName="bar-btn" onClicked={runCmd("ags --toggle-window notification")}>
+          </menubutton>
+          <menubutton cssName="bar-btn">
+            <popover cssName="bar-popover">
+              <box orientation={1} cssName="bar-popover-content" widthRequest={800} heightRequest={400}>
+                <label label="Notifications" cssName="appmenu-title" />
+              </box>
+            </popover>
             <label label="Notifications" />
-          </button>
+          </menubutton>
+          <menubutton cssName="bar-btn">
+            <popover cssName="bar-popover">
+              <box orientation={1} cssName="bar-popover-content" spacing={8} widthRequest={800} heightRequest={400}>
+                <label label="Power" cssName="appmenu-title" />
+                <button cssName="bar-btn" onClicked={runCmd("systemctl poweroff")}>
+                  <label label="Shutdown" />
+                </button>
+                <button cssName="bar-btn" onClicked={runCmd("systemctl reboot")}>
+                  <label label="Reboot" />
+                </button>
+                <button cssName="bar-btn" onClicked={runCmd("hyprctl dispatch exit")}>
+                  <label label="Logout" />
+                </button>
+              </box>
+            </popover>
+            <label label="Power" />
+          </menubutton>
         </box>
-        <box hexpand halign={3} orientation={0}>
+        <box halign={3} orientation={0}>
+          <SysMonitor />
           <Workspaces />
         </box>
-        <box halign={2} orientation={0}>
-          <button cssName="bar-btn" onClicked={runCmd("ags --toggle-window powermenu")}>
-            <label label="Power" />
-          </button>
-        </box>
-        <label label="     " />
       </box>
     </window>
   ) as JSX.Element;

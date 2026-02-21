@@ -50,7 +50,7 @@ let
       opacity: 0.5;
     }
 
-    /* Menu overlay: 500x500 block centered, flows from navbar */
+    /* Menu overlay */
     window.MenuOverlay {
       margin-top: $navbar-gap;
       margin-left: $navbar-gap;
@@ -69,6 +69,26 @@ let
       min-height: 500px;
       margin-top: $navbar-height;
       padding: 12px;
+    }
+
+    /* Bar popover: 800x400 centered, navbar theme */
+    popover.bar-popover {
+      margin-top: -1px;
+    }
+
+    popover.bar-popover contents {
+      background-color: $bar-bg;
+      color: $bar-fg;
+      border: 1px solid $bar-border;
+      border-top: none;
+      border-radius: 0 0 $bar-rounding $bar-rounding;
+      box-shadow: 0 8px 24px $bar-shadow;
+      padding: 12px;
+    }
+
+    .bar-popover-content {
+      min-width: 800px;
+      min-height: 400px;
     }
   '';
   system = pkgs.stdenv.hostPlatform.system;
