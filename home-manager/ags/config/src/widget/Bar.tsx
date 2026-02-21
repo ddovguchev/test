@@ -83,35 +83,27 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
       application={app}
     >
       <box cssName="bar" orientation={0}>
-        <box halign={1} orientation={0}>
-          <Clock />
-        </box>
-        <box hexpand halign={3} orientation={0} />
-        <box orientation={0}>
-          <menubutton cssName="bar-btn apps-logo-btn">
-            <popover cssName="apps-menu">
-              <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
-            </popover>
-            <NixLogo />
-          </menubutton>
-          <menubutton cssName="bar-btn">
-            <popover cssName="notifications-menu">
-              <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
-            </popover>
-            <label label="Notifications" />
-          </menubutton>
-          <menubutton cssName="bar-btn">
-            <popover cssName="power-menu">
-              <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
-            </popover>
-            <label label="Power" />
-          </menubutton>
-        </box>
-        <box hexpand halign={3} orientation={0} />
-        <box halign={3} orientation={0}>
-          <SysMonitor />
-          <Workspaces />
-        </box>
+        <Clock />
+        <menubutton cssName="bar-btn apps-logo-btn">
+          <popover cssName="apps-menu">
+            <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
+          </popover>
+          <NixLogo />
+        </menubutton>
+        <SysMonitor />
+        <menubutton cssName="bar-btn">
+          <popover cssName="notifications-menu">
+            <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
+          </popover>
+          <label label="Notifications" />
+        </menubutton>
+        <Workspaces />
+        <menubutton cssName="bar-btn">
+          <popover cssName="power-menu">
+            <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
+          </popover>
+          <label label="Power" />
+        </menubutton>
       </box>
     </window>
   ) as JSX.Element;

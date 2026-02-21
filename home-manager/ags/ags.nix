@@ -37,8 +37,8 @@ let
 
     .apps-logo-btn image,
     .apps-logo-btn picture {
-      min-width: 20px;
-      min-height: 20px;
+      min-width: 14px;
+      min-height: 14px;
     }
 
     popover.apps-menu,
