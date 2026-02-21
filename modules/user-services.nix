@@ -6,7 +6,7 @@
         Description = "Aylur's GTK Shell";
         After = [ "graphical-session.target" ];
       };
-      Service = {
+      ServiceConfig = {
         ExecStart = "/run/current-system/sw/bin/ags";
         Restart = "on-failure";
       };
@@ -18,7 +18,7 @@
         Description = "Swww Wallpaper Daemon";
         After = [ "graphical-session.target" ];
       };
-      Service = {
+      ServiceConfig = {
         ExecStart = "/run/current-system/sw/bin/swww-daemon";
         Restart = "on-failure";
       };
