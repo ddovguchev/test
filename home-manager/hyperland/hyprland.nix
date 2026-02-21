@@ -49,6 +49,7 @@ in
         lib.optional hasXwaylandVideoBridge "xwaylandvideobridge";
 
       bind = [
+        "$mod, R, exec, ags --toggle-window appmenu"
         "$mod, F, exec, firefox"
         "$mod, T, exec, kitty"
         "$mod, Q, killactive"

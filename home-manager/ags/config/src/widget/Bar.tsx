@@ -1,15 +1,15 @@
 import app from "astal/gtk4/app";
 import { Astal, type Gdk } from "astal/gtk4";
 import Gio from "gi://Gio?version=2.0";
+import GLib from "gi://GLib?version=2.0";
 import Clock from "./Clock";
 import SysMonitor from "./SysMonitor";
 
 function runCmd(cmd: string): () => void {
   return () => {
     try {
-      // NixOS: ensure PATH when run under systemd (hyprctl, wlogout in /run/current-system/sw/bin)
-      const fullCmd = `export PATH="/run/current-system/sw/bin:/usr/bin:$PATH"; ${cmd}`;
-      Gio.Subprocess.new(["sh", "-c", fullCmd], Gio.SubprocessFlags.NONE);
+      const fullCmd = `PATH="/run/current-system/sw/bin:/usr/bin:$PATH" ${cmd}`;
+      GLib.spawn_async(null, ["sh", "-c", fullCmd], null, GLib.SpawnFlags.SEARCH_PATH, null);
     } catch (e) {
       console.error("runCmd", cmd, e);
     }

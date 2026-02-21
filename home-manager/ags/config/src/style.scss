@@ -66,3 +66,19 @@ window.Bar {
     background: $bg-color;
   }
 }
+
+window.AppMenu {
+  background: $bg-color;
+  color: $fg-color;
+  border: 1px solid $fg-color;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  .appmenu-content {
+    padding: 12px;
+  }
+
+  .appmenu-title {
+    font-weight: bold;
+  }
+}

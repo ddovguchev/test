@@ -27,7 +27,7 @@ declare module "astal/gtk4" {
   };
   namespace JSX {
     interface IntrinsicElements {
-      window: Record<string, unknown>;
+      window: Record<string, unknown> & { name?: string; visible?: boolean };
       box: Record<string, unknown> & { widthRequest?: number; heightRequest?: number };
       centerbox: Record<string, unknown>;
       revealer: Record<string, unknown> & { reveal_child?: boolean | unknown };

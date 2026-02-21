@@ -21,6 +21,19 @@ declare module "*.css" {
 }
 
 /* eslint-disable rulesdir/specified-exports -- ambient module declarations use named exports */
+declare module "gi://GLib?version=2.0" {
+  export enum SpawnFlags {
+    SEARCH_PATH = 1,
+  }
+  export function spawn_async(
+    working_directory: string | null,
+    argv: string[],
+    envp: string[] | null,
+    flags: SpawnFlags,
+    child_setup: (() => void) | null,
+  ): [boolean, number];
+}
+
 declare module "gi://Gio?version=2.0" {
   export enum SubprocessFlags {
     NONE = 0,
