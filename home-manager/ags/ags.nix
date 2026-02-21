@@ -40,7 +40,7 @@ let
     pkgs.astal.wireplumber
     pkgs.astal.notifd
   ];
-  typelibDeps = astalDeps ++ [ pkgs.gtk4 ];
+  typelibDeps = astalDeps ++ [ pkgs.gtk4 pkgs.graphene ];
   typelib = lib.makeSearchPath "lib/girepository-1.0" typelibDeps;
   schema = lib.makeSearchPath "share/glib-2.0/schemas" astalDeps;
   gsettingsData = lib.concatStringsSep ":" (map (p: "${p}/share/gsettings-schemas/${p.name}") astalDeps);
