@@ -25,6 +25,52 @@ let
       border-bottom: 1px solid $bar-border;
       box-shadow: 0 1px 3px $bar-shadow;
     }
+
+    /* Popovers: overlay on navbar, curved notch at click point */
+    popover.apps-menu,
+    popover.notifications-menu,
+    popover.workspaces-menu,
+    popover.power-menu {
+      margin-top: -1px;
+    }
+
+    popover.apps-menu contents,
+    popover.notifications-menu contents,
+    popover.workspaces-menu contents,
+    popover.power-menu contents {
+      background: $bar-bg-opacity;
+      color: $bar-fg;
+      border: 1px solid $bar-border;
+      border-top: none;
+      border-radius: 0 0 $bar-rounding $bar-rounding;
+      box-shadow: 0 4px 12px $bar-shadow;
+      padding: 8px;
+    }
+
+    .bar-menu-content {
+      min-width: 140px;
+      min-height: 40px;
+    }
+
+    .menu-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .menu-item {
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    .menu-item:hover {
+      background: alpha($bar-fg, 0.12);
+    }
+
+    .workspaces-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
   '';
   system = pkgs.stdenv.hostPlatform.system;
   astalPkgs = inputs.astal.packages.${system};

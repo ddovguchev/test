@@ -43,27 +43,49 @@ window.Bar {
     border-radius: 6px;
   }
 
-  /* Floating menus: same look as navbar, smooth junction with bar */
-  popover.bar-menu,
+  /* Popovers: overlay on navbar, flow out from bar */
   popover.apps-menu,
   popover.notifications-menu,
-  popover.power-menu,
-  .bar-menu-content {
+  popover.workspaces-menu,
+  popover.power-menu {
+    margin-top: -1px;
+  }
+
+  popover.apps-menu contents,
+  popover.notifications-menu contents,
+  popover.workspaces-menu contents,
+  popover.power-menu contents {
     background: $bg-color;
     border: 1px solid $fg-color;
     border-top: none;
     border-radius: 0 0 12px 12px;
-    padding: 8px;
-    margin: 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 8px;
   }
 
-  popover.bar-menu contents,
-  popover.apps-menu contents,
-  popover.notifications-menu contents,
-  popover.power-menu contents {
-    border-radius: 0 0 12px 12px;
-    background: $bg-color;
+  .bar-menu-content {
+    min-width: 140px;
+    min-height: 40px;
+  }
+
+  .menu-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .menu-item {
+    padding: 6px 12px;
+    border-radius: 6px;
+  }
+
+  .menu-item:hover {
+    background: alpha($fg-color, 0.12);
+  }
+
+  .workspaces-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
   }
 }
 
