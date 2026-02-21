@@ -18,8 +18,10 @@ let
       min-height: $bar-height;
       margin: $navbar-gap $navbar-gap 0 $navbar-gap;
       font-weight: bold;
+      backdrop-filter: blur(12px);
+      -gtk-icon-shadow: none;
       border-bottom: 1px solid $bar-border;
-      box-shadow: 0 2px 8px $bar-shadow;
+      box-shadow: 0 1px 3px $bar-shadow;
 
       >.bar-row {
         min-width: 100%;

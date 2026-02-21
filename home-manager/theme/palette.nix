@@ -26,13 +26,13 @@ let
     color15 = "#e7e7e7";
   };
 
-  # Navbar uses kitty theme (same fg/bg/accent) so bar matches terminal
+  # Navbar = kitty theme: same fg/bg, no blue accent on border
   navbar = {
     fg = kitty.foreground;
     bg = kitty.background;
-    bgOpacity = "rgba(18, 24, 38, 0.62)";
-    border = kitty.url;
-    shadow = "rgba(0, 0, 0, 0.45)";
+    bgOpacity = "rgba(16, 20, 24, 0.75)";
+    border = kitty.color8;
+    shadow = "rgba(0, 0, 0, 0.4)";
   };
 in
 {
