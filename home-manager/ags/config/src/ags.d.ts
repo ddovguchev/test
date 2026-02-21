@@ -1,0 +1,49 @@
+declare module "astal/gtk4/app" {
+  interface IStartConfig {
+    css?: string;
+    main?: (...argv: string[]) => void;
+  }
+  interface IAppInstance {
+    get_monitors(): unknown[];
+    start(config: IStartConfig): void;
+  }
+  const app: IAppInstance;
+  export default app;
+}
+
+type TReactiveLabel = string | { (): string; subscribe(cb: () => void): () => void; };
+
+declare module "astal/gtk4" {
+  export namespace Gdk {
+    interface Monitor {
+      width: number;
+      height: number;
+    }
+  }
+  export const Astal: {
+    Window: new (props: unknown) => unknown;
+    WindowAnchor: { TOP: number; BOTTOM: number; LEFT: number; RIGHT: number };
+    Exclusivity: { EXCLUSIVE: number };
+  };
+  namespace JSX {
+    interface ILabelAttributes {
+      label?: TReactiveLabel;
+    }
+  }
+}
+
+declare module "astal/time" {
+  type TAccessor<T> = { (): T; subscribe(cb: () => void): () => void; };
+  function createPoll<T>(
+    init: T,
+    interval: number,
+    exec: string | string[],
+    transform?: (stdout: string, prev: T) => T,
+  ): TAccessor<T>;
+  function createPoll<T>(
+    init: T,
+    interval: number,
+    fn: (prev: T) => T | Promise<T>,
+  ): TAccessor<T>;
+  export { createPoll };
+}

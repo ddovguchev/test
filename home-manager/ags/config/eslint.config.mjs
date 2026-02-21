@@ -7,5 +7,5 @@ const { createEslintConfig } = await import("./eslint-config/src/index.ts");
 
 export default createEslintConfig({
   pathToTsConfigDir: path.join(__dirname, "src"),
-  ignores: ["node_modules", "assets", "eslint-config"],
+  ignores: ["node_modules", "assets", "eslint-config", "env.d.ts", "src/ags.d.ts", "src/astal-stub"],
 });

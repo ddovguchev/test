@@ -44,7 +44,7 @@ let
     mkdir -p $out/src/widget $out/src/assets $out/node_modules
     cp ${cfg}/src/app.ts ${cfg}/src/env.d.ts ${cfg}/src/tsconfig.json $out/src/
     cp ${styleScss} $out/src/style.scss
-    cp ${cfg}/src/widget/Bar.tsx $out/src/widget/
+    cp -r ${cfg}/src/widget/. $out/src/widget/
     cp -r ${cfg}/src/assets/. $out/src/assets/ 2>/dev/null || true
     echo "import './src/app'" > $out/app.ts
     ln -s ${astalJs} $out/node_modules/astal

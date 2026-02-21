@@ -1,6 +1,14 @@
 {
     "$schema": "https://json.schemastore.org/tsconfig",
     "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "astal/gtk4": ["./astal-stub/gtk4.ts"],
+            "astal/gtk4/app": ["./astal-stub/gtk4-app.ts"],
+            "astal/gtk4/jsx-runtime": ["./astal-stub/gtk4-jsx-runtime.ts"],
+            "astal/gtk4/*": ["./astal-stub/gtk4.ts"],
+            "astal/time": ["./astal-stub/time.ts"]
+        },
         "experimentalDecorators": true,
         "strict": true,
         "target": "ES2022",

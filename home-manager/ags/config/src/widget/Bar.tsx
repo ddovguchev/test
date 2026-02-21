@@ -1,10 +1,8 @@
 import app from "astal/gtk4/app";
-import { Astal, Gtk, type Gdk } from "astal/gtk4";
-import { createPoll } from "astal/time";
+import { Astal, type Gdk } from "astal/gtk4";
+import Clock from "./Clock";
 
-const clock = createPoll("", 1000, "date");
-
-export default function Bar(gdkmonitor: Gdk.Monitor): ReturnType<typeof Astal.Window> {
+export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
   const { TOP, LEFT, RIGHT } = Astal.WindowAnchor;
 
   return (
@@ -16,12 +14,12 @@ export default function Bar(gdkmonitor: Gdk.Monitor): ReturnType<typeof Astal.Wi
       anchor={TOP | LEFT | RIGHT}
       application={app}
     >
-      <box cssName="bar-row" hexpand>
+      <box cssName="bar">
         <box cssName="bar-left" />
-        <box cssName="bar-center" hexpand halign={Gtk.Align.CENTER}>
-          <label label={clock} />
+        <box cssName="bar-center" />
+        <box cssName="bar-right">
+          <Clock />
         </box>
-        <box cssName="bar-right" />
       </box>
     </window>
   );

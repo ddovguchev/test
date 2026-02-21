@@ -7,9 +7,11 @@
     "@config/eslint-config": "file:./eslint-config",
     "eslint": "^9.39.1",
     "ts-node": "^10.9.2",
-    "tsx": "^4.21.0"
+    "tsx": "^4.21.0",
+    "typescript": "^5.0.0"
   },
   "scripts": {
-    "lint": "node --import tsx node_modules/.bin/eslint ."
+    "lint": "node --import tsx node_modules/.bin/eslint .",
+    "typecheck": "tsc --noEmit -p src"
   }
 }
