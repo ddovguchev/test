@@ -40,7 +40,8 @@ let
     pkgs.astal.wireplumber
     pkgs.astal.notifd
   ];
-  typelib = lib.makeSearchPath "lib/girepository-1.0" astalDeps;
+  typelibDeps = astalDeps ++ [ pkgs.gtk4 ];
+  typelib = lib.makeSearchPath "lib/girepository-1.0" typelibDeps;
   schema = lib.makeSearchPath "share/glib-2.0/schemas" astalDeps;
   gsettingsData = lib.concatStringsSep ":" (map (p: "${p}/share/gsettings-schemas/${p.name}") astalDeps);
   systemDataDirs = lib.concatStringsSep ":" [
@@ -96,11 +97,14 @@ let
     export GI_TYPELIB_PATH="${typelib}"
     export GSETTINGS_SCHEMA_DIR="${schema}:''${GSETTINGS_SCHEMA_DIR:-}"
     export XDG_DATA_DIRS="${gsettingsData}:${data}:''${XDG_DATA_DIRS:-}"
+    export XDG_CURRENT_DESKTOP="''${XDG_CURRENT_DESKTOP:-Hyprland}"
+    export XDG_SESSION_TYPE="''${XDG_SESSION_TYPE:-wayland}"
     config="''${AGS_CONFIG:-$HOME/.config/ags}"
-    if [ -f "$config/dist/bundle.js" ]; then
-      exec "${bin}" run "$config/dist/bundle.js" "$@"
+    cd "$config" || exit 1
+    if [ -f "dist/bundle.js" ]; then
+      exec "${bin}" run dist/bundle.js "$@"
     else
-      cd "$config" && exec "${bin}" run "$@"
+      exec "${bin}" run "$@"
     fi
   '';
   agsScripts = pkgs.runCommand "ags-scripts" { } ''
