@@ -1,22 +1,21 @@
 { config, pkgs, lib, ... }:
+
 let
-  ltsKernelPackages =
-    if pkgs ? linuxPackages_lts then
-      pkgs.linuxPackages_lts
-    else if pkgs ? linuxPackages_6_12 then
-      pkgs.linuxPackages_6_12
-    else
-      pkgs.linuxPackages;
+  kernelPackages =
+    if pkgs ? linuxPackages_lts then pkgs.linuxPackages_lts
+    else if pkgs ? linuxPackages_6_12 then pkgs.linuxPackages_6_12
+    else pkgs.linuxPackages;
 in
 {
-  boot.kernelPackages = ltsKernelPackages;
-  boot.loader.systemd-boot = {
-    enable = lib.mkDefault true;
-    configurationLimit = lib.mkDefault 10;
-    editor = lib.mkDefault false;
+  boot.kernelPackages = kernelPackages;
+
+  boot.loader.systemd-boot.enable = false;
+  boot.loader.grub = {
+    enable = true;
+    efiSupport = true;
+    device = "nodev";
+    configurationLimit = 10;
   };
-  boot.loader.efi = {
-    canTouchEfiVariables = lib.mkDefault true;
-    efiSysMountPoint = lib.mkDefault "/boot";
-  };
+
+  boot.loader.efi.canTouchEfiVariables = true;
 }

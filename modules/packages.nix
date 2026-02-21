@@ -1,7 +1,6 @@
 { config, pkgs, lib, ... }:
 
 let
-  # взять первый существующий атрибут из списка путей, иначе null
   firstAttr = paths:
     let xs = builtins.filter (p: lib.hasAttrByPath p pkgs) paths;
     in if xs == [] then null else lib.getAttrFromPath (builtins.head xs) pkgs;
@@ -38,7 +37,7 @@ in
   environment.systemPackages =
     (with pkgs; [
       # base
-      git curl wget unzip ripgrep pciutils htop fastfetch nixpkgs-fmt
+      git curl wget unzip ripgrep pciutils htop fastfetch nixpkgs-fmt mangohud protonup
 
       # dev
       nodejs_22 nodePackages.typescript go gcc terraform terragrunt
@@ -49,7 +48,7 @@ in
 
       # apps
       jetbrains.idea kitty ranger firefox spotify blender insomnia obs-studio
-      steam burpsuite metasploit mangohud
+      steam burpsuite metasploit
 
       # network
       wireguard-tools wireshark gns3-gui teams-for-linux telegram-desktop
