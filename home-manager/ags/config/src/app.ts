@@ -1,17 +1,10 @@
-import { App } from "astal/gtk4";
+import app from "astal/gtk4/app";
 import style from "./style.scss";
 import Bar from "./widget/Bar";
 
-type TMonitor = Parameters<typeof Bar>[0];
-
-type TAppWithMonitors = {
-  get_monitors: () => TMonitor[];
-  start: (cfg: { css: string; main: () => void; }) => void;
-};
-
-(App as unknown as TAppWithMonitors).start({
+app.start({
   css: style,
   main() {
-    (App as unknown as TAppWithMonitors).get_monitors().map(Bar);
+    app.get_monitors().map(Bar);
   },
 });
