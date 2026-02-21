@@ -17,17 +17,13 @@ let
       background: $bar-bg-opacity;
       color: $bar-fg;
       min-height: $bar-height;
-      margin: $navbar-gap $navbar-gap 0 $navbar-gap;
+      margin: $navbar-gap;
+      margin-bottom: 0;
       font-weight: bold;
       border-radius: $bar-rounding;
-      backdrop-filter: blur(20px);
       -gtk-icon-shadow: none;
       border-bottom: 1px solid $bar-border;
       box-shadow: 0 1px 3px $bar-shadow;
-
-      >.bar {
-        min-width: 100%;
-      }
     }
   '';
   system = pkgs.stdenv.hostPlatform.system;
