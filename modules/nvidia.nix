@@ -1,4 +1,5 @@
 { config, pkgs, lib, ... }:
+
 {
   boot.blacklistedKernelModules = [ "nouveau" ];
   boot.kernelParams = [ "nvidia_drm.modeset=1" ];
@@ -11,14 +12,10 @@
   };
 
   hardware.nvidia = {
-    open = false;                     # proprietary
+    open = true;
     modesetting.enable = true;
     nvidiaSettings = true;
-
-    # важное: явно выбрать пакет драйвера под текущий kernelPackages
     package = config.boot.kernelPackages.nvidiaPackages.latest;
-
-    # временно лучше выключить, если ловишь NvKms ошибки
     powerManagement.enable = false;
   };
 
