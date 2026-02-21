@@ -57,4 +57,8 @@ in
       astalPkgs.notifd
     ];
   };
+
+  # Entry is root app.ts which only re-exports src/app — ags can't infer GTK version.
+  systemd.user.services.ags.Service.ExecStart = lib.mkForce
+    "${config.programs.ags.finalPackage}/bin/ags run --gtk 4";
 }
