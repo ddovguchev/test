@@ -13,14 +13,11 @@ window.Bar {
     filter: blur(10px);
   }
 
-  .bar-left,
-  .bar-center,
+  .bar-left { justify-content: flex-start; }
+  .bar-center { justify-content: center; }
   .bar-right {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
   }
-
-  .bar-left { justify-content: flex-start; }
-  .bar-center { justify-content: center; }
-  .bar-right { justify-content: flex-end; }
 }

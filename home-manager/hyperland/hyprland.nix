@@ -87,7 +87,10 @@ in
     };
 
     extraConfig = ''
-      # AGS bar: match exact window class so Hyprland applies blur behind it
+      # AGS uses gtk-layer-shell (layer), not a regular window — use layerrule for blur
+      layerrule = blur, gtk-layer-shell
+      layerrule = ignorezero, gtk-layer-shell
+      # Fallback: if AGS ever appears as a window
       blurls = com\\.github\\.Aylur\\.ags
     '';
   };
