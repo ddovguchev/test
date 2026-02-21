@@ -85,14 +85,11 @@ in
         "match:title Picture-in-Picture, move 100%-w-20 100%-h-20"
       ];
 
-      # AGS bar: layerrule = rule, namespace (no value after blur/ignorezero)
-      layerrule = [
-        "blur, gtk4-layer-shell"
-        "ignorezero, gtk4-layer-shell"
-      ];
     };
 
     extraConfig = ''
+      layerrule = blur, gtk4-layer-shell
+      layerrule = ignorezero, gtk4-layer-shell
       blurls = com\\.github\\.Aylur\\.ags
     '';
   };
