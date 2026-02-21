@@ -54,7 +54,8 @@ in
     ];
   };
 
-  # Entry is root app.ts which only re-exports src/app — ags can't infer GTK version.
+  # Entry point must be given; run from configDir so ags finds app.ts.
   systemd.user.services.ags.Service.ExecStart = lib.mkForce
-    "${config.programs.ags.finalPackage}/bin/ags run --gtk 4";
+    "${config.programs.ags.finalPackage}/bin/ags run app.ts --gtk 4";
+  systemd.user.services.ags.Service.WorkingDirectory = config.programs.ags.configDir;
 }
