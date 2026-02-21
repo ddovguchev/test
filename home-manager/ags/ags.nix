@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 let
   cfg = ./config;
-  palette = import ../../theme/palette.nix;
+  palette = import ../theme/palette.nix;
   styleScss = pkgs.writeText "ags-style.scss" ''
     $bar-fg: ${palette.ags.barFg};
     $bar-bg: ${palette.ags.barBg};
