@@ -13,11 +13,18 @@ window.Bar {
     filter: blur(10px);
   }
 
-  .bar-left { justify-content: flex-start; }
-  .bar-center { justify-content: center; }
+  .bar-left {
+    justify-content: flex-start;
+  }
+
+  .bar-center {
+    justify-content: center;
+  }
+
   .bar-right {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    margin-left: 5px;
   }
 }
