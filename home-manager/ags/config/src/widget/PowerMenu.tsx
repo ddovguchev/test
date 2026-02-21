@@ -30,15 +30,14 @@ export default function PowerMenu(gdkmonitor: Gdk.Monitor): JSX.Element {
     >
       <centerbox>
         <box />
-        <box cssName="menu-overlay-block" orientation={1} spacing={8} widthRequest={900} heightRequest={600}>
-          <label label="Power" cssName="appmenu-title" />
-          <button cssName="bar-btn" onClicked={runCmd("systemctl poweroff")}>
+        <box orientation={1} spacing={8} widthRequest={900} heightRequest={600}>
+          <button onClicked={runCmd("systemctl poweroff")}>
             <label label="Shutdown" />
           </button>
-          <button cssName="bar-btn" onClicked={runCmd("systemctl reboot")}>
+          <button onClicked={runCmd("systemctl reboot")}>
             <label label="Reboot" />
           </button>
-          <button cssName="bar-btn" onClicked={runCmd("hyprctl dispatch exit")}>
+          <button onClicked={runCmd("hyprctl dispatch exit")}>
             <label label="Logout" />
           </button>
         </box>
