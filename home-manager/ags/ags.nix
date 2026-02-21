@@ -27,15 +27,14 @@ let
       box-shadow: 0 1px 3px $bar-shadow;
     }
 
-    /* Workspace indicator: active state */
-    .workspace-active {
-      background: rgba(224, 226, 232, 0.25);
+    /* Workspace indicator: active state - very visible */
+    window.Bar button.workspace-active,
+    window.Bar .workspace-active {
+      background: rgba(224, 226, 232, 0.35);
       border-radius: 6px;
-      border: 1px solid rgba(224, 226, 232, 0.4);
-    }
-
-    window.Bar .bar-btn.workspace-active {
+      border: 2px solid rgba(224, 226, 232, 0.6);
       font-weight: bold;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
     }
 
     /* Bar buttons - clickable area */

@@ -1,5 +1,7 @@
 import app from "astal/gtk4/app";
 import { Astal, type Gdk } from "astal/gtk4";
+import type Gtk from "gi://Gtk?version=4.0";
+import { overlayWindows } from "./windows";
 
 export default function NotificationOverlay(gdkmonitor: Gdk.Monitor): JSX.Element {
   const { TOP, LEFT, RIGHT } = Astal.WindowAnchor;
@@ -7,6 +9,7 @@ export default function NotificationOverlay(gdkmonitor: Gdk.Monitor): JSX.Elemen
     <window
       name="notification"
       visible={false}
+      setup={(self) => overlayWindows.set("notification", self as Gtk.Window)}
       cssClasses={["MenuOverlay"]}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.NORMAL}

@@ -5,6 +5,7 @@ import GLib from "gi://GLib?version=2.0";
 import { createPoll } from "astal/time";
 import Clock from "./Clock";
 import SysMonitor from "./SysMonitor";
+import { toggleWindow } from "./windows";
 
 function runCmd(cmd: string): () => void {
   return () => {
@@ -14,13 +15,6 @@ function runCmd(cmd: string): () => void {
     } catch (e) {
       console.error("runCmd", cmd, e);
     }
-  };
-}
-
-function toggleWindow(name: string): () => void {
-  return () => {
-    const w = app.get_window(name);
-    if (w) w.visible = !w.visible;
   };
 }
 

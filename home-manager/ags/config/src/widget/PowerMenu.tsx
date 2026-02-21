@@ -1,6 +1,8 @@
 import app from "astal/gtk4/app";
 import { Astal, type Gdk } from "astal/gtk4";
+import Gtk from "gi://Gtk?version=4.0";
 import GLib from "gi://GLib?version=2.0";
+import { overlayWindows } from "./windows";
 
 function runCmd(cmd: string): () => void {
   return () => {
@@ -19,6 +21,7 @@ export default function PowerMenu(gdkmonitor: Gdk.Monitor): JSX.Element {
     <window
       name="powermenu"
       visible={false}
+      setup={(self) => overlayWindows.set("powermenu", self as Gtk.Window)}
       cssClasses={["MenuOverlay"]}
       gdkmonitor={gdkmonitor}
       exclusivity={Astal.Exclusivity.NORMAL}
