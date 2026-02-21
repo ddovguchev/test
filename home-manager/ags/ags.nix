@@ -68,6 +68,7 @@ let
       min-width: 500px;
       min-height: 500px;
       margin-top: $navbar-height;
+      padding: 12px;
     }
   '';
   system = pkgs.stdenv.hostPlatform.system;
