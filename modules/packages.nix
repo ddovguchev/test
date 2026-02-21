@@ -37,7 +37,7 @@ in
   environment.systemPackages =
     (with pkgs; [
       # base
-      git curl wget unzip ripgrep pciutils htop fastfetch nixpkgs-fmt mangohud protonup
+      git curl wget unzip ripgrep pciutils htop fastfetch nixpkgs-fmt mangohud protonup-ng
 
       # dev
       nodejs_22 nodePackages.typescript go gcc terraform terragrunt
