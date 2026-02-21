@@ -14,11 +14,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
       anchor={TOP | LEFT | RIGHT}
       application={app}
     >
-      <centerbox cssName="bar">
-        <Clock />
-        <Clock />
-        <Clock />
-      </centerbox>
+      <box cssName="bar" orientation={0}>
+        <box hexpand><Clock /></box>
+        <box hexpand halign={3}><Clock /></box>
+        <box hexpand halign={2}><Clock /></box>
+      </box>
     </window>
   );
 }

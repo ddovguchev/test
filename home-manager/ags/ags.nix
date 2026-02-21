@@ -25,13 +25,6 @@ let
       border-bottom: 1px solid $bar-border;
       box-shadow: 0 1px 3px $bar-shadow;
     }
-    window.Bar box#clock-wrap,
-    window.Bar .clock-wrap {
-      min-width: 80px;
-    }
-    window.Bar label.clock {
-      min-width: 80px;
-    }
   '';
   system = pkgs.stdenv.hostPlatform.system;
   astalPkgs = inputs.astal.packages.${system};
@@ -61,7 +54,6 @@ in
     ];
   };
 
-  # Entry point must be given; run from configDir so ags finds app.ts.
   systemd.user.services.ags.Service.ExecStart = lib.mkForce
     "${config.programs.ags.finalPackage}/bin/ags run app.ts --gtk 4";
   systemd.user.services.ags.Service.WorkingDirectory = config.programs.ags.configDir;
