@@ -1,6 +1,39 @@
 { config, pkgs, lib, ... }:
 let
   cfg = ./config;
+  palette = import ../../theme/palette.nix;
+  styleScss = pkgs.writeText "ags-style.scss" ''
+    $bar-fg: ${palette.ags.barFg};
+    $bar-bg: ${palette.ags.barBg};
+    $bar-bg-opacity: ${palette.ags.barBgOpacity};
+    $bar-border: ${palette.ags.barBorder};
+    $bar-shadow: ${palette.ags.barShadow};
+
+    window.Bar {
+      background: $bar-bg-opacity;
+      color: $bar-fg;
+      min-height: 32px;
+      font-weight: bold;
+      border-bottom: 1px solid $bar-border;
+      box-shadow: 0 2px 8px $bar-shadow;
+
+      >.bar-row {
+        min-width: 100%;
+        display: flex;
+      }
+
+      .bar-left,
+      .bar-center,
+      .bar-right {
+        display: flex;
+        align-items: center;
+      }
+
+      .bar-left { justify-content: flex-start; }
+      .bar-center { justify-content: center; }
+      .bar-right { justify-content: flex-end; }
+    }
+  '';
   astalDeps = [
     pkgs.astal.astal3
     pkgs.astal.io
@@ -27,56 +60,23 @@ let
     systemDataDirs
   ];
   astalGjs = "${pkgs.astal.gjs}/share/astal/gjs";
-  palette = import ../theme/palette.nix;
-  styleScss = builtins.replaceStrings
-    [
-      "__FG_COLOR__"
-      "__BAR_BG__"
-      "__BAR_BORDER__"
-      "__BAR_SHADOW__"
-      "__PANEL_BG__"
-      "__PANEL_TEXT__"
-      "__PANEL_BORDER__"
-    ]
-    [
-      palette.ags.barFg
-      palette.ags.barBgOpacity
-      palette.ags.barBorder
-      palette.ags.barShadow
-      palette.ags.panelBg
-      palette.ags.launcherText
-      palette.ags.panelBorder
-    ]
-    (builtins.readFile "${cfg}/style.scss");
   agsConfig = pkgs.runCommand "ags-config" {
-    src = cfg;
-    # Ensures config changes trigger rebuild
+    nativeBuildInputs = [ pkgs.ags ];
+    GI_TYPELIB_PATH = typelib;
+    GSETTINGS_SCHEMA_DIR = schema;
+    XDG_DATA_DIRS = "${gsettingsData}:${data}";
   } ''
-        mkdir -p $out/widget $out/node_modules $out/assets
-        cp $src/app.ts $out/app.ts
-        cp $src/tsconfig.json $out/tsconfig.json
-        cp $src/env.d.ts $out/env.d.ts
-        cp $src/.gitignore $out/.gitignore 2>/dev/null || true
-        cp -r $src/assets/. $out/assets/
-        cp $src/widget/Bar.tsx $out/widget/Bar.tsx
-        cp $src/widget/Launcher.tsx $out/widget/Launcher.tsx
-        cp $src/widget/launcherState.ts $out/widget/launcherState.ts
-        cp -r $src/widget/bar $out/widget/bar
-
-        cat > $out/style.scss <<'EOF'
-    ${styleScss}
-    EOF
-
-        cat > $out/package.json <<'EOF'
-    {
-      "name": "astal-shell",
-      "dependencies": {
-        "astal": "${astalGjs}"
-      }
-    }
-    EOF
-
-        ln -s ${astalGjs} $out/node_modules/astal
+    buildDir=$TMPDIR/ags-build
+    mkdir -p $buildDir/node_modules $buildDir/src/widget $buildDir/src/assets
+    cp ${cfg}/src/app.ts ${cfg}/src/env.d.ts ${styleScss} $buildDir/src/style.scss
+    cp ${cfg}/src/tsconfig.json $buildDir/src/
+    cp ${cfg}/src/widget/Bar.tsx $buildDir/src/widget/
+    cp -r ${cfg}/src/assets/. $buildDir/src/assets/ 2>/dev/null || true
+    echo '{"name":"astal-shell","dependencies":{"astal":"${astalGjs}"}}' > $buildDir/package.json
+    ln -s ${astalGjs} $buildDir/node_modules/astal
+    cd $buildDir && ags bundle src/app.ts dist/bundle.js -r .
+    mkdir -p $out
+    cp -r $buildDir/dist $out/
   '';
   wrapped = pkgs.runCommand "ags-wrapped" { buildInputs = [ pkgs.makeWrapper ]; } ''
     mkdir -p $out/bin
@@ -96,7 +96,12 @@ let
     export GI_TYPELIB_PATH="${typelib}"
     export GSETTINGS_SCHEMA_DIR="${schema}:''${GSETTINGS_SCHEMA_DIR:-}"
     export XDG_DATA_DIRS="${gsettingsData}:${data}:''${XDG_DATA_DIRS:-}"
-    cd "''${AGS_CONFIG:-$HOME/.config/ags}" && exec "${bin}" run "$@"
+    config="''${AGS_CONFIG:-$HOME/.config/ags}"
+    if [ -f "$config/dist/bundle.js" ]; then
+      exec "${bin}" run "$config/dist/bundle.js" "$@"
+    else
+      cd "$config" && exec "${bin}" run "$@"
+    fi
   '';
   agsScripts = pkgs.runCommand "ags-scripts" { } ''
     mkdir -p $out/bin

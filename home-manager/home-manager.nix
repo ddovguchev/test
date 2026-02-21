@@ -5,7 +5,6 @@
     inputs.spicetify-nix.homeManagerModules.default
     ./ags/ags.nix
     ./firefox/firefox.nix
-    ./ags/wallpapers.nix
     ./kitty/kitty.nix
     ./hyperland/hyprland.nix
     ./ranger/ranger.nix
