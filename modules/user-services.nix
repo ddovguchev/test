@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 {
   systemd.user.services = {
     ags = {
@@ -7,7 +7,7 @@
         After = [ "graphical-session.target" ];
       };
       Service = {
-        ExecStart = "${config.home.profileDirectory}/bin/ags";
+        ExecStart = "/run/current-system/sw/bin/ags";
         Restart = "on-failure";
       };
       wantedBy = [ "default.target" ];
@@ -19,7 +19,7 @@
         After = [ "graphical-session.target" ];
       };
       Service = {
-        ExecStart = "${pkgs.swww}/bin/swww-daemon";
+        ExecStart = "/run/current-system/sw/bin/swww-daemon";
         Restart = "on-failure";
       };
       wantedBy = [ "default.target" ];
