@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 set -e
 
-# Переход в git-корень (предполагается, что скрипт рядом с flake)
+# Переходим в корень flake
 cd "$(dirname "$0")/.."
 
-# Обновить flake из git
+# Обновляем конфигурацию из Git
 git pull --rebase
 
-# Очистка устаревших nix путей и оптимизация хранилища
-sudo nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 7d || true
+# Очищаем старые поколения и оптимизируем nix-хранилище
+sudo nix --extra-experimental-features nix-command profile wipe-history --profile /nix/var/nix/profiles/system --older-than 7d || true
 sudo nix-collect-garbage -d
-sudo nix store gc
-sudo nix store optimise
+sudo nix --extra-experimental-features nix-command store gc
+sudo nix --extra-experimental-features nix-command store optimise
 
-# Очистка пользовательского nix профиля (история и мусор)
-nix profile wipe-history --profile /nix/var/nix/profiles/per-user/$USER/profile --older-than 7d || true
+# Очищаем nix-профиль пользователя
+nix --extra-experimental-features nix-command profile wipe-history --profile /nix/var/nix/profiles/per-user/$USER/profile --older-than 7d || true
 nix-collect-garbage -d
 
-# Очистка основных пользовательских кешей и временных файлов
+# Удаляем кеши и временные файлы пользователя
 rm -rf "$HOME/.cache"/* "$HOME/.local/state/nix/profiles"/*-link "$HOME/.nv/ComputeCache"/* "$HOME/.cache/thumbnails"/*
 
-# Очистка системных временных директорий
+# Удаляем системные временные файлы
 sudo rm -rf /tmp/* /var/tmp/*
 
 echo "Cleanup complete!"
