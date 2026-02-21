@@ -34,18 +34,22 @@ let
       .bar-right { justify-content: flex-end; }
     }
   '';
+  system = pkgs.stdenv.hostPlatform.system;
+  astalPkgs = inputs.astal.packages.${system};
+  agsPkg = inputs.ags.packages.${system}.default;
+  astalJs = agsPkg.jsPackage or (throw "ags package has no jsPackage");
   agsConfig = pkgs.runCommand "ags-config" {
     nativeBuildInputs = [ pkgs.coreutils ];
   } ''
-    mkdir -p $out/src/widget $out/src/assets
+    mkdir -p $out/src/widget $out/src/assets $out/node_modules
     cp ${cfg}/src/app.ts ${cfg}/src/env.d.ts ${cfg}/src/tsconfig.json $out/src/
     cp ${styleScss} $out/src/style.scss
     cp ${cfg}/src/widget/Bar.tsx $out/src/widget/
     cp -r ${cfg}/src/assets/. $out/src/assets/ 2>/dev/null || true
     echo "import './src/app'" > $out/app.ts
+    ln -s ${astalJs} $out/node_modules/astal
+    echo '{"name":"ags-config","type":"module"}' > $out/package.json
   '';
-  system = pkgs.stdenv.hostPlatform.system;
-  astalPkgs = inputs.astal.packages.${system};
 in
 {
   programs.ags = {
