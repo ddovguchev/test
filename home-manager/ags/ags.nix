@@ -12,6 +12,7 @@ let
     $navbar-gap: ${toString layout.navbarGap}px;
     $bar-height: ${toString layout.barHeight}px;
     $bar-rounding: ${toString layout.barRounding}px;
+    $navbar-height: ${toString (layout.navbarGap + layout.barHeight)}px;
 
     window.Bar {
       background: $bar-bg-opacity;
@@ -32,25 +33,24 @@ let
       border-radius: 6px;
     }
 
-    /* Popovers: empty rectangles, flow out from under navbar */
-    popover.apps-menu,
-    popover.notifications-menu,
-    popover.power-menu {
-      margin-top: -1px;
+    /* Menu overlay: 500x500 block centered, flows from navbar */
+    window.MenuOverlay {
+      margin-top: $navbar-gap;
+      margin-left: $navbar-gap;
+      margin-right: $navbar-gap;
+      margin-bottom: 0;
     }
 
-    popover.apps-menu contents,
-    popover.notifications-menu contents,
-    popover.power-menu contents {
+    .menu-overlay-block {
       background: $bar-bg-opacity;
       color: $bar-fg;
       border: 1px solid $bar-border;
       border-top: none;
       border-radius: 0 0 $bar-rounding $bar-rounding;
-      box-shadow: 0 4px 12px $bar-shadow;
-      padding: 8px;
-      min-width: 120px;
-      min-height: 80px;
+      box-shadow: 0 8px 24px $bar-shadow;
+      min-width: 500px;
+      min-height: 500px;
+      margin-top: $navbar-height;
     }
   '';
   system = pkgs.stdenv.hostPlatform.system;
