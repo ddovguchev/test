@@ -74,23 +74,32 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
         <label label="     " />
         <box halign={1} orientation={0}>
           <Clock />
-          <button cssName="bar-btn" onClicked={runCmd("ags --toggle-window menuoverlay")}>
+          <menubutton cssName="bar-btn">
+            <popover cssName="apps-menu">
+              <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
+            </popover>
             <label label="Apps" />
-          </button>
+          </menubutton>
         </box>
         <box hexpand halign={3} orientation={0}>
           <SysMonitor />
-          <button cssName="bar-btn">
+          <menubutton cssName="bar-btn">
+            <popover cssName="notifications-menu">
+              <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
+            </popover>
             <label label="Notifications" />
-          </button>
+          </menubutton>
         </box>
         <box hexpand halign={3} orientation={0}>
           <Workspaces />
         </box>
         <box halign={2} orientation={0}>
-          <button cssName="bar-btn">
+          <menubutton cssName="bar-btn">
+            <popover cssName="power-menu">
+              <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
+            </popover>
             <label label="Power" />
-          </button>
+          </menubutton>
         </box>
         <label label="     " />
       </box>
