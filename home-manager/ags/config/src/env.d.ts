@@ -21,20 +21,6 @@ declare module "*.css" {
 }
 
 /* eslint-disable rulesdir/specified-exports -- ambient module declarations use named exports */
-declare module "astal/variable" {
-  interface IVariableBinding {
-    subscribe(fn: (v: boolean) => void): () => void;
-    get(): boolean;
-  }
-  interface IVariableApi<T> {
-    get(): T;
-    set(v: T): void;
-    bind(): IVariableBinding;
-  }
-  function Variable<T>(initial: T): IVariableApi<T>;
-  export default Variable;
-}
-
 declare module "gi://Gio?version=2.0" {
   export enum SubprocessFlags {
     NONE = 0,
