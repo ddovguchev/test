@@ -21,7 +21,7 @@ declare module "*.css" {
 }
 
 /* eslint-disable rulesdir/specified-exports -- ambient module declarations use named exports */
-declare module "ags/variable" {
+declare module "astal/variable" {
   interface IVariableBinding {
     subscribe(fn: (v: boolean) => void): () => void;
     get(): boolean;

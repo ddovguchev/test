@@ -1,6 +1,6 @@
 import app from "astal/gtk4/app";
 import { Astal, type Gdk } from "astal/gtk4";
-import Variable from "ags/variable";
+import Variable from "astal/variable";
 import Gio from "gi://Gio?version=2.0";
 import Clock from "./Clock";
 import SysMonitor from "./SysMonitor";
