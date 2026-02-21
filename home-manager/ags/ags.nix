@@ -25,6 +25,9 @@ let
       border-bottom: 1px solid $bar-border;
       box-shadow: 0 1px 3px $bar-shadow;
     }
+    window.Bar label.clock {
+      min-width: 80px;
+    }
   '';
   system = pkgs.stdenv.hostPlatform.system;
   astalPkgs = inputs.astal.packages.${system};
