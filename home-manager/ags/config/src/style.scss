@@ -14,7 +14,10 @@ window.Bar {
   }
 
   .bar-left {
+    display: flex;
+    align-items: center;
     justify-content: flex-start;
+    margin-left: 5px;
   }
 
   .bar-center {
@@ -25,6 +28,5 @@ window.Bar {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    margin-left: 5px;
   }
 }
