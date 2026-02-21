@@ -1,6 +1,7 @@
 import app from "astal/gtk4/app";
 import { Astal, type Gdk } from "astal/gtk4";
 import GLib from "gi://GLib?version=2.0";
+import { createPoll } from "astal/time";
 import Clock from "./Clock";
 import SysMonitor from "./SysMonitor";
 
@@ -13,6 +14,48 @@ function runCmd(cmd: string): () => void {
       console.error("runCmd", cmd, e);
     }
   };
+}
+
+const workspaceData = createPoll(
+  { ids: [1, 2, 3, 4, 5, 6, 7, 8, 9], active: 1 },
+  500,
+  [
+    "sh",
+    "-c",
+    'ids=$(hyprctl workspaces -j 2>/dev/null | jq -r "[.[].id] | sort | unique | .[]" 2>/dev/null | tr "\\n" " "); [ -z "$ids" ] && ids="1 2 3 4 5 6 7 8 9"; active=$(hyprctl activeworkspace -j 2>/dev/null | jq -r ".id" 2>/dev/null); echo "$ids|${active:-1}"',
+  ],
+  (out, prev) => {
+    try {
+      const [idsStr, activeStr] = out.trim().split("|");
+      const ids = (idsStr?.match(/\d+/g) ?? ["1", "2", "3", "4", "5", "6", "7", "8", "9"])
+        .map(Number)
+        .filter((n) => n >= 1 && n <= 9)
+        .sort((a, b) => a - b);
+      const uniq = [...new Set(ids)];
+      const active = parseInt(activeStr ?? "1", 10) || 1;
+      return { ids: uniq.length > 0 ? uniq : [1, 2, 3, 4, 5, 6, 7, 8, 9], active };
+    } catch {
+      return prev;
+    }
+  },
+);
+
+function Workspaces(): JSX.Element {
+  const data = workspaceData();
+  const ids = data?.ids ?? [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const active = data?.active ?? 1;
+  return (
+    <box orientation={0}>
+      {ids.map((id) => (
+        <button
+          cssName={id === active ? "bar-btn workspace-active" : "bar-btn"}
+          onClicked={runCmd(`hyprctl dispatch workspace ${id}`)}
+        >
+          <label label={String(id)} />
+        </button>
+      ))}
+    </box>
+  ) as JSX.Element;
 }
 
 export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
@@ -33,15 +76,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           <Clock />
           <menubutton cssName="bar-btn">
             <popover cssName="apps-menu">
-              <box orientation={1} cssName="bar-menu-content">
-                <label label="Apps" cssName="menu-title" />
-                <button cssName="menu-item" onClicked={runCmd("firefox")}>
-                  <label label="Firefox" />
-                </button>
-                <button cssName="menu-item" onClicked={runCmd("kitty")}>
-                  <label label="Terminal" />
-                </button>
-              </box>
+              <box orientation={1} cssName="bar-menu-content" />
             </popover>
             <label label="Apps" />
           </menubutton>
@@ -50,59 +85,18 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           <SysMonitor />
           <menubutton cssName="bar-btn">
             <popover cssName="notifications-menu">
-              <box orientation={1} cssName="bar-menu-content">
-                <label label="Notifications" cssName="menu-title" />
-                <label label="No notifications" />
-              </box>
+              <box orientation={1} cssName="bar-menu-content" />
             </popover>
             <label label="Notifications" />
           </menubutton>
         </box>
         <box hexpand halign={3} orientation={0}>
-          <menubutton cssName="bar-btn">
-            <popover cssName="workspaces-menu">
-              <box orientation={0} cssName="bar-menu-content workspaces-grid">
-                <button cssName="menu-item" onClicked={runCmd("hyprctl dispatch workspace 1")}>
-                  <label label="1" />
-                </button>
-                <button cssName="menu-item" onClicked={runCmd("hyprctl dispatch workspace 2")}>
-                  <label label="2" />
-                </button>
-                <button cssName="menu-item" onClicked={runCmd("hyprctl dispatch workspace 3")}>
-                  <label label="3" />
-                </button>
-                <button cssName="menu-item" onClicked={runCmd("hyprctl dispatch workspace 4")}>
-                  <label label="4" />
-                </button>
-                <button cssName="menu-item" onClicked={runCmd("hyprctl dispatch workspace 5")}>
-                  <label label="5" />
-                </button>
-              </box>
-            </popover>
-            <label label="Workspaces" />
-          </menubutton>
+          <Workspaces />
         </box>
         <box halign={2} orientation={0}>
           <menubutton cssName="bar-btn">
             <popover cssName="power-menu">
-              <box orientation={1} cssName="bar-menu-content">
-                <label label="Session" cssName="menu-title" />
-                <button cssName="menu-item" onClicked={runCmd("loginctl lock-session")}>
-                  <label label="Lock" />
-                </button>
-                <button cssName="menu-item" onClicked={runCmd("loginctl terminate-user $USER")}>
-                  <label label="Logout" />
-                </button>
-                <button cssName="menu-item" onClicked={runCmd("systemctl suspend")}>
-                  <label label="Sleep" />
-                </button>
-                <button cssName="menu-item" onClicked={runCmd("systemctl reboot")}>
-                  <label label="Reboot" />
-                </button>
-                <button cssName="menu-item" onClicked={runCmd("systemctl poweroff")}>
-                  <label label="Power off" />
-                </button>
-              </box>
+              <box orientation={1} cssName="bar-menu-content" />
             </popover>
             <label label="Power" />
           </menubutton>

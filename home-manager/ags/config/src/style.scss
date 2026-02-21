@@ -43,17 +43,20 @@ window.Bar {
     border-radius: 6px;
   }
 
-  /* Popovers: overlay on navbar, flow out from bar */
+  .workspace-active {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+  }
+
+  /* Popovers: empty rectangles, flow out from under bar */
   popover.apps-menu,
   popover.notifications-menu,
-  popover.workspaces-menu,
   popover.power-menu {
     margin-top: -1px;
   }
 
   popover.apps-menu contents,
   popover.notifications-menu contents,
-  popover.workspaces-menu contents,
   popover.power-menu contents {
     background: $bg-color;
     border: 1px solid $fg-color;
@@ -61,31 +64,8 @@ window.Bar {
     border-radius: 0 0 12px 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     padding: 8px;
-  }
-
-  .bar-menu-content {
-    min-width: 140px;
-    min-height: 40px;
-  }
-
-  .menu-title {
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-
-  .menu-item {
-    padding: 6px 12px;
-    border-radius: 6px;
-  }
-
-  .menu-item:hover {
-    background: rgba(255, 255, 255, 0.08);
-  }
-
-  .workspaces-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
+    min-width: 120px;
+    min-height: 80px;
   }
 }
 
