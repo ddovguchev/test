@@ -30,11 +30,11 @@ let
     /* Workspace indicator: active state - very visible */
     window.Bar button.workspace-active,
     window.Bar .workspace-active {
-      background: rgba(224, 226, 232, 0.35);
+      background: rgba(224, 226, 232, 0.4) !important;
       border-radius: 6px;
-      border: 2px solid rgba(224, 226, 232, 0.6);
+      border: 2px solid rgba(224, 226, 232, 0.8) !important;
       font-weight: bold;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
     }
 
     /* Bar buttons - clickable area */
