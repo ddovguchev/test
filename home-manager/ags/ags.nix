@@ -31,17 +31,25 @@ let
       border-radius: 6px;
     }
 
+    /* Apps logo button: no border */
+    .apps-logo-btn {
+      border: none;
+      box-shadow: none;
+    }
+
     popover.apps-menu,
     popover.notifications-menu,
     popover.power-menu {
       margin-top: -1px;
     }
 
+    /* GTK4 popover: target contents node (child of popover.background) */
     popover.apps-menu contents,
     popover.notifications-menu contents,
-    popover.power-menu contents {
-      background: $bar-bg-opacity;
-      color: $bar-fg;
+    popover.power-menu contents,
+    popover.background contents {
+      background-color: $bar-bg-opacity !important;
+      color: $bar-fg !important;
       font-weight: bold;
       border: 1px solid $bar-border;
       border-top: none;
@@ -78,6 +86,7 @@ in
     extraPackages = with pkgs; [
       astalPkgs.wireplumber
       astalPkgs.notifd
+      nixos-icons
     ];
   };
 

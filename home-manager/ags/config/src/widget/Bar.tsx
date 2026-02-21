@@ -76,11 +76,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
             <Clock />
           </box>
           <box orientation={0}>
-            <menubutton cssName="bar-btn">
+            <menubutton cssName="bar-btn apps-logo-btn">
               <popover cssName="apps-menu">
                 <box orientation={1} cssName="bar-menu-content" widthRequest={500} heightRequest={500} />
               </popover>
-              <label label="Apps" />
+              <icon icon="nix-snowflake" />
             </menubutton>
             <menubutton cssName="bar-btn">
               <popover cssName="notifications-menu">
