@@ -15,7 +15,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
       application={app}
     >
       <box cssName="bar" orientation={0}>
-        <box cssName="bar-spacer" />
+        <label label="     " />
         <box halign={1}>
           <Clock />
         </box>
@@ -28,7 +28,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
         <box halign={2}>
           <Clock />
         </box>
-        <box cssName="bar-spacer" />
+        <label label="     " />
       </box>
     </window>
   );
