@@ -25,7 +25,6 @@
           ./modules/boot.nix
           ./modules/networking.nix
           ./modules/users.nix
-          ./modules/keyboard.nix
           ./modules/nvidia.nix
           ./modules/hyprland.nix
           ./modules/audio.nix
