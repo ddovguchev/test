@@ -72,11 +72,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
       application={app}
     >
       <box cssName="bar" orientation={0}>
+        <label label="     " />
         <box halign={1} orientation={0} spacing={12}>
           <Clock />
           <label label="│" cssName="bar-separator" />
-        </box>
-        <box hexpand halign={2} orientation={0} spacing={12}>
           <menubutton cssName="bar-btn nixos-btn">
             <popover cssName="bar-popover">
               <box orientation={1} cssName="bar-popover-content" widthRequest={800} heightRequest={400}>
@@ -85,6 +84,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
             </popover>
             <Gtk.Image iconName="nix-snowflake" />
           </menubutton>
+        </box>
+        <box hexpand halign={3} orientation={0}>
+          <SysMonitor />
           <menubutton cssName="bar-btn">
             <popover cssName="bar-popover">
               <box orientation={1} cssName="bar-popover-content" widthRequest={800} heightRequest={400}>
@@ -93,6 +95,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
             </popover>
             <label label="Notifications" />
           </menubutton>
+        </box>
+        <box halign={3} orientation={0}>
+          <Workspaces />
           <menubutton cssName="bar-btn">
             <popover cssName="bar-popover">
               <box orientation={1} cssName="bar-popover-content" spacing={8} widthRequest={800} heightRequest={400}>
@@ -111,10 +116,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
             <label label="Power" />
           </menubutton>
         </box>
-        <box halign={3} orientation={0}>
-          <SysMonitor />
-          <Workspaces />
-        </box>
+        <label label="     " />
       </box>
     </window>
   ) as JSX.Element;
