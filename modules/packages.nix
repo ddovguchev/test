@@ -58,8 +58,6 @@ in
 
       # astal
       astal.gjs astal.astal3 astal.io astal.wireplumber astal.notifd
-
-      imagemagick ffmpegthumbnailer poppler ueberzugpp
     ])
     ++ [ vesktopWrapped ]
     ++ lib.optional (xwaylandVideoBridge != null) xwaylandVideoBridge
