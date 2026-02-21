@@ -65,30 +65,10 @@ let
       border-top: none;
       border-radius: 0 0 $bar-rounding $bar-rounding;
       box-shadow: 0 8px 24px $bar-shadow;
-      min-width: 500px;
-      min-height: 500px;
-      margin-top: $navbar-height;
-      padding: 12px;
-    }
-
-    /* Bar popover: 800x400 centered, navbar theme */
-    popover.bar-popover {
-      margin-top: -1px;
-    }
-
-    popover.bar-popover contents {
-      background-color: $bar-bg;
-      color: $bar-fg;
-      border: 1px solid $bar-border;
-      border-top: none;
-      border-radius: 0 0 $bar-rounding $bar-rounding;
-      box-shadow: 0 8px 24px $bar-shadow;
-      padding: 12px;
-    }
-
-    .bar-popover-content {
       min-width: 800px;
       min-height: 400px;
+      margin-top: $navbar-height;
+      padding: 12px;
     }
   '';
   system = pkgs.stdenv.hostPlatform.system;

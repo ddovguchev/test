@@ -76,45 +76,21 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
         <box halign={1} orientation={0} spacing={12}>
           <Clock />
           <label label="│" cssName="bar-separator" />
-          <menubutton cssName="bar-btn nixos-btn">
-            <popover cssName="bar-popover">
-              <box orientation={1} cssName="bar-popover-content" widthRequest={800} heightRequest={400}>
-                <label label="Apps" cssName="appmenu-title" />
-              </box>
-            </popover>
+          <button cssName="bar-btn nixos-btn" onClicked={runCmd("ags --toggle-window menuoverlay")}>
             <Gtk.Image iconName="nix-snowflake" />
-          </menubutton>
+          </button>
         </box>
         <box hexpand halign={3} orientation={0}>
           <SysMonitor />
-          <menubutton cssName="bar-btn">
-            <popover cssName="bar-popover">
-              <box orientation={1} cssName="bar-popover-content" widthRequest={800} heightRequest={400}>
-                <label label="Notifications" cssName="appmenu-title" />
-              </box>
-            </popover>
+          <button cssName="bar-btn" onClicked={runCmd("ags --toggle-window notification")}>
             <label label="Notifications" />
-          </menubutton>
+          </button>
         </box>
         <box halign={3} orientation={0}>
           <Workspaces />
-          <menubutton cssName="bar-btn">
-            <popover cssName="bar-popover">
-              <box orientation={1} cssName="bar-popover-content" spacing={8} widthRequest={800} heightRequest={400}>
-                <label label="Power" cssName="appmenu-title" />
-                <button cssName="bar-btn" onClicked={runCmd("systemctl poweroff")}>
-                  <label label="Shutdown" />
-                </button>
-                <button cssName="bar-btn" onClicked={runCmd("systemctl reboot")}>
-                  <label label="Reboot" />
-                </button>
-                <button cssName="bar-btn" onClicked={runCmd("hyprctl dispatch exit")}>
-                  <label label="Logout" />
-                </button>
-              </box>
-            </popover>
+          <button cssName="bar-btn" onClicked={runCmd("ags --toggle-window powermenu")}>
             <label label="Power" />
-          </menubutton>
+          </button>
         </box>
         <label label="     " />
       </box>

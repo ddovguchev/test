@@ -1,11 +1,11 @@
 import app from "astal/gtk4/app";
 import { Astal, type Gdk } from "astal/gtk4";
 
-export default function MenuOverlay(gdkmonitor: Gdk.Monitor): JSX.Element {
+export default function NotificationOverlay(gdkmonitor: Gdk.Monitor): JSX.Element {
   const { TOP, LEFT, RIGHT } = Astal.WindowAnchor;
   return (
     <window
-      name="menuoverlay"
+      name="notification"
       visible={false}
       cssClasses={["MenuOverlay"]}
       gdkmonitor={gdkmonitor}
@@ -16,7 +16,7 @@ export default function MenuOverlay(gdkmonitor: Gdk.Monitor): JSX.Element {
       <centerbox>
         <box />
         <box cssName="menu-overlay-block" orientation={1} widthRequest={800} heightRequest={400}>
-          <label label="Apps" cssName="appmenu-title" />
+          <label label="Notifications" cssName="appmenu-title" />
         </box>
         <box />
       </centerbox>
