@@ -1,5 +1,6 @@
 import app from "astal/gtk4/app";
 import { Astal, type Gdk } from "astal/gtk4";
+import Variable from "ags/variable";
 import Gio from "gi://Gio?version=2.0";
 import Clock from "./Clock";
 import SysMonitor from "./SysMonitor";
@@ -17,20 +18,27 @@ function runCmd(cmd: string): () => void {
   };
 }
 
-type RevealerRef = { current: { set_reveal_child: (reveal: boolean) => void } | null };
-
-function hideAll(refs: { apps: RevealerRef; notif: RevealerRef; power: RevealerRef }): void {
-  refs.apps.current?.set_reveal_child(false);
-  refs.notif.current?.set_reveal_child(false);
-  refs.power.current?.set_reveal_child(false);
-}
-
 export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
   const { TOP, LEFT, RIGHT } = Astal.WindowAnchor;
-  const appsRevealerRef: RevealerRef = { current: null };
-  const notifRevealerRef: RevealerRef = { current: null };
-  const powerRevealerRef: RevealerRef = { current: null };
-  const refs = { apps: appsRevealerRef, notif: notifRevealerRef, power: powerRevealerRef };
+  const appsRevealed = Variable(false);
+  const notifRevealed = Variable(false);
+  const powerRevealed = Variable(false);
+
+  function showApps(): void {
+    notifRevealed.set(false);
+    powerRevealed.set(false);
+    appsRevealed.set(true);
+  }
+  function showNotif(): void {
+    appsRevealed.set(false);
+    powerRevealed.set(false);
+    notifRevealed.set(true);
+  }
+  function showPower(): void {
+    appsRevealed.set(false);
+    notifRevealed.set(false);
+    powerRevealed.set(true);
+  }
 
   return (
     <window
@@ -46,25 +54,13 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           <label label="     " />
           <box halign={1} orientation={0}>
             <Clock />
-            <button
-              cssName="bar-btn"
-              onClicked={() => {
-                hideAll(refs);
-                appsRevealerRef.current?.set_reveal_child(true);
-              }}
-            >
+            <button cssName="bar-btn" onClicked={showApps}>
               <label label="Apps" />
             </button>
           </box>
           <box hexpand halign={3} orientation={0}>
             <SysMonitor />
-            <button
-              cssName="bar-btn"
-              onClicked={() => {
-                hideAll(refs);
-                notifRevealerRef.current?.set_reveal_child(true);
-              }}
-            >
+            <button cssName="bar-btn" onClicked={showNotif}>
               <label label="Notifications" />
             </button>
           </box>
@@ -86,20 +82,14 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
             </button>
           </box>
           <box halign={2} orientation={0}>
-            <button
-              cssName="bar-btn"
-              onClicked={() => {
-                hideAll(refs);
-                powerRevealerRef.current?.set_reveal_child(true);
-              }}
-            >
+            <button cssName="bar-btn" onClicked={showPower}>
               <label label="Power" />
             </button>
           </box>
           <label label="     " />
         </box>
 
-        <revealer ref={appsRevealerRef} reveal_child={false} cssName="panel-revealer">
+        <revealer reveal_child={appsRevealed.bind()} cssName="panel-revealer">
           <box
             cssName="apps-panel"
             orientation={1}
@@ -107,10 +97,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
             heightRequest={APPS_PANEL_HEIGHT}
           >
             <box orientation={0} cssName="panel-header">
-              <button
-                cssName="bar-btn"
-                onClicked={() => appsRevealerRef.current?.set_reveal_child(false)}
-              >
+              <button cssName="bar-btn" onClicked={() => appsRevealed.set(false)}>
                 <label label="← Back" />
               </button>
             </box>
@@ -121,13 +108,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           </box>
         </revealer>
 
-        <revealer ref={notifRevealerRef} reveal_child={false} cssName="panel-revealer">
+        <revealer reveal_child={notifRevealed.bind()} cssName="panel-revealer">
           <box cssName="notif-panel" orientation={1} widthRequest={400} heightRequest={500}>
             <box orientation={0} cssName="panel-header">
-              <button
-                cssName="bar-btn"
-                onClicked={() => notifRevealerRef.current?.set_reveal_child(false)}
-              >
+              <button cssName="bar-btn" onClicked={() => notifRevealed.set(false)}>
                 <label label="← Back" />
               </button>
             </box>
@@ -135,13 +119,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           </box>
         </revealer>
 
-        <revealer ref={powerRevealerRef} reveal_child={false} cssName="panel-revealer">
+        <revealer reveal_child={powerRevealed.bind()} cssName="panel-revealer">
           <box cssName="power-panel" orientation={1} widthRequest={300} heightRequest={400}>
             <box orientation={0} cssName="panel-header">
-              <button
-                cssName="bar-btn"
-                onClicked={() => powerRevealerRef.current?.set_reveal_child(false)}
-              >
+              <button cssName="bar-btn" onClicked={() => powerRevealed.set(false)}>
                 <label label="← Back" />
               </button>
             </box>

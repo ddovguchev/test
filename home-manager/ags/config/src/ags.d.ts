@@ -30,7 +30,7 @@ declare module "astal/gtk4" {
       window: Record<string, unknown>;
       box: Record<string, unknown> & { widthRequest?: number; heightRequest?: number };
       centerbox: Record<string, unknown>;
-      revealer: Record<string, unknown> & { ref?: { current: unknown }; reveal_child?: boolean };
+      revealer: Record<string, unknown> & { reveal_child?: boolean | unknown };
       button: Record<string, unknown> & { onClicked?: string | (() => void) };
       label: Record<string, unknown> & {
         label?: TReactiveLabel;
