@@ -86,9 +86,5 @@ in
       ];
 
     };
-
-    extraConfig = ''
-      blurls = com\\.github\\.Aylur\\.ags
-    '';
   };
 }
