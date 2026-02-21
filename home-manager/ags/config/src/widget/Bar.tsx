@@ -17,8 +17,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
       <box cssName="bar" orientation={0}>
         <box hexpand><Clock /></box>
         <box hexpand><Clock /></box>
-        <box hexpand halign={3}><Clock /></box>
-        <box hexpand halign={2}><Clock /></box>
+        <box hexpand><Clock /></box>
+        <box hexpand><Clock /></box>
       </box>
     </window>
   );
