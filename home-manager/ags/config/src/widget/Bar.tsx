@@ -14,13 +14,6 @@ function runCmd(cmd: string): () => void {
   };
 }
 
-const menuContentProps = {
-  orientation: 1 as const,
-  cssName: "bar-menu-content",
-  widthRequest: 280,
-  heightRequest: 320,
-};
-
 export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
   const { TOP, LEFT, RIGHT } = Astal.WindowAnchor;
 
@@ -37,21 +30,15 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
         <label label="     " />
         <box halign={1} orientation={0}>
           <Clock />
-          <menubutton cssName="bar-btn">
-            <popover cssName="apps-menu" hasArrow={false}>
-              <box {...menuContentProps} />
-            </popover>
+          <button cssName="bar-btn">
             <label label="Apps" />
-          </menubutton>
+          </button>
         </box>
         <box hexpand halign={3} orientation={0}>
           <SysMonitor />
-          <menubutton cssName="bar-btn">
-            <popover cssName="notifications-menu" hasArrow={false}>
-              <box {...menuContentProps} />
-            </popover>
+          <button cssName="bar-btn">
             <label label="Notifications" />
-          </menubutton>
+          </button>
         </box>
         <box hexpand halign={3} orientation={0}>
           <button cssName="bar-btn" onClicked={runCmd("hyprctl dispatch workspace 1")}>
@@ -71,12 +58,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           </button>
         </box>
         <box halign={2} orientation={0}>
-          <menubutton cssName="bar-btn">
-            <popover cssName="power-menu" hasArrow={false}>
-              <box {...menuContentProps} />
-            </popover>
+          <button cssName="bar-btn">
             <label label="Power" />
-          </menubutton>
+          </button>
         </box>
         <label label="     " />
       </box>
