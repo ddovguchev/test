@@ -84,13 +84,17 @@ in
         "match:title Picture-in-Picture, size 480 270"
         "match:title Picture-in-Picture, move 100%-w-20 100%-h-20"
       ];
+
+      # AGS bar is a layer — blur by namespace. Run: hyprctl layers (see namespace in output)
+      layerrule = [
+        "blur on, gtk-layer-shell"
+        "ignorealpha 0, gtk-layer-shell"
+        "blur on, ags"
+        "ignorealpha 0, ags"
+      ];
     };
 
     extraConfig = ''
-      # AGS uses gtk-layer-shell (layer) — layerrule needs rule value then namespace
-      layerrule = blur on, gtk-layer-shell
-      layerrule = ignorealpha 0, gtk-layer-shell
-      # Fallback: if AGS ever appears as a window
       blurls = com\\.github\\.Aylur\\.ags
     '';
   };
