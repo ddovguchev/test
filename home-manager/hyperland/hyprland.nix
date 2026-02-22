@@ -4,8 +4,8 @@
 
 let
   primaryMonitor = "DP-4,2560x1080@200,0x0,1";
-  secondaryMonitor = ",preferred,auto,1";
-  monitorsList = [ primaryMonitor secondaryMonitor ];
+  secondaryMonitor = "";  # второй монитор, напр. "HDMI-A-1,preferred,auto,1"
+  monitorsList = if secondaryMonitor == "" then [ primaryMonitor ] else [ primaryMonitor secondaryMonitor ];
 in
 {
   wayland.windowManager.hyprland = {
@@ -84,11 +84,10 @@ in
 
       master.new_status = "master";
 
-      # 200Hz: vrr=0 + force_hypr_chan — стабильная синхронизация, меньше артефактов
+      # 200Hz: vrr=0 — стабильная синхронизация (force_hypr_chan убран — может давать unknown keyword)
       misc = {
         vfr = true;
         vrr = 0;
-        force_hypr_chan = true;
         session_lock_xray = true;
         force_default_wallpaper = 0;
         disable_hyprland_logo = true;
@@ -121,12 +120,12 @@ in
         ];
       };
 
-      # Input (from configs/input.conf)
+      # Input (from configs/input.conf) — раскладка us,ru и переключение языка
       input = {
-        kb_layout = "us";
+        kb_layout = "us,ru";
+        kb_options = "grp:alt_shift_toggle";
         kb_variant = "";
         kb_model = "";
-        kb_options = "";
         kb_rules = "";
         follow_mouse = 1;
         sensitivity = 0;

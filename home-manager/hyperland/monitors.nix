@@ -2,8 +2,8 @@
 { lib, ... }:
 let
   primaryMonitor = "DP-4,2560x1080@200,0x0,1";
-  secondaryMonitor = ",preferred,auto,1";
-  monitorsList = [ primaryMonitor secondaryMonitor ];
+  secondaryMonitor = "";
+  monitorsList = if secondaryMonitor == "" then [ primaryMonitor ] else [ primaryMonitor secondaryMonitor ];
 in
 {
   monitor = monitorsList;
