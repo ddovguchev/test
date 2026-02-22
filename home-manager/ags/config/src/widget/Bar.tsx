@@ -80,19 +80,19 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           <button cssName="bar-btn nixos-btn" onClicked={toggleWindow("menuoverlay")}>
             <Gtk.Image iconName="nix-snowflake" />
           </button>
+          <Workspaces />
         </box>
         <box hexpand halign={3} orientation={0}>
           <SysMonitor />
+        </box>
+        <box halign={2} orientation={0}>
           <button cssName="bar-btn" onClicked={toggleWindow("notification")}>
             <label label="Notifications" />
           </button>
         </box>
-        <box hexpand halign={3} orientation={0}>
-          <Workspaces />
-        </box>
         <box halign={2} orientation={0}>
           <button cssName="bar-btn" onClicked={toggleWindow("powermenu")}>
-            <label label="Power" />
+            <Gtk.Image iconName="system-shutdown-symbolic" />
           </button>
         </box>
         <label label="     " />
