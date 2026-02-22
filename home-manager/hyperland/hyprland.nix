@@ -1,4 +1,9 @@
 # Generated from config/hypr: hyprland.conf + configs/*.conf rewritten as Nix.
+#
+# Смотреть лог ошибок Hyprland в терминале:
+#   hyprctl rollinglog
+# или в реальном времени:
+#   tail -f $XDG_RUNTIME_DIR/hypr/*/hyprland.log
 
 { config, pkgs, lib, ... }:
 
@@ -22,7 +27,7 @@ in
 
       # Monitors (from configs/monitors.conf)
       monitor = monitorsList;
-      render.explicit_sync = 0;
+      # render.explicit_sync удалён: в Hyprland 0.50+ не существует (explicit sync всегда вкл.)
 
       # Xwayland (from autostart)
       xwayland.force_zero_scaling = true;
@@ -48,7 +53,7 @@ in
       ];
 
       # General, decoration, etc. (from configs/appearance.conf) – values without wallust
-      # 200Hz: max_fps в такт монитору — меньше размытия/призраков при движении окон
+      # general.max_fps удалён: в актуальной Hyprland этой опции нет
       general = {
         gaps_in = 5;
         gaps_out = 20;
@@ -56,7 +61,6 @@ in
         resize_on_border = false;
         allow_tearing = false;
         layout = "dwindle";
-        max_fps = 200;
       };
 
       decoration = {
@@ -209,8 +213,8 @@ in
         ", XF86AudioPrev, exec, playerctl previous"
       ];
 
-      # Window rules (from configs/windowrules.conf) – simplified to list form where possible
-      workspace = [ "1, layoutopt:orientation:left, monitor:eeDP-1, default:true" ];
+      # Window rules — monitor должен совпадать с твоим (у тебя primaryMonitor = DP-4)
+      workspace = [ "1, layoutopt:orientation:left, monitor:DP-4, default:true" ];
       windowrule = [
         "opacity 1 override, match:title ^(Picture-in-Picture)$"
         "opacity 1 override, match:title ^(Sober)$"
@@ -262,7 +266,8 @@ in
           move = 20 monitor_h-120
           float = yes
       }
-      source = ~/.cache/wallust/colors-hyprland.conf
+      # source wallust: раскомментируй и запусти wallust, если используешь
+      # source = ~/.cache/wallust/colors-hyprland.conf
       env = XCURSOR_SIZE,15
       env = HYPRCURSOR_SIZE,15
       env = XDG_MENU_PREFIX,arch-
