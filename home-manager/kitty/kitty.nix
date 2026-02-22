@@ -1,55 +1,43 @@
+# config/kitty/kitty.conf → Nix, цвета из theme/palette.nix (не из кэша)
 { config, pkgs, ... }:
 let
   palette = import ../theme/palette.nix;
+  k = palette.kitty;
 in
 {
   programs.kitty = {
     enable = true;
-    font = {
-      name = "JetBrainsMono Nerd Font";
-      size = 11.5;
-    };
     settings = {
-      cursor = palette.kitty.cursor;
-      cursor_text_color = palette.kitty.cursorText;
-      cursor_shape = "block";
-      cursor_stop_blinking_after = 0;
-      foreground = palette.kitty.foreground;
-      background = palette.kitty.background;
-      selection_foreground = palette.kitty.selectionForeground;
-      selection_background = palette.kitty.selectionBackground;
-      url_color = palette.kitty.url;
-      color0 = palette.kitty.color0;
-      color8 = palette.kitty.color8;
-      color1 = palette.kitty.color1;
-      color9 = palette.kitty.color9;
-      color2 = palette.kitty.color2;
-      color10 = palette.kitty.color10;
-      color3 = palette.kitty.color3;
-      color11 = palette.kitty.color11;
-      color4 = palette.kitty.color4;
-      color12 = palette.kitty.color12;
-      color5 = palette.kitty.color5;
-      color13 = palette.kitty.color13;
-      color6 = palette.kitty.color6;
-      color14 = palette.kitty.color14;
-      color7 = palette.kitty.color7;
-      color15 = palette.kitty.color15;
-      scrollback_lines = 2000;
-      copy_on_select = "yes";
-      mouse_hide_wait = 0;
-      select_by_word_characters = "@-./_~?&=%+#a";
-      enable_audio_bell = false;
-      bell_on_tab = "🔔 ";
-      remember_window_size = false;
-      window_border_width = "1pt";
-      draw_minimal_borders = true;
-      window_padding_width = 10;
-      inactive_text_alpha = 1.0;
-      hide_window_decorations = true;
-      confirm_os_window_close = 0;
-      tab_bar_style = "powerline";
-      background_opacity = 1.0;
+      font_family = "JetBrains Mono";
+      bold_font = "JetBrains Mono Bold";
+      italic_font = "JetBrains Mono Italic";
+      bold_italic_font = "JetBrains Mono Bold Italic";
+      shell = "${pkgs.zsh}/bin/zsh";
+      window_padding_width = "5 10";
+      cursor_trail = 3;
+      cursor = k.cursor;
+      cursor_text_color = k.cursorText;
+      foreground = k.foreground;
+      background = k.background;
+      selection_foreground = k.selectionForeground;
+      selection_background = k.selectionBackground;
+      url_color = k.url;
+      color0 = k.color0;
+      color8 = k.color8;
+      color1 = k.color1;
+      color9 = k.color9;
+      color2 = k.color2;
+      color10 = k.color10;
+      color3 = k.color3;
+      color11 = k.color11;
+      color4 = k.color4;
+      color12 = k.color12;
+      color5 = k.color5;
+      color13 = k.color13;
+      color6 = k.color6;
+      color14 = k.color14;
+      color7 = k.color7;
+      color15 = k.color15;
     };
   };
 }

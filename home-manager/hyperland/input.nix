@@ -1,0 +1,14 @@
+# config/hypr/configs/input.conf — раскладка и переключение языка
+{ ... }:
+{
+  input = {
+    kb_layout = "us,ru";
+    kb_options = "grp:alt_shift_toggle";
+    kb_variant = "";
+    kb_model = "";
+    kb_rules = "";
+    follow_mouse = 1;
+    sensitivity = 0;
+    touchpad.natural_scroll = false;
+  };
+}
