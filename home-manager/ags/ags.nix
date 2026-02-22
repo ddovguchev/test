@@ -3,28 +3,22 @@ let
   cfg = ./config;
   palette = import ../theme/palette.nix;
   layout = import ../theme/layout.nix;
+  barBg = lib.replaceStrings ["\n" "\r"] ["" ""] (builtins.toString palette.ags.barBg);
+  barFg = lib.replaceStrings ["\n" "\r"] ["" ""] (builtins.toString palette.ags.barFg);
+  barBorder = lib.replaceStrings ["\n" "\r"] ["" ""] (builtins.toString palette.ags.barBorder);
+  barShadow = lib.replaceStrings ["\n" "\r"] ["" ""] (builtins.toString palette.ags.barShadow);
   styleScss = pkgs.writeText "ags-style.scss" ''
-    $bar-fg: ${palette.ags.barFg};
-    $bar-bg: ${palette.ags.barBg};
-    $bar-bg-opacity: ${palette.ags.barBgOpacity};
-    $bar-border: ${palette.ags.barBorder};
-    $bar-shadow: ${palette.ags.barShadow};
-    $navbar-gap: ${toString layout.navbarGap}px;
-    $bar-height: ${toString layout.barHeight}px;
-    $bar-rounding: ${toString layout.barRounding}px;
-    $navbar-height: ${toString (layout.navbarGap + layout.barHeight)}px;
-
     window.Bar {
-      background: $bar-bg;
-      color: $bar-fg;
-      min-height: $bar-height;
-      margin: $navbar-gap;
+      background: ${barBg};
+      color: ${barFg};
+      min-height: ${toString layout.barHeight}px;
+      margin: ${toString layout.navbarGap}px;
       margin-bottom: 0;
       font-weight: bold;
-      border-radius: $bar-rounding;
+      border-radius: ${toString layout.barRounding}px;
       -gtk-icon-shadow: none;
-      border-bottom: 1px solid $bar-border;
-      box-shadow: 0 1px 3px $bar-shadow;
+      border-bottom: 1px solid ${barBorder};
+      box-shadow: 0 1px 3px ${barShadow};
     }
 
     /* Workspace indicator: active state - very visible */
@@ -56,22 +50,22 @@ let
 
     /* Menu overlay */
     window.MenuOverlay {
-      margin-top: $navbar-gap;
-      margin-left: $navbar-gap;
-      margin-right: $navbar-gap;
+      margin-top: ${toString layout.navbarGap}px;
+      margin-left: ${toString layout.navbarGap}px;
+      margin-right: ${toString layout.navbarGap}px;
       margin-bottom: 0;
     }
 
     .menu-overlay-block {
-      background: $bar-bg;
-      color: $bar-fg;
-      border: 1px solid $bar-border;
+      background: ${barBg};
+      color: ${barFg};
+      border: 1px solid ${barBorder};
       border-top: none;
-      border-radius: 0 0 $bar-rounding $bar-rounding;
-      box-shadow: 0 8px 24px $bar-shadow;
+      border-radius: 0 0 ${toString layout.barRounding}px ${toString layout.barRounding}px;
+      box-shadow: 0 8px 24px ${barShadow};
       min-width: 900px;
       min-height: 600px;
-      margin-top: $navbar-height;
+      margin-top: ${toString (layout.navbarGap + layout.barHeight)}px;
       padding: 12px;
     }
   '';

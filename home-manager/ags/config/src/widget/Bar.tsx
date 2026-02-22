@@ -77,21 +77,13 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
         <box halign={1} orientation={0} spacing={12}>
           <Clock />
           <label label="│" cssName="bar-separator" />
-          <button
-            cssName="bar-btn nixos-btn"
-            onClicked={toggleWindow("menuoverlay")}
-            onButtonPressed={() => toggleWindow("menuoverlay")()}
-          >
+          <button cssName="bar-btn nixos-btn" onClicked={toggleWindow("menuoverlay")}>
             <Gtk.Image iconName="nix-snowflake" />
           </button>
         </box>
         <box hexpand halign={3} orientation={0}>
           <SysMonitor />
-          <button
-            cssName="bar-btn"
-            onClicked={toggleWindow("notification")}
-            onButtonPressed={() => toggleWindow("notification")()}
-          >
+          <button cssName="bar-btn" onClicked={toggleWindow("notification")}>
             <label label="Notifications" />
           </button>
         </box>
@@ -99,11 +91,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           <Workspaces />
         </box>
         <box halign={2} orientation={0}>
-          <button
-            cssName="bar-btn"
-            onClicked={toggleWindow("powermenu")}
-            onButtonPressed={() => toggleWindow("powermenu")()}
-          >
+          <button cssName="bar-btn" onClicked={toggleWindow("powermenu")}>
             <label label="Power" />
           </button>
         </box>
