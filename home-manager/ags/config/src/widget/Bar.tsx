@@ -88,22 +88,22 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
         </box>
         <box hexpand halign={3} orientation={0}>
           <button cssName="bar-btn" onClicked={toggleWindow("notification")}>
-            <label label="Notifications" />
+            <Gtk.Image iconName="bell-symbolic" cssName="bar-notification-icon" />
           </button>
         </box>
-        <box halign={2} orientation={0}>
-          <button cssName="bar-btn" onClicked={toggleWindow("powermenu")}>
-            <label label="⏻" cssName="bar-power-icon" />
+        <box halign={2} orientation={0} cssName="bar-right-spacer">
+          <button cssName="bar-btn bar-btn-vpn" onClicked={runCmd("true")}>
+            <Gtk.Image iconName="network-vpn-symbolic" cssName="bar-vpn-icon" />
           </button>
         </box>
-        <box halign={2} orientation={0}>
+        <box halign={2} orientation={0} cssName="bar-right-spacer">
           <button cssName="bar-btn bar-btn-volume" onClicked={runCmd("pactl set-sink-mute @DEFAULT_SINK@ toggle")}>
             <Gtk.Image iconName="audio-volume-high-symbolic" cssName="bar-volume-icon" />
           </button>
         </box>
-        <box halign={2} orientation={0}>
-          <button cssName="bar-btn bar-btn-vpn" onClicked={runCmd("true")}>
-            <Gtk.Image iconName="network-vpn-symbolic" cssName="bar-vpn-icon" />
+        <box halign={2} orientation={0} cssName="bar-right-spacer">
+          <button cssName="bar-btn" onClicked={toggleWindow("powermenu")}>
+            <label label="⏻" cssName="bar-power-icon" />
           </button>
         </box>
         <label label="     " />

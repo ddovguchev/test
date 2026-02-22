@@ -47,6 +47,10 @@ window.Bar {
     background: rgba(255, 255, 255, 0.15);
     border-radius: 6px;
   }
+
+  box.bar-right-spacer {
+    margin-left: 5px;
+  }
 }
 
 window.MenuOverlay {
