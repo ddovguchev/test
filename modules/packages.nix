@@ -26,11 +26,13 @@ let
       "$@"
   '');
 
-  # umu-run (вызываемый из faugus) ищет модуль faugus — добавляем PYTHONPATH
-  faugusLauncherWrapped = pkgs.writeShellScriptBin "faugus-launcher" ''
-    export PYTHONPATH="${pkgs.faugus-launcher}/lib/python${pkgs.python3.version}/site-packages''${PYTHONPATH:+:$PYTHONPATH}"
-    exec ${pkgs.faugus-launcher}/bin/faugus-launcher "$@"
+  # faugus вызывает umu-run по абсолютному пути — подменяем umu-launcher на обёртку с PYTHONPATH
+  faugusSitePackages = "${pkgs.faugus-launcher}/lib/python3.13/site-packages";
+  umuRunWithFaugus = pkgs.writeShellScriptBin "umu-run" ''
+    export PYTHONPATH="${faugusSitePackages}''${PYTHONPATH:+:$PYTHONPATH}"
+    exec ${pkgs.umu-launcher}/bin/umu-run "$@"
   '';
+  faugusLauncherWrapped = pkgs.faugus-launcher.override { umu-launcher = umuRunWithFaugus; };
 in
 {
   programs.steam = {
