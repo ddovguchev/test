@@ -1,4 +1,3 @@
-# config/hypr/configs/appearance.conf (without wallust source — that goes in extraConfig)
 { ... }:
 {
   general = {

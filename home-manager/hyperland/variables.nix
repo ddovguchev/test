@@ -1,4 +1,3 @@
-# config/hypr/hyprland.conf — переменные для запуска программ и модификаторов
 { ... }:
 {
   "$terminal" = "kitty";
@@ -6,5 +5,4 @@
   "$clipboard" = "cliphist list";
   "$mainMod" = "SUPER";
   "$killPanel" = "swaync-client -cp";
-  "$launcher" = "rofi";
 }

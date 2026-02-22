@@ -1,4 +1,3 @@
-# config/hypr/configs/input.conf — раскладка и переключение языка
 { ... }:
 {
   input = {

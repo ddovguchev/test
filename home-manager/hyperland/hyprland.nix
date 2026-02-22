@@ -1,17 +1,9 @@
-# Generated from config/hypr: hyprland.conf + configs/*.conf rewritten as Nix.
-#
-# Смотреть лог ошибок Hyprland в терминале:
-#   hyprctl rollinglog
-# или в реальном времени:
-#   tail -f $XDG_RUNTIME_DIR/hypr/*/hyprland.log
-
 { config, pkgs, lib, ... }:
 
 let
   primaryMonitor = "DP-4,2560x1080@200,0x0,1";
-  secondaryMonitor = "";  # второй монитор, напр. "HDMI-A-1,preferred,auto,1"
+  secondaryMonitor = "";
   monitorsList = if secondaryMonitor == "" then [ primaryMonitor ] else [ primaryMonitor secondaryMonitor ];
-  # Полный путь к kitty, чтобы Hyprland не писал "requested kitty does not exist" (нет в PATH при старте)
   terminalCmd = "${pkgs.kitty}/bin/kitty";
 in
 {
@@ -19,7 +11,6 @@ in
     enable = true;
 
     settings = {
-      # Variables (from hyprland.conf)
       "$terminal" = terminalCmd;
       "$fileManager" = "dolphin";
       "$clipboard" = "cliphist list";
@@ -27,14 +18,10 @@ in
       "$killPanel" = "swaync-client -cp";
       "$launcher" = "rofi";
 
-      # Monitors (from configs/monitors.conf)
       monitor = monitorsList;
-      # render.explicit_sync удалён: в Hyprland 0.50+ не существует (explicit sync всегда вкл.)
 
-      # Xwayland (from autostart)
       xwayland.force_zero_scaling = true;
 
-      # Exec-once (from configs/autostart.conf)
       "exec-once" = [
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=Hyprland"
         "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
@@ -49,13 +36,11 @@ in
         "nm-applet --indicator"
         "bash ~/.config/hypr/scripts/wallpapers/check-video.sh"
         "bash ~/.config/hypr/scripts/start-dashboard.sh &"
-        "[workspace 2 silent] ${terminalCmd}"
+        "${terminalCmd}"
         "~/.config/hypr/scripts/hypr-nice"
         "sleep 1 && swww-daemon && swww restore &"
       ];
 
-      # General, decoration, etc. (from configs/appearance.conf) – values without wallust
-      # general.max_fps удалён: в актуальной Hyprland этой опции нет
       general = {
         gaps_in = 5;
         gaps_out = 20;
@@ -90,7 +75,6 @@ in
 
       master.new_status = "master";
 
-      # 200Hz: vrr=0 — стабильная синхронизация (force_hypr_chan убран — может давать unknown keyword)
       misc = {
         vfr = true;
         vrr = 0;
@@ -99,7 +83,6 @@ in
         disable_hyprland_logo = true;
       };
 
-      # Animations (from configs/animations.conf)
       animations = {
         enabled = true;
         bezier = [
@@ -126,7 +109,6 @@ in
         ];
       };
 
-      # Input (from configs/input.conf) — раскладка us,ru и переключение языка
       input = {
         kb_layout = "us,ru";
         kb_options = "grp:alt_shift_toggle";
@@ -138,10 +120,8 @@ in
         touchpad.natural_scroll = false;
       };
 
-      # Debug (from configs/debug.conf)
       debug.disable_logs = false;
 
-      # Keybinds (from configs/keybinds.conf)
       bind = [
         "$mainMod, Z, exec, $terminal"
         "$mainMod, X, killactive"
@@ -149,10 +129,10 @@ in
         "$mainMod SHIFT, C, exec, $killPanel; pkill $launcher; $launcher-launch game"
         "$mainMod, C, exec, $killPanel; pkill $launcher; $launcher-launch drun"
         "$mainMod, V, exec, $killPanel; pkill $launcher || $clipboard | $launcher -dmenu | cliphist decode | wl-copy"
-        "$mainMod, Q, exec, $killPanel; screenshot output"
+        "$mainMod, Q, killactive"
         "$mainMod ALT, Q, exec, screenshot window"
         "$mainMod SHIFT, Q, exec, screenshot region"
-        "$mainMod t, exec, $terminal"
+        "$mainMod, t, exec, $terminal"
         "$mainMod, O, setprop, active opaque toggle"
         "$mainMod, F, fullscreen, 1"
         "$mainMod SHIFT, F, fullscreen, 0"
@@ -215,7 +195,6 @@ in
         ", XF86AudioPrev, exec, playerctl previous"
       ];
 
-      # Window rules — monitor должен совпадать с твоим (у тебя primaryMonitor = DP-4)
       workspace = [ "1, layoutopt:orientation:left, monitor:DP-4, default:true" ];
       windowrule = [
         "opacity 1 override, match:title ^(Picture-in-Picture)$"
@@ -238,8 +217,6 @@ in
       ];
     };
 
-    # Parts that need external files or unsupported syntax
-    # 200Hz: софтверный курсор — убирает рассинхрон и «призраки» при движении
     extraConfig = ''
       env = WLR_NO_HARDWARE_CURSORS,1
       gesture = 3, horizontal, workspace
@@ -268,8 +245,6 @@ in
           move = 20 monitor_h-120
           float = yes
       }
-      # source wallust: раскомментируй и запусти wallust, если используешь
-      # source = ~/.cache/wallust/colors-hyprland.conf
       env = XCURSOR_SIZE,15
       env = HYPRCURSOR_SIZE,15
       env = XDG_MENU_PREFIX,arch-
@@ -284,7 +259,6 @@ in
     '';
   };
 
-  # Deploy non-generated files: scripts, hyprlock, hypridle, hyprsunset
   xdg.configFile."hypr/scripts" = { source = ../config/hypr/scripts; recursive = true; };
   xdg.configFile."hypr/hyprlock" = { source = ../config/hypr/hyprlock; recursive = true; };
   xdg.configFile."hypr/hypridle.conf" = { source = ../config/hypr/hypridle.conf; };

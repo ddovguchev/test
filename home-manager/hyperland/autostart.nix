@@ -1,4 +1,3 @@
-# config/hypr/configs/autostart.conf
 { ... }:
 {
   xwayland.force_zero_scaling = true;

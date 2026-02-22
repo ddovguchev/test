@@ -1,4 +1,3 @@
-# config/hypr/configs/animations.conf
 { ... }:
 {
   animations = {
