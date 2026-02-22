@@ -87,22 +87,22 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           <SysMonitor />
         </box>
         <box hexpand halign={3} orientation={0}>
-          <button cssName="bar-btn" onClicked={toggleWindow("notification")}>
-            <Gtk.Image iconName="bell-symbolic" cssName="bar-notification-icon" />
+          <button cssName="bar-btn bar-right-icon-btn" onClicked={toggleWindow("notification")}>
+            <label label="🔔" cssName="bar-notification-icon" />
           </button>
         </box>
-        <box halign={2} orientation={0} cssName="bar-right-spacer">
-          <button cssName="bar-btn bar-btn-vpn" onClicked={runCmd("true")}>
-            <Gtk.Image iconName="network-vpn-symbolic" cssName="bar-vpn-icon" />
+        <box halign={2} orientation={0}>
+          <button cssName="bar-btn bar-right-icon-btn bar-btn-vpn" onClicked={runCmd("true")}>
+            <label label="VPN" cssName="bar-vpn-label" />
           </button>
         </box>
-        <box halign={2} orientation={0} cssName="bar-right-spacer">
-          <button cssName="bar-btn bar-btn-volume" onClicked={runCmd("pactl set-sink-mute @DEFAULT_SINK@ toggle")}>
-            <Gtk.Image iconName="audio-volume-high-symbolic" cssName="bar-volume-icon" />
+        <box halign={2} orientation={0}>
+          <button cssName="bar-btn bar-right-icon-btn bar-btn-volume" onClicked={runCmd("pactl set-sink-mute @DEFAULT_SINK@ toggle")}>
+            <label label="🔊" cssName="bar-volume-icon" />
           </button>
         </box>
-        <box halign={2} orientation={0} cssName="bar-right-spacer">
-          <button cssName="bar-btn" onClicked={toggleWindow("powermenu")}>
+        <box halign={2} orientation={0}>
+          <button cssName="bar-btn bar-right-icon-btn" onClicked={toggleWindow("powermenu")}>
             <label label="⏻" cssName="bar-power-icon" />
           </button>
         </box>

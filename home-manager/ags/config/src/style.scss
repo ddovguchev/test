@@ -48,8 +48,17 @@ window.Bar {
     border-radius: 6px;
   }
 
-  box.bar-right-spacer {
-    margin-left: 5px;
+  .bar-right-icon-btn {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+
+  .bar-notification-icon,
+  .bar-volume-icon,
+  .bar-power-icon,
+  .bar-vpn-label {
+    min-width: 1.2em;
+    min-height: 1.2em;
   }
 }
 
