@@ -11,6 +11,8 @@ let
   primaryMonitor = "DP-4,2560x1080@200,0x0,1";
   secondaryMonitor = "";  # второй монитор, напр. "HDMI-A-1,preferred,auto,1"
   monitorsList = if secondaryMonitor == "" then [ primaryMonitor ] else [ primaryMonitor secondaryMonitor ];
+  # Полный путь к kitty, чтобы Hyprland не писал "requested kitty does not exist" (нет в PATH при старте)
+  terminalCmd = "${pkgs.kitty}/bin/kitty";
 in
 {
   wayland.windowManager.hyprland = {
@@ -18,7 +20,7 @@ in
 
     settings = {
       # Variables (from hyprland.conf)
-      "$terminal" = "kitty";
+      "$terminal" = terminalCmd;
       "$fileManager" = "dolphin";
       "$clipboard" = "cliphist list";
       "$mainMod" = "SUPER";
@@ -47,7 +49,7 @@ in
         "nm-applet --indicator"
         "bash ~/.config/hypr/scripts/wallpapers/check-video.sh"
         "bash ~/.config/hypr/scripts/start-dashboard.sh &"
-        "[workspace 2 silent] kitty"
+        "[workspace 2 silent] ${terminalCmd}"
         "~/.config/hypr/scripts/hypr-nice"
         "sleep 1 && swww-daemon && swww restore &"
       ];
@@ -150,7 +152,7 @@ in
         "$mainMod, Q, exec, $killPanel; screenshot output"
         "$mainMod ALT, Q, exec, screenshot window"
         "$mainMod SHIFT, Q, exec, screenshot region"
-        "$mainMod t, exec, kitty"
+        "$mainMod t, exec, $terminal"
         "$mainMod, O, setprop, active opaque toggle"
         "$mainMod, F, fullscreen, 1"
         "$mainMod SHIFT, F, fullscreen, 0"
