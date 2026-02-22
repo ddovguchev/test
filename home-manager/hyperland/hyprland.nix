@@ -5,6 +5,26 @@ let
   secondaryMonitor = "";
   monitorsList = if secondaryMonitor == "" then [ primaryMonitor ] else [ primaryMonitor secondaryMonitor ];
   terminalCmd = "${pkgs.kitty}/bin/kitty";
+
+  hypridleConf = pkgs.writeText "hypridle.conf" ''
+    general {
+      lock_cmd = loginctl lock-session
+      before_sleep_cmd = loginctl lock-session
+      ignore_dbus_inhibit = false
+    }
+    listener {
+      timeout = 300
+      on-timeout = loginctl lock-session
+    }
+  '';
+
+  hyprlockConf = pkgs.writeText "hyprlock.conf" ''
+    general { hide_cursor = true; grace = 0; }
+    background { path = ~/.config/hyprlock/wallpaper.png; color = rgba(0,0,0,1.0); }
+    input { size = 64; outline_thickness = 2; dots_center = true; }
+  '';
+
+  hyprsunsetConf = pkgs.writeText "hyprsunset.conf" "# hyprsunset — раскомментируй и настрой temp_day/temp_night\n";
 in
 {
   wayland.windowManager.hyprland = {
@@ -122,57 +142,43 @@ in
 
       debug.disable_logs = false;
 
-      bind = [
-        "$mainMod, Z, exec, $terminal"
-        "$mainMod, X, killactive"
-        "$mainMod ALT, C, exec, $killPanel; pkill $launcher; $launcher-launch run"
-        "$mainMod SHIFT, C, exec, $killPanel; pkill $launcher; $launcher-launch game"
-        "$mainMod, C, exec, $killPanel; pkill $launcher; $launcher-launch drun"
-        "$mainMod, V, exec, $killPanel; pkill $launcher || $clipboard | $launcher -dmenu | cliphist decode | wl-copy"
-        "$mainMod, Q, killactive"
-        "$mainMod ALT, Q, exec, screenshot window"
-        "$mainMod SHIFT, Q, exec, screenshot region"
-        "$mainMod, t, exec, $terminal"
-        "$mainMod, O, setprop, active opaque toggle"
-        "$mainMod, F, fullscreen, 1"
-        "$mainMod SHIFT, F, fullscreen, 0"
-        "$mainMod ALT, F, togglefloating"
-        "$mainMod, P, pseudo"
-        "$mainMod, J, togglesplit"
-        "$mainMod, N, exec, kill-layers; swaync-client -t"
-        "$mainMod, L, exec, loginctl lock-session"
-        "$mainMod, B, exec, $killPanel; pkill $launcher || change-navbar-mode"
-        "$mainMod SHIFT, W, exec, customize wallpaper random"
-        "$mainMod, W, exec, $killPanel; pkill $launcher || customize"
-        "$mainMod, left, movefocus, l"
-        "$mainMod, right, movefocus, r"
-        "$mainMod, up, movefocus, u"
-        "$mainMod, down, movefocus, d"
-        "$mainMod, 1, workspace, 1"
-        "$mainMod, 2, workspace, 2"
-        "$mainMod, 3, workspace, 3"
-        "$mainMod, 4, workspace, 4"
-        "$mainMod, 5, workspace, 5"
-        "$mainMod, 6, workspace, 6"
-        "$mainMod, 7, workspace, 7"
-        "$mainMod, 8, workspace, 8"
-        "$mainMod, 9, workspace, 9"
-        "$mainMod, 0, workspace, 10"
-        "$mainMod SHIFT, 1, movetoworkspace, 1"
-        "$mainMod SHIFT, 2, movetoworkspace, 2"
-        "$mainMod SHIFT, 3, movetoworkspace, 3"
-        "$mainMod SHIFT, 4, movetoworkspace, 4"
-        "$mainMod SHIFT, 5, movetoworkspace, 5"
-        "$mainMod SHIFT, 6, movetoworkspace, 6"
-        "$mainMod SHIFT, 7, movetoworkspace, 7"
-        "$mainMod SHIFT, 8, movetoworkspace, 8"
-        "$mainMod SHIFT, 9, movetoworkspace, 9"
-        "$mainMod SHIFT, 0, movetoworkspace, 10"
-        "$mainMod, S, togglespecialworkspace, magic"
-        "$mainMod SHIFT, S, movetoworkspace, special:magic"
-        "$mainMod, mouse_down, workspace, e+1"
-        "$mainMod, mouse_up, workspace, e-1"
-      ];
+      bind = let
+        mod = "$mainMod";
+        ws = n: if n == 10 then "0" else toString n;
+      in [
+        "${mod}, Z, exec, $terminal"
+        "${mod}, X, killactive"
+        "${mod}, Q, killactive"
+        "${mod}, t, exec, $terminal"
+        "${mod}, C, exec, $killPanel; pkill $launcher; $launcher-launch drun"
+        "${mod} ALT, C, exec, $killPanel; pkill $launcher; $launcher-launch run"
+        "${mod} SHIFT, C, exec, $killPanel; pkill $launcher; $launcher-launch game"
+        "${mod}, V, exec, $killPanel; pkill $launcher || $clipboard | $launcher -dmenu | cliphist decode | wl-copy"
+        "${mod} ALT, Q, exec, screenshot window"
+        "${mod} SHIFT, Q, exec, screenshot region"
+        "${mod}, O, setprop, active opaque toggle"
+        "${mod}, F, fullscreen, 1"
+        "${mod} SHIFT, F, fullscreen, 0"
+        "${mod} ALT, F, togglefloating"
+        "${mod}, P, pseudo"
+        "${mod}, J, togglesplit"
+        "${mod}, N, exec, kill-layers; swaync-client -t"
+        "${mod}, L, exec, loginctl lock-session"
+        "${mod}, B, exec, $killPanel; pkill $launcher || change-navbar-mode"
+        "${mod} SHIFT, W, exec, customize wallpaper random"
+        "${mod}, W, exec, $killPanel; pkill $launcher || customize"
+        "${mod}, left, movefocus, l"
+        "${mod}, right, movefocus, r"
+        "${mod}, up, movefocus, u"
+        "${mod}, down, movefocus, d"
+        "${mod}, S, togglespecialworkspace, magic"
+        "${mod} SHIFT, S, movetoworkspace, special:magic"
+        "${mod}, mouse_down, workspace, e+1"
+        "${mod}, mouse_up, workspace, e-1"
+      ] ++ lib.concatLists (map (n: [
+        "${mod}, ${ws n}, workspace, ${toString n}"
+        "${mod} SHIFT, ${ws n}, movetoworkspace, ${toString n}"
+      ]) (lib.range 1 10));
 
       bindm = [
         "$mainMod, mouse:272, movewindow"
@@ -259,9 +265,9 @@ in
     '';
   };
 
-  xdg.configFile."hypr/scripts" = { source = ../config/hypr/scripts; recursive = true; };
-  xdg.configFile."hypr/hyprlock" = { source = ../config/hypr/hyprlock; recursive = true; };
-  xdg.configFile."hypr/hypridle.conf" = { source = ../config/hypr/hypridle.conf; };
-  xdg.configFile."hypr/hyprlock.conf" = { source = ../config/hypr/hyprlock.conf; };
-  xdg.configFile."hypr/hyprsunset.conf" = { source = ../config/hypr/hyprsunset.conf; };
+  # Конфиги hypridle/hyprlock/hyprsunset генерируются из Nix (без зависимости от config/hypr/)
+  xdg.configFile."hypr/hypridle.conf".source = hypridleConf;
+  xdg.configFile."hypr/hyprlock.conf".source = hyprlockConf;
+  xdg.configFile."hypr/hyprsunset.conf".source = hyprsunsetConf;
+  # scripts и hyprlock: добавь xdg.configFile вручную, когда появятся файлы в репо
 }
