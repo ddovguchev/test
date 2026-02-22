@@ -44,7 +44,7 @@ in
       docker docker-compose qemu
 
       jetbrains.idea kitty ranger firefox spotify blender insomnia obs-studio
-      steam burpsuite metasploit
+      steam burpsuite metasploit faugus-launcher
 
       wireguard-tools wireshark gns3-gui teams-for-linux telegram-desktop
 
