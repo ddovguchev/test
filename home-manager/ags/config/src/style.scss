@@ -49,14 +49,17 @@ window.Bar {
   }
 
   .bar-right-icon-btn {
-    margin-left: 8px;
-    margin-right: 8px;
+    margin: 0 2px;
+  }
+
+  label.bar-icon-gap {
+    min-width: 10px;
   }
 
   .bar-notification-icon,
   .bar-volume-icon,
   .bar-power-icon,
-  .bar-vpn-label {
+  .bar-vpn-icon {
     min-width: 1.2em;
     min-height: 1.2em;
   }

@@ -88,19 +88,22 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
         </box>
         <box hexpand halign={3} orientation={0}>
           <button cssName="bar-btn bar-right-icon-btn" onClicked={toggleWindow("notification")}>
-            <label label="🔔" cssName="bar-notification-icon" />
+            <Gtk.Image iconName="notifications-symbolic" cssName="bar-notification-icon" />
           </button>
         </box>
+        <label label=" " cssName="bar-icon-gap" />
         <box halign={2} orientation={0}>
           <button cssName="bar-btn bar-right-icon-btn bar-btn-vpn" onClicked={runCmd("true")}>
-            <label label="VPN" cssName="bar-vpn-label" />
+            <Gtk.Image iconName="network-vpn-symbolic" cssName="bar-vpn-icon" />
           </button>
         </box>
+        <label label=" " cssName="bar-icon-gap" />
         <box halign={2} orientation={0}>
           <button cssName="bar-btn bar-right-icon-btn bar-btn-volume" onClicked={runCmd("pactl set-sink-mute @DEFAULT_SINK@ toggle")}>
-            <label label="🔊" cssName="bar-volume-icon" />
+            <Gtk.Image iconName="audio-volume-high-symbolic" cssName="bar-volume-icon" />
           </button>
         </box>
+        <label label=" " cssName="bar-icon-gap" />
         <box halign={2} orientation={0}>
           <button cssName="bar-btn bar-right-icon-btn" onClicked={toggleWindow("powermenu")}>
             <label label="⏻" cssName="bar-power-icon" />
