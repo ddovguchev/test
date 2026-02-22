@@ -24,7 +24,7 @@ const workspaceData = createPoll(
   [
     "sh",
     "-c",
-    'ids=$(hyprctl workspaces -j 2>/dev/null | jq -r "[.[].id] | sort | unique | .[]" 2>/dev/null | tr "\\n" " "); [ -z "$ids" ] && ids="1 2 3 4 5 6 7 8 9"; active=$(hyprctl activeworkspace -j 2>/dev/null | jq -r ".id" 2>/dev/null); echo "$ids|${active:-1}"',
+    "ids=$(hyprctl workspaces -j 2>/dev/null | jq -r \"[.[].id] | sort | unique | .[]\" 2>/dev/null | tr \"\\n\" \" \"); [ -z \"$ids\" ] && ids=\"1 2 3 4 5 6 7 8 9\"; active=$(hyprctl activeworkspace -j 2>/dev/null | jq -r \".id\" 2>/dev/null); echo \"$ids|${active:-1}\"",
   ],
   (out, prev) => {
     try {
@@ -86,7 +86,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
         <box hexpand halign={3} orientation={0}>
           <SysMonitor />
         </box>
-        <box halign={2} orientation={0}>
+        <box halign={3} orientation={0}>
           <button cssName="bar-btn" onClicked={toggleWindow("notification")}>
             <label label="Notifications" />
           </button>
