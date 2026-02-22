@@ -12,7 +12,7 @@ export default function NotificationOverlay(gdkmonitor: Gdk.Monitor): JSX.Elemen
       setup={(self) => overlayWindows.set("notification", self as Gtk.Window)}
       cssClasses={["MenuOverlay"]}
       gdkmonitor={gdkmonitor}
-      exclusivity={Astal.Exclusivity.NORMAL}
+      exclusivity={Astal.Exclusivity.EXCLUSIVE}
       anchor={TOP | LEFT | RIGHT}
       application={app}
       widthRequest={900}

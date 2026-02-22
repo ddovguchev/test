@@ -12,7 +12,7 @@ export default function MenuOverlay(gdkmonitor: Gdk.Monitor): JSX.Element {
       setup={(self) => overlayWindows.set("menuoverlay", self as Gtk.Window)}
       cssClasses={["MenuOverlay"]}
       gdkmonitor={gdkmonitor}
-      exclusivity={Astal.Exclusivity.NORMAL}
+      exclusivity={Astal.Exclusivity.EXCLUSIVE}
       anchor={TOP | LEFT | RIGHT}
       application={app}
       widthRequest={900}

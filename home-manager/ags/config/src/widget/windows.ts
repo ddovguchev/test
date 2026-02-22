@@ -8,24 +8,18 @@ export function toggleWindow(name: string): () => void {
     const w = overlayWindows.get(name);
     if (w) {
       try {
-        const v = (w as { visible: boolean }).visible;
-        (w as { visible: boolean }).visible = !v;
-      } catch (e) {
-        console.error("toggle in-process failed", name, e);
-        runAgsToggle(name);
+        (w as { visible: boolean }).visible = !(w as { visible: boolean }).visible;
+      } catch {
+        spawnToggle(name);
       }
     } else {
-      runAgsToggle(name);
+      spawnToggle(name);
     }
   };
 }
 
-function runAgsToggle(name: string): void {
-  try {
-    const agsBin = (globalThis as { AGS_BIN?: string }).AGS_BIN || "ags";
-    const cmd = `"${agsBin}" --toggle-window "${name}"`;
-    GLib.spawn_async(null, ["sh", "-c", cmd], null, GLib.SpawnFlags.SEARCH_PATH, null);
-  } catch (e) {
-    console.error("toggle CLI failed", name, e);
-  }
+function spawnToggle(name: string): void {
+  const agsBin = (globalThis as { AGS_BIN?: string }).AGS_BIN || "ags";
+  const cmd = `"${agsBin}" --toggle-window "${name}"`;
+  GLib.spawn_async(null, ["sh", "-c", cmd], null, GLib.SpawnFlags.SEARCH_PATH, null);
 }

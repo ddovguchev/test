@@ -50,6 +50,9 @@ in
 
       bind = [
         "$mod, R, exec, ${config.programs.ags.finalPackage}/bin/ags --toggle-window appmenu"
+        "$mod, M, exec, ${config.programs.ags.finalPackage}/bin/ags --toggle-window menuoverlay"
+        "$mod, N, exec, ${config.programs.ags.finalPackage}/bin/ags --toggle-window notification"
+        "$mod, P, exec, ${config.programs.ags.finalPackage}/bin/ags --toggle-window powermenu"
         "$mod, F, exec, firefox"
         "$mod, T, exec, kitty"
         "$mod, Q, killactive"
