@@ -86,17 +86,15 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
         <box hexpand halign={3} orientation={0}>
           <SysMonitor />
         </box>
-        <box halign={2} orientation={0} spacing={12}>
-          <box orientation={0}>
-            <button cssName="bar-btn" onClicked={toggleWindow("notification")}>
-              <label label="Notifications" />
-            </button>
-          </box>
-          <box orientation={0}>
-            <button cssName="bar-btn" onClicked={toggleWindow("powermenu")}>
-              <label label="⏻" cssName="bar-power-icon" />
-            </button>
-          </box>
+        <box halign={2} orientation={0}>
+          <button cssName="bar-btn" onClicked={toggleWindow("notification")}>
+            <label label="Notifications" />
+          </button>
+        </box>
+        <box halign={2} orientation={0}>
+          <button cssName="bar-btn" onClicked={toggleWindow("powermenu")}>
+            <label label="⏻" cssName="bar-power-icon" />
+          </button>
         </box>
         <label label="     " />
       </box>
