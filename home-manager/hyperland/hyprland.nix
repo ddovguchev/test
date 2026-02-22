@@ -48,6 +48,7 @@ in
       ];
 
       # General, decoration, etc. (from configs/appearance.conf) – values without wallust
+      # 200Hz: max_fps в такт монитору — меньше размытия/призраков при движении окон
       general = {
         gaps_in = 5;
         gaps_out = 20;
@@ -55,6 +56,7 @@ in
         resize_on_border = false;
         allow_tearing = false;
         layout = "dwindle";
+        max_fps = 200;
       };
 
       decoration = {
@@ -82,8 +84,11 @@ in
 
       master.new_status = "master";
 
+      # 200Hz: vrr=0 + force_hypr_chan — стабильная синхронизация, меньше артефактов
       misc = {
         vfr = true;
+        vrr = 0;
+        force_hypr_chan = true;
         session_lock_xray = true;
         force_default_wallpaper = 0;
         disable_hyprland_logo = true;
@@ -229,7 +234,9 @@ in
     };
 
     # Parts that need external files or unsupported syntax
+    # 200Hz: софтверный курсор — убирает рассинхрон и «призраки» при движении
     extraConfig = ''
+      env = WLR_NO_HARDWARE_CURSORS,1
       gesture = 3, horizontal, workspace
       device {
           name = epic-mouse-v1
