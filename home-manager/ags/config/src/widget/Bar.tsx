@@ -96,6 +96,16 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
             <label label="⏻" cssName="bar-power-icon" />
           </button>
         </box>
+        <box halign={2} orientation={0}>
+          <button cssName="bar-btn bar-btn-volume" onClicked={runCmd("pactl set-sink-mute @DEFAULT_SINK@ toggle")}>
+            <label label="🔊" cssName="bar-volume-icon" />
+          </button>
+        </box>
+        <box halign={2} orientation={0}>
+          <button cssName="bar-btn bar-btn-vpn" onClicked={runCmd("true")}>
+            <label label="VPN" cssName="bar-vpn-label" />
+          </button>
+        </box>
         <label label="     " />
       </box>
     </window>
