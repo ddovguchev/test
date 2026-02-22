@@ -79,6 +79,7 @@ let
   astalPkgs = inputs.astal.packages.${system};
   agsPkg = inputs.ags.packages.${system}.default;
   astalJs = agsPkg.jsPackage or (throw "ags package has no jsPackage");
+  agsBin = "${config.programs.ags.finalPackage}/bin/ags";
   agsConfig = pkgs.runCommand "ags-config" {
     nativeBuildInputs = [ pkgs.coreutils ];
   } ''
@@ -87,7 +88,8 @@ let
     cp ${styleScss} $out/src/style.scss
     cp -r ${cfg}/src/widget/. $out/src/widget/
     cp -r ${cfg}/src/assets/. $out/src/assets/ 2>/dev/null || true
-    echo "import './src/app'" > $out/app.ts
+    echo 'globalThis.AGS_BIN = "${agsBin}";' > $out/src/ags-env.js
+    echo "import './src/ags-env.js'; import './src/app'" > $out/app.ts
     ln -s ${astalJs} $out/node_modules/astal
     echo '{"name":"ags-config","type":"module"}' > $out/package.json
   '';

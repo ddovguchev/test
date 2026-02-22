@@ -15,6 +15,8 @@ export default function NotificationOverlay(gdkmonitor: Gdk.Monitor): JSX.Elemen
       exclusivity={Astal.Exclusivity.NORMAL}
       anchor={TOP | LEFT | RIGHT}
       application={app}
+      widthRequest={900}
+      heightRequest={600}
     >
       <centerbox>
         <box />
