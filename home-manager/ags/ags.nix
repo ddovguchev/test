@@ -37,12 +37,10 @@ let
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
     }
 
-    /* Bar buttons - reset styles, default look */
+    /* Bar buttons */
     window.Bar .bar-btn {
-      background: unset;
-      border: none;
-      box-shadow: none;
-      padding: 4px 8px;
+      padding: 6px 10px;
+      min-height: 24px;
     }
 
     /* NixOS icon - small */
@@ -64,7 +62,18 @@ let
       margin-bottom: 0;
     }
 
-    /* Overlay buttons - no custom styles, default GTK look */
+    .menu-overlay-block {
+      background: $bar-bg;
+      color: $bar-fg;
+      border: 1px solid $bar-border;
+      border-top: none;
+      border-radius: 0 0 $bar-rounding $bar-rounding;
+      box-shadow: 0 8px 24px $bar-shadow;
+      min-width: 900px;
+      min-height: 600px;
+      margin-top: $navbar-height;
+      padding: 12px;
+    }
   '';
   system = pkgs.stdenv.hostPlatform.system;
   astalPkgs = inputs.astal.packages.${system};

@@ -18,10 +18,8 @@ export default function MenuOverlay(gdkmonitor: Gdk.Monitor): JSX.Element {
     >
       <centerbox>
         <box />
-        <box orientation={1} spacing={8} widthRequest={900} heightRequest={600}>
-          <button onClicked={() => {}}>
-            <label label="Apps" />
-          </button>
+        <box cssName="menu-overlay-block" orientation={1} widthRequest={900} heightRequest={600}>
+          <label label="Apps" cssName="appmenu-title" />
         </box>
         <box />
       </centerbox>
