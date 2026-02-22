@@ -27,9 +27,12 @@ let
   '');
 
   # faugus вызывает umu-run по абсолютному пути — подменяем umu-launcher на обёртку с PYTHONPATH
-  faugusSitePackages = "${pkgs.faugus-launcher}/lib/python3.13/site-packages";
+  # faugus в nixpkgs может быть собран под python 3.12 или 3.13 — добавляем оба пути
+  faugusLib = "${pkgs.faugus-launcher}/lib";
   umuRunWithFaugus = pkgs.writeShellScriptBin "umu-run" ''
-    export PYTHONPATH="${faugusSitePackages}''${PYTHONPATH:+:$PYTHONPATH}"
+    for d in python3.12/site-packages python3.13/site-packages; do
+      [ -d "${faugusLib}/$d" ] && export PYTHONPATH="${faugusLib}/$d''${PYTHONPATH:+:$PYTHONPATH}" && break
+    done
     exec ${pkgs.umu-launcher}/bin/umu-run "$@"
   '';
   faugusLauncherWrapped = pkgs.faugus-launcher.override { umu-launcher = umuRunWithFaugus; };
