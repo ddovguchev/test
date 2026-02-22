@@ -45,8 +45,8 @@ in
       "exec-once" = [
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=Hyprland"
         "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "systemctl --user stop xdg-desktop-portal-hyprland xdg-desktop-portal"
-        "systemctl --user start xdg-desktop-portal-hyprland xdg-desktop-portal"
+        "systemctl --user stop xdg-desktop-portal-hyprland xdg-desktop-portal xdg-desktop-portal-gtk"
+        "systemctl --user start xdg-desktop-portal-hyprland xdg-desktop-portal xdg-desktop-portal-gtk"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
         "systemctl --user start hyprpolkitagent"

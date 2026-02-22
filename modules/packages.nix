@@ -25,6 +25,12 @@ let
       --ozone-platform=wayland \
       "$@"
   '');
+
+  # umu-run (вызываемый из faugus) ищет модуль faugus — добавляем PYTHONPATH
+  faugusLauncherWrapped = pkgs.writeShellScriptBin "faugus-launcher" ''
+    export PYTHONPATH="${pkgs.faugus-launcher}/lib/python${pkgs.python3.version}/site-packages''${PYTHONPATH:+:$PYTHONPATH}"
+    exec ${pkgs.faugus-launcher}/bin/faugus-launcher "$@"
+  '';
 in
 {
   programs.steam = {
@@ -44,7 +50,8 @@ in
       docker docker-compose qemu
 
       jetbrains.idea kitty ranger firefox spotify blender insomnia obs-studio
-      steam burpsuite metasploit faugus-launcher
+      steam burpsuite metasploit xdg-user-dirs
+      faugusLauncherWrapped
 
       wireguard-tools wireshark gns3-gui teams-for-linux telegram-desktop
 
