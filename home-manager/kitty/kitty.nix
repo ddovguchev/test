@@ -1,4 +1,3 @@
-# config/kitty/kitty.conf → Nix, цвета из theme/palette.nix (не из кэша)
 { config, pkgs, ... }:
 let
   palette = import ../theme/palette.nix;
