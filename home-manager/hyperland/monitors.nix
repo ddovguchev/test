@@ -1,9 +1,9 @@
-# config/hypr/configs/monitors.conf — сохраняем настройки мониторов
+# config/hypr/configs/monitors.conf — настройки мониторов
 { lib, ... }:
 let
-  primaryMonitor = "DP-4";   # основной монитор
-  secondaryMonitor = "";    # второй монитор, например "HDMI-A-1"
-  monitorsList = if secondaryMonitor == "" then [ "${primaryMonitor}, preferred, auto, 1" ] else [ "${primaryMonitor}, preferred, auto, 1" "${secondaryMonitor}, preferred, auto, 1" ];
+  primaryMonitor = "DP-4,2560x1080@200,0x0,1";
+  secondaryMonitor = ",preferred,auto,1";
+  monitorsList = [ primaryMonitor secondaryMonitor ];
 in
 {
   monitor = monitorsList;
