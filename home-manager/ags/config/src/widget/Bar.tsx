@@ -74,30 +74,25 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
     >
       <box cssName="bar" orientation={0}>
         <label label="     " />
-        {/* 1: Logo Nix + рабочие столы */}
         <box halign={1} orientation={0} spacing={12}>
+          <Clock />
+          <label label="│" cssName="bar-separator" />
           <button cssName="bar-btn nixos-btn" onClicked={toggleWindow("menuoverlay")}>
             <Gtk.Image iconName="nix-snowflake" />
           </button>
-          <label label="Nix" cssName="bar-nix-label" />
-          <label label="│" cssName="bar-separator" />
-          <Workspaces />
         </box>
-        {/* 2: CPU, RAM, часы по центру */}
         <box hexpand halign={3} orientation={0}>
           <SysMonitor />
-          <Clock />
-        </box>
-        {/* 3: Notifications */}
-        <box halign={2} orientation={0}>
           <button cssName="bar-btn" onClicked={toggleWindow("notification")}>
             <label label="Notifications" />
           </button>
         </box>
-        {/* 4: иконка выключения */}
+        <box hexpand halign={3} orientation={0}>
+          <Workspaces />
+        </box>
         <box halign={2} orientation={0}>
-          <button cssName="bar-btn bar-btn-power" onClicked={toggleWindow("powermenu")}>
-            <Gtk.Image iconName="system-shutdown-symbolic" cssName="bar-power-icon" />
+          <button cssName="bar-btn" onClicked={toggleWindow("powermenu")}>
+            <label label="Power" />
           </button>
         </box>
         <label label="     " />
