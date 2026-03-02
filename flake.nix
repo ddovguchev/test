@@ -25,12 +25,13 @@
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
+      hasHardware = builtins.elem "hardware-configuration.nix" (builtins.attrNames (builtins.readDir ./.));
     in
     {
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
-          (if builtins.pathExists ./hardware-configuration.nix then ./hardware-configuration.nix else { })
+          (if hasHardware then ./hardware-configuration.nix else { })
           ./modules/boot.nix
           ./modules/networking.nix
           ./modules/users.nix
