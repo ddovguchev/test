@@ -140,7 +140,14 @@ in
         touchpad.natural_scroll = false;
       };
 
-      debug.disable_logs = false;
+      debug = {
+        disable_logs = false;
+        damage_tracking = 0;
+      };
+
+      cursor = {
+        no_hardware_cursors = true;
+      };
 
       bind = let
         mod = "$mainMod";
@@ -224,6 +231,7 @@ in
     };
 
     extraConfig = ''
+      env = GBM_BACKEND,nvidia-drm
       env = WLR_NO_HARDWARE_CURSORS,1
       gesture = 3, horizontal, workspace
       device {
