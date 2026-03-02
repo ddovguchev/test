@@ -40,6 +40,10 @@ in
 
       monitor = monitorsList;
 
+      render = {
+        explicit_sync = 1;
+      };
+
       xwayland.force_zero_scaling = true;
 
       "exec-once" = [
