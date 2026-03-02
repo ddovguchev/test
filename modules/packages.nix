@@ -25,6 +25,15 @@ let
       --ozone-platform=wayland \
       "$@"
   '');
+
+  # faugus вызывает umu-run по абсолютному пути — подменяем umu-launcher на обёртку с PYTHONPATH
+  # Добавляем все возможные пути к модулю faugus (meson может ставить в разные места)
+  faugusOut = "${pkgs.faugus-launcher}";
+  umuRunWithFaugus = pkgs.writeShellScriptBin "umu-run" ''
+    export PYTHONPATH="${faugusOut}/lib/python3.12/site-packages:${faugusOut}/lib/python3.13/site-packages:${faugusOut}/lib:${faugusOut}''${PYTHONPATH:+:$PYTHONPATH}"
+    exec ${pkgs.umu-launcher}/bin/umu-run "$@"
+  '';
+  faugusLauncherWrapped = pkgs.faugus-launcher.override { umu-launcher = umuRunWithFaugus; };
 in
 {
   programs.steam = {
@@ -44,7 +53,8 @@ in
       docker docker-compose qemu
 
       jetbrains.idea kitty ranger firefox spotify blender insomnia obs-studio
-      steam burpsuite metasploit
+      steam burpsuite metasploit xdg-user-dirs
+      faugusLauncherWrapped
 
       wireguard-tools wireshark gns3-gui teams-for-linux telegram-desktop
 

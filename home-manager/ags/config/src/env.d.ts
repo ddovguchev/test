@@ -44,3 +44,14 @@ declare module "gi://Gio?version=2.0" {
   const Gio: { Subprocess: typeof Subprocess; SubprocessFlags: typeof SubprocessFlags; };
   export default Gio;
 }
+
+declare module "gi://Gtk?version=4.0" {
+  export class Image {
+    constructor(props?: { iconName?: string; [key: string]: unknown });
+  }
+  export class Window {
+    // Gtk.Window for overlayWindows
+  }
+  const Gtk: { Image: typeof Image; Window: typeof Window; [key: string]: unknown };
+  export default Gtk;
+}

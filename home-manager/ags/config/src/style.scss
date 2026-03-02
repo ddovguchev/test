@@ -47,6 +47,22 @@ window.Bar {
     background: rgba(255, 255, 255, 0.15);
     border-radius: 6px;
   }
+
+  .bar-right-icon-btn {
+    margin: 0 2px;
+  }
+
+  label.bar-icon-gap {
+    min-width: 10px;
+  }
+
+  .bar-notification-icon,
+  .bar-volume-icon,
+  .bar-power-icon,
+  .bar-vpn-icon {
+    min-width: 1.2em;
+    min-height: 1.2em;
+  }
 }
 
 window.MenuOverlay {

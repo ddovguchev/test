@@ -24,7 +24,7 @@ const workspaceData = createPoll(
   [
     "sh",
     "-c",
-    'ids=$(hyprctl workspaces -j 2>/dev/null | jq -r "[.[].id] | sort | unique | .[]" 2>/dev/null | tr "\\n" " "); [ -z "$ids" ] && ids="1 2 3 4 5 6 7 8 9"; active=$(hyprctl activeworkspace -j 2>/dev/null | jq -r ".id" 2>/dev/null); echo "$ids|${active:-1}"',
+    "ids=$(hyprctl workspaces -j 2>/dev/null | jq -r \"[.[].id] | sort | unique | .[]\" 2>/dev/null | tr \"\\n\" \" \"); [ -z \"$ids\" ] && ids=\"1 2 3 4 5 6 7 8 9\"; active=$(hyprctl activeworkspace -j 2>/dev/null | jq -r \".id\" 2>/dev/null); echo \"$ids|${active:-1}\"",
   ],
   (out, prev) => {
     try {
@@ -80,19 +80,33 @@ export default function Bar(gdkmonitor: Gdk.Monitor): JSX.Element {
           <button cssName="bar-btn nixos-btn" onClicked={toggleWindow("menuoverlay")}>
             <Gtk.Image iconName="nix-snowflake" />
           </button>
+          <label label="│" cssName="bar-separator" />
+          <Workspaces />
         </box>
         <box hexpand halign={3} orientation={0}>
           <SysMonitor />
-          <button cssName="bar-btn" onClicked={toggleWindow("notification")}>
-            <label label="Notifications" />
-          </button>
         </box>
         <box hexpand halign={3} orientation={0}>
-          <Workspaces />
+          <button cssName="bar-btn bar-right-icon-btn" onClicked={toggleWindow("notification")}>
+            <Gtk.Image iconName="notifications-symbolic" cssName="bar-notification-icon" />
+          </button>
         </box>
+        <label label=" " cssName="bar-icon-gap" />
         <box halign={2} orientation={0}>
-          <button cssName="bar-btn" onClicked={toggleWindow("powermenu")}>
-            <label label="Power" />
+          <button cssName="bar-btn bar-right-icon-btn bar-btn-vpn" onClicked={runCmd("true")}>
+            <Gtk.Image iconName="network-vpn-symbolic" cssName="bar-vpn-icon" />
+          </button>
+        </box>
+        <label label=" " cssName="bar-icon-gap" />
+        <box halign={2} orientation={0}>
+          <button cssName="bar-btn bar-right-icon-btn bar-btn-volume" onClicked={runCmd("pactl set-sink-mute @DEFAULT_SINK@ toggle")}>
+            <Gtk.Image iconName="audio-volume-high-symbolic" cssName="bar-volume-icon" />
+          </button>
+        </box>
+        <label label=" " cssName="bar-icon-gap" />
+        <box halign={2} orientation={0}>
+          <button cssName="bar-btn bar-right-icon-btn" onClicked={toggleWindow("powermenu")}>
+            <label label="⏻" cssName="bar-power-icon" />
           </button>
         </box>
         <label label="     " />
