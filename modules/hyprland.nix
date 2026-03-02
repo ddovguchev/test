@@ -8,8 +8,13 @@
 
   services.displayManager.sddm = {
     enable = true;
-    wayland.enable = true;
+    wayland = {
+      enable = true;
+      compositor = "kwin";
+    };
   };
+
+  services.displayManager.defaultSession = "hyprland";
 
   xdg.portal = {
     enable = true;

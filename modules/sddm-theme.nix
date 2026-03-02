@@ -40,12 +40,18 @@ let
   sddmConfig = if useDefaultTheme then {
     enable = true;
     package = lib.mkDefault pkgs.kdePackages.sddm;
-    wayland.enable = true;
+    wayland = {
+      enable = true;
+      compositor = "kwin";  # Weston crashes with NVIDIA; KWin works
+    };
     theme = themeName;
   } else {
     enable = true;
     package = lib.mkDefault pkgs.kdePackages.sddm;
-    wayland.enable = true;
+    wayland = {
+      enable = true;
+      compositor = "kwin";  # Weston crashes with NVIDIA; KWin works
+    };
     theme = themeName;
     extraPackages = with pkgs.kdePackages; [
       qtsvg
@@ -53,6 +59,7 @@ let
       qtvirtualkeyboard
       qtwayland
       layer-shell-qt
+      silentTheme
     ];
     settings = {
       General = {
