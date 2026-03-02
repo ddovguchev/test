@@ -6,6 +6,5 @@ let
 in
 {
   monitor = monitorsList;
-  render.explicit_sync = 1;
   misc.vfr = true;
 }
