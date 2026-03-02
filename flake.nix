@@ -30,7 +30,7 @@
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
-          ./hardware-configuration.nix
+          (if builtins.pathExists ./hardware-configuration.nix then ./hardware-configuration.nix else { })
           ./modules/boot.nix
           ./modules/networking.nix
           ./modules/users.nix
