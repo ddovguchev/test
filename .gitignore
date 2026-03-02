@@ -2,3 +2,5 @@
 result*
 dist
 node_modules
+.idea
+flake.lock
