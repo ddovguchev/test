@@ -233,6 +233,8 @@ in
     extraConfig = ''
       env = GBM_BACKEND,nvidia-drm
       env = WLR_NO_HARDWARE_CURSORS,1
+      # Fix NVIDIA ghosting regression (equivalent to old render.explicit_sync = false)
+      env = __NV_DISABLE_EXPLICIT_SYNC,1
       gesture = 3, horizontal, workspace
       device {
           name = epic-mouse-v1
