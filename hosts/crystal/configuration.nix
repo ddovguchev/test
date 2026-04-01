@@ -25,12 +25,15 @@
 
   networking.hostName = "crystal";
 
-  # Видео: дискретная NVIDIA; процессор AMD (микрокод в hardware-configuration.nix).
-  # При гибриде AMD iGPU + NVIDIA см. hardware.nvidia.prime в документации NixOS.
+  boot.blacklistedKernelModules = [ "nouveau" ];
+
+  # RTX 5060 (Blackwell, десктоп): открытый kmod NVIDIA + свежий nixpkgs. Без PRIME — одна дискретная карта.
+  # Обязательно: nix flake update && sudo nixos-rebuild boot --flake .#crystal
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = true;
-    open = false;
+    open = true;
+    package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
 
   services.xserver = {
