@@ -49,13 +49,14 @@
         patches = import ./dwm-patches.nix { inherit pkgs; };
       };
     };
-    libinput = {
-      enable = true;
-      touchpad = {
-        tapping = true;
-        middleEmulation = true;
-        naturalScrolling = true;
-      };
+  };
+
+  services.libinput = {
+    enable = true;
+    touchpad = {
+      tapping = true;
+      middleEmulation = true;
+      naturalScrolling = true;
     };
   };
 }

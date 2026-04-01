@@ -13,6 +13,6 @@
   (pkgs.fetchpatch {
     name = "dwm-scratchpad-20240321.patch";
     url = "https://dwm.suckless.org/patches/scratchpad/dwm-scratchpad-20240321-061e9fe.diff";
-    hash = "sha256-JTj06iZ/XjHzqONP2cE045yX+m12tpOqhVl4igdgxio=";
+    hash = "sha256-ObLLp46y8Ig65tKZVwWUpsqctdc9t8sDQJOhYtcM0ww=";
   })
 ]

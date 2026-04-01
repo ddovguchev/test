@@ -28,6 +28,7 @@ in
     gtk3.extraConfig.gtk-decoration-layout = "menu:";
     iconTheme.name = "Papirus";
     theme.name = "phocus";
+    gtk4.theme = config.gtk.theme;
   };
 
   nixpkgs.overlays = [
@@ -75,7 +76,7 @@ in
       libdbusmenu-gtk3
       xdg-desktop-portal
       imagemagick
-      xorg.xev
+      xev
       procps
       obsidian
       redshift

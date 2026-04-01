@@ -18,7 +18,7 @@ in
       style = "nixos";
     };
   };
-  hardware.opengl.enable = true;
+  hardware.graphics.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot";
 
@@ -88,8 +88,8 @@ in
 
   services.pipewire.enable = lib.mkForce false;
 
-  hardware.pulseaudio.enable = true;
-  hardware.pulseaudio.extraConfig = "load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1";
+  services.pulseaudio.enable = true;
+  services.pulseaudio.extraConfig = "load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1";
 
   hardware.bluetooth = {
     enable = true;
@@ -124,7 +124,7 @@ in
     inotify-tools
     udiskie
     nil
-    xorg.xwininfo
+    xwininfo
     brightnessctl
     networkmanager_dmenu
     (pkgs.python313.withPackages my-python-packages)
@@ -161,11 +161,11 @@ in
     maim
     xclip
     wirelesstools
-    xorg.xf86inputevdev
-    xorg.xf86inputsynaptics
-    xorg.xf86inputlibinput
-    xorg.xorgserver
-    xorg.xf86videoati
+    xf86-input-evdev
+    xf86-input-synaptics
+    xf86-input-libinput
+    xorg-server
+    xf86-video-ati
   ];
   security.pam.services.gdm.enableGnomeKeyring = true;
 
