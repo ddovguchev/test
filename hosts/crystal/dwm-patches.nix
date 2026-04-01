@@ -8,7 +8,7 @@
   (pkgs.fetchpatch {
     name = "dwm-fullgaps-6.4.patch";
     url = "https://dwm.suckless.org/patches/fullgaps/dwm-fullgaps-6.4.diff";
-    hash = "sha256-DvLNPOwDfaZj9o2n+t+xh6fj8X7EFW38ZWV5jzRhXxU=";
+    hash = "sha256-+OXRqnlVeCP2Ihco+J7s5BQPpwFyRRf8lnVsN7rm+Cc=";
   })
   (pkgs.fetchpatch {
     name = "dwm-scratchpad-20240321.patch";
