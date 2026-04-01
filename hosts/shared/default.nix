@@ -20,7 +20,7 @@ in
   };
   hardware.opengl.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+  boot.loader.efi.efiSysMountPoint = "/boot";
 
   programs.zsh.enable = true;
   programs.nix-ld.enable = true;
