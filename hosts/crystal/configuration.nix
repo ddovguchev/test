@@ -15,7 +15,7 @@
     overlays = [
       outputs.overlays.modifications
       outputs.overlays.additions
-      inputs.nur.overlay
+      inputs.nur.overlays.default
     ];
     config = {
       allowUnfreePredicate = _: true;
