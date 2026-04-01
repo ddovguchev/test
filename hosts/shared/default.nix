@@ -34,6 +34,15 @@ in
     firewall.enable = false;
   };
 
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = true;
+      KbdInteractiveAuthentication = true;
+      PermitRootLogin = "no";
+    };
+  };
+
   security.sudo.enable = true;
   services.blueman.enable = true;
   location.provider = "geoclue2";
