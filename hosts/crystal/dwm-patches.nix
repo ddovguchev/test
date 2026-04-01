@@ -3,7 +3,7 @@
   (pkgs.fetchpatch {
     name = "dwm-systray-6.6.patch";
     url = "https://dwm.suckless.org/patches/systray/dwm-systray-6.6.diff";
-    hash = "sha256-VmRvELcsOSL0+9RTurNnDjPeKNOarCxUOci3cF/ZCwo=";
+    hash = "sha256-fPg8z822OH0/Y0iqXyPc5JVTqEAZIMInKR4XUuDxgXQ=";
   })
   (pkgs.fetchpatch {
     name = "dwm-fullgaps-6.4.patch";
