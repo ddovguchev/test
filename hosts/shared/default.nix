@@ -1,4 +1,4 @@
-{ pkgs, outputs, overlays, lib, inputs, ... }:
+{ pkgs, outputs, lib, inputs, ... }:
 let
   flake-compat = builtins.fetchTarball "https://github.com/edolstra/flake-compat/archive/master.tar.gz";
   my-python-packages = ps: with ps; [
