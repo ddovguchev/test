@@ -21,6 +21,8 @@ stdenvNoCC.mkDerivation rec {
   ];
 
   dontDropIconThemeCache = true;
+  # breeze-icons / pantheon pull qtbase; this package only installs icons, not a Qt app.
+  dontWrapQtApps = true;
 
   installPhase = ''
     runHook preInstall
