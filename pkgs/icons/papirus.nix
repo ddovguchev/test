@@ -1,4 +1,4 @@
-{ lib, stdenvNoCC, fetchFromGitHub, gtk3, pantheon, breeze-icons, gnome-icon-theme, hicolor-icon-theme, papirus-folders, color ? null }:
+{ lib, stdenvNoCC, fetchFromGitHub, gtk3, pantheon, kdePackages, gnome-icon-theme, hicolor-icon-theme, papirus-folders, color ? null }:
 
 stdenvNoCC.mkDerivation rec {
   pname = "papirus-icon-theme";
@@ -15,7 +15,7 @@ stdenvNoCC.mkDerivation rec {
 
   propagatedBuildInputs = [
     pantheon.elementary-icon-theme
-    breeze-icons
+    kdePackages.breeze-icons
     gnome-icon-theme
     hicolor-icon-theme
   ];

@@ -1,8 +1,10 @@
-{ lib, buildPythonPackage, fetchFromGitHub, pkgs, ... }:
+{ lib, buildPythonPackage, fetchFromGitHub, setuptools, pillow }:
 
 buildPythonPackage rec {
   pname = "imagecolorizer";
   version = "git";
+  pyproject = true;
+  nativeBuildInputs = [ setuptools ];
   preBuild = ''
     cat > setup.py << EOF
     from setuptools import setup
@@ -16,9 +18,7 @@ buildPythonPackage rec {
     )
     EOF
   '';
-  propagatedBuildInputs = with pkgs;[
-    python310Packages.pillow
-  ];
+  propagatedBuildInputs = [ pillow ];
   src = fetchFromGitHub {
     repo = "ImageColorizer";
     owner = "kiddae";

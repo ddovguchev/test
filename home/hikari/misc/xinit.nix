@@ -14,6 +14,7 @@
   home.file.".xinitrc".text = ''
     #!/usr/bin/env bash
     xrdb -merge ~/.Xresources &
-    exec dbus-run-session dwm 
+    [[ -x "$HOME/.dwm/autostart.sh" ]] && "$HOME/.dwm/autostart.sh"
+    exec dbus-run-session dwm
   '';
 }

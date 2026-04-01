@@ -1,6 +1,6 @@
 { stdenvNoCC
 , fetchFromGitHub
-, nodePackages
+, dart-sass
 , colors
 ,
 }:
@@ -50,7 +50,7 @@ stdenvNoCC.mkDerivation rec {
       --replace "@secondary@" "#${colors.color15}"
   '';
 
-  nativeBuildInputs = [ nodePackages.sass ];
+  nativeBuildInputs = [ dart-sass ];
   installFlags = [ "DESTDIR=$(out)" "PREFIX=" ];
 }
 

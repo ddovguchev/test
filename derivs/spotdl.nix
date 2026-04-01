@@ -13,14 +13,14 @@ buildPythonApplication rec {
     sha256 = "sha256-XsOecKwSgLWasZw3A4LKSSwEfq93oQM9IrsAIR2M28o=";
   };
 
-  nativeBuildInputs = with pkgs.python311Packages; [
+  nativeBuildInputs = with pkgs.python313Packages; [
     poetry-core
     pythonRelaxDepsHook
   ];
 
   pythonRelaxDeps = true;
 
-  propagatedBuildInputs = with pkgs.python311Packages; [
+  propagatedBuildInputs = with pkgs.python313Packages; [
     spotipy
     pytube
     syncedlyrics
@@ -45,7 +45,7 @@ buildPythonApplication rec {
     platformdirs
   ];
 
-  checkInputs = with pkgs.python311Packages; [
+  checkInputs = with pkgs.python313Packages; [
     pytest-subprocess
   ];
 

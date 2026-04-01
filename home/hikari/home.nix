@@ -66,11 +66,11 @@ in
       playerctl
       (pkgs.callPackage ../../pkgs/icons/papirus.nix { })
       (pkgs.callPackage ../../pkgs/others/phocus.nix { inherit colors; })
-      cinnamon.nemo
+      nemo
       i3lock-color
       rust-analyzer
-      mpc-cli
-      ffmpeg_5-full
+      mpc
+      ffmpeg-full
       neovim
       libdbusmenu-gtk3
       xdg-desktop-portal

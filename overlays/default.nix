@@ -3,7 +3,7 @@
   additions = final: _prev: import ../pkgs { pkgs = final; inherit inputs; };
   modifications = final: prev: {
     spotdl = prev.callPackage ../derivs/spotdl.nix {
-      buildPythonApplication = prev.python311Packages.buildPythonApplication;
+      buildPythonApplication = prev.python313Packages.buildPythonApplication;
     };
 
     st = prev.st.overrideAttrs (oldAttrs: {

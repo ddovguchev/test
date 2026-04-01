@@ -86,13 +86,8 @@ in
     defaultUserShell = pkgs.zsh;
   };
 
-  programs.adb.enable = true;
-  services.udev.packages = [
-    pkgs.android-udev-rules
-  ];
+  services.pipewire.enable = lib.mkForce false;
 
-
-  sound.enable = true;
   hardware.pulseaudio.enable = true;
   hardware.pulseaudio.extraConfig = "load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1";
 
@@ -122,16 +117,17 @@ in
     home-manager
     lua-language-server
     bluez
+    android-tools
     direnv
     unzip
     bluez-tools
     inotify-tools
     udiskie
-    rnix-lsp
+    nil
     xorg.xwininfo
     brightnessctl
     networkmanager_dmenu
-    (pkgs.python311.withPackages my-python-packages)
+    (pkgs.python313.withPackages my-python-packages)
     libnotify
     xdg-utils
     gtk3
@@ -144,7 +140,7 @@ in
     imgclr
     grim
     slop
-    eww-wayland
+    eww
     swaylock-effects
     git
     pstree
@@ -156,7 +152,6 @@ in
     pamixer
     dmenu
     nix-prefetch-git
-    python3
     brillo
     wmctrl
     slop
@@ -181,7 +176,7 @@ in
     rubik
     noto-fonts-color-emoji
     google-fonts
-    (nerdfonts.override { fonts = [ "Iosevka" ]; })
+    nerd-fonts.iosevka
   ];
   fonts.fontconfig = {
     defaultFonts = {
@@ -202,9 +197,9 @@ in
 
   services.printing.enable = true;
 
-  services.xserver = {
+  services.xserver.xkb = {
     layout = "us";
-    xkbVariant = "us,";
+    variant = "";
   };
 
   security.polkit.enable = true;
