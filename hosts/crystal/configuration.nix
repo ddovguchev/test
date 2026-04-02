@@ -31,32 +31,38 @@ let
   ) profiles;
 
   waylandSessions = pkgs.runCommand "hikari-wayland-sessions" { } ''
-    mkdir -p $out
+    mkdir -p "$out/share/wayland-sessions"
     ${lib.concatStringsSep "\n" (
       lib.mapAttrsToList (
         id: p:
         lib.optionalString (p.kind == "wayland") ''
           printf '%s\n' '[Desktop Entry]' 'Name=${p.label}' 'Comment=Wayland (niri)' \
             'Exec=${sessionBins.${id}}/bin/hikari-session-${id}' 'Type=Application' \
-            > "$out/${id}.desktop"
+            'DesktopNames=niri' \
+            > "$out/share/wayland-sessions/${id}.desktop"
         ''
       ) profiles
     )}
   '';
 
   xsessions = pkgs.runCommand "hikari-xsessions" { } ''
-    mkdir -p $out
+    mkdir -p "$out/share/xsessions"
     ${lib.concatStringsSep "\n" (
       lib.mapAttrsToList (
         id: p:
         lib.optionalString (p.kind == "x11") ''
           printf '%s\n' '[Desktop Entry]' 'Name=${p.label}' 'Comment=X11 (dwm)' \
             'Exec=${sessionBins.${id}}/bin/hikari-session-${id}' 'Type=Application' \
-            > "$out/${id}.desktop"
+            > "$out/share/xsessions/${id}.desktop"
         ''
       ) profiles
     )}
   '';
+
+  # theme1 = rei, theme2 = silvia (фоны ghost.jpg / vixima.jpg)
+  hikariSddmTheme = pkgs.callPackage ../../pkgs/sddm-silent-hikari {
+    themeVariant = "theme1"; # или "theme2"
+  };
 
 in
 
@@ -110,12 +116,30 @@ in
     }
   ) profiles;
 
-  services.greetd = {
+  services.greetd.enable = false;
+
+  # SDDM (Wayland greeter); тема — vendored SilentSDDM, см. pkgs/sddm-silent-hikari
+  services.displayManager.sddm = {
     enable = true;
-    useTextGreeter = true;
-    settings.default_session.command =
-      "${pkgs.tuigreet}/bin/tuigreet --time --remember --sessions ${waylandSessions} --xsessions ${xsessions}";
+    package = pkgs.kdePackages.sddm;
+    wayland.enable = true;
+    theme = "hikari-silent";
+    extraPackages = hikariSddmTheme.propagatedBuildInputs;
+    settings = {
+      General = {
+        GreeterEnvironment =
+          "QML2_IMPORT_PATH=${hikariSddmTheme}/share/sddm/themes/hikari-silent/components/,QT_IM_MODULE=qtvirtualkeyboard";
+        InputMethod = "qtvirtualkeyboard";
+      };
+    };
   };
+
+  services.displayManager.sessionPackages = [
+    waylandSessions
+    xsessions
+  ];
+
+  qt.enable = true;
 
   services.xserver = {
     enable = true;
