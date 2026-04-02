@@ -2,7 +2,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  colors = import ../../../shared/cols/vixima.nix { };
+  colors = import ../../../../shared/cols/vixima.nix { };
   polkit = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
   homeDir = config.home.homeDirectory;
 
