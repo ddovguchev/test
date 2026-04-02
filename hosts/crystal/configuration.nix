@@ -133,13 +133,10 @@ in
     wayland.enable = true;
     theme = "hikari-silent";
     extraPackages = hikariSddmTheme.propagatedBuildInputs;
-    settings = {
-      General = {
-        GreeterEnvironment =
-          "QML2_IMPORT_PATH=${hikariSddmTheme}/share/sddm/themes/hikari-silent/components/,QT_IM_MODULE=qtvirtualkeyboard";
-        InputMethod = "qtvirtualkeyboard";
-      };
-    };
+    # Не задавать QT_IM_MODULE / InputMethod=qtvirtualkeyboard: это включает платформенную
+    # полноэкранную клавиатуру и перекрывает тему. Встроенная клавиатура темы — InputPanel в QML.
+    settings.General.GreeterEnvironment =
+      "QML2_IMPORT_PATH=${hikariSddmTheme}/share/sddm/themes/hikari-silent/components/";
   };
 
   services.displayManager.sessionPackages = [
