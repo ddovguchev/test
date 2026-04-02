@@ -16,6 +16,11 @@ let
         set -a
         [ -r /etc/hikari/profiles/${id}.env ] && . /etc/hikari/profiles/${id}.env
         set +a
+        # SDDM (особенно Wayland-гритер) и X-гритер часто передают DISPLAY/WAYLAND_* от
+        # своей сессии; niri тогда не получает корректный EGL/DRM (чёрный экран на NVIDIA).
+        unset DISPLAY WAYLAND_DISPLAY WAYLAND_SOCKET XAUTHORITY
+        export XDG_SESSION_TYPE=wayland
+        cd "''${HOME:-/}"
         exec ${pkgs.niri}/bin/niri-session
       ''
     else
@@ -131,7 +136,9 @@ in
   services.displayManager.sddm = {
     enable = true;
     package = pkgs.kdePackages.sddm;
-    wayland.enable = true;
+    # Wayland-гритер SDDM часто оставляет GPU/окружение так, что niri после входа
+    # не подхватывает выходы (чёрный экран на NVIDIA). Гритер на X11, niri — Wayland.
+    wayland.enable = false;
     theme = "hikari-silent";
     extraPackages = hikariSddmTheme.propagatedBuildInputs;
     # Не задавать QT_IM_MODULE / InputMethod=qtvirtualkeyboard: это включает платформенную
