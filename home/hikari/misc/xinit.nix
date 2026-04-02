@@ -4,7 +4,7 @@
     executable = true;
     text = ''
       #!/usr/bin/env bash
-      feh --bg-scale ~/.wallpapers/${colors.name}.jpg &
+      feh --bg-scale ~/.wallpapers/ghost.jpg &
       dwmbar & echo $! > /tmp/db &
       dunst &
       xss-lock ~/.local/bin/dlock &

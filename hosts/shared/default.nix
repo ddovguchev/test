@@ -87,10 +87,15 @@ in
     defaultUserShell = pkgs.zsh;
   };
 
-  services.pipewire.enable = lib.mkForce false;
+  # PipeWire + Pulse-совместимость — надёжнее для Wayland/niri, чем только «голый» PulseAudio.
+  services.pulseaudio.enable = false;
 
-  services.pulseaudio.enable = true;
-  services.pulseaudio.extraConfig = "load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1";
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
 
   hardware.bluetooth = {
     enable = true;
