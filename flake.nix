@@ -1,5 +1,5 @@
 {
-  description = "NixOS + Home Manager: dwm (crystal host)";
+  description = "NixOS + Home Manager: niri/dwm + session profiles (crystal)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -15,9 +15,25 @@
     let
       inherit (self) outputs;
       system = "x86_64-linux";
+      forAllSystems = nixpkgs.lib.genAttrs [
+        "x86_64-linux"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
     in
     {
       overlays = import ./overlays { inherit inputs; };
+
+      devShells = forAllSystems (
+        sys:
+        let
+          pkgs = nixpkgs.legacyPackages.${sys};
+        in
+        {
+          default = pkgs.mkShellNoCC { packages = with pkgs; [ gnumake ]; };
+        }
+      );
 
       nixosConfigurations.crystal = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs outputs; };
@@ -30,7 +46,13 @@
 
       homeConfigurations.hikari = inputs.home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
-        extraSpecialArgs = { inherit inputs outputs; };
+        extraSpecialArgs = {
+          inherit inputs outputs;
+          profiles = import ./profiles {
+            lib = nixpkgs.lib;
+            pkgs = nixpkgs.legacyPackages.${system};
+          };
+        };
         modules = [ ./home/hikari/home.nix ];
       };
     };

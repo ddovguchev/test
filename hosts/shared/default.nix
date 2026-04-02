@@ -143,6 +143,7 @@ in
     eww
     swaylock-effects
     git
+    gnumake
     pstree
     mpv
     xdotool

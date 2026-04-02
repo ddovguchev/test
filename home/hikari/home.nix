@@ -98,6 +98,8 @@ in
   };
 
   imports = [
+    ./profiles-module.nix
+
     # Importing Configutations
     (import ../shared/xresources.nix { inherit colors; })
 

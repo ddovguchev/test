@@ -67,7 +67,7 @@ in
             #!/bin/sh
             playerctl pause
             sleep 0.2
-            awesome-client "awesome.emit_signal('toggle::lock')"
+            ${w}
           '';
         };
       ".local/bin/waylock" =
