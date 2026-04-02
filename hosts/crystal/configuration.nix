@@ -110,7 +110,8 @@ in
 
   programs.niri.enable = true;
 
-  environment.systemPackages = [ customDwm ] ++ (lib.attrValues sessionBins);
+  # Тема должна быть в system path, иначе Current=hikari-silent не находится и SDDM падает на дефолт.
+  environment.systemPackages = [ customDwm hikariSddmTheme ] ++ (lib.attrValues sessionBins);
 
   environment.etc = lib.mapAttrs' (
     id: p:
