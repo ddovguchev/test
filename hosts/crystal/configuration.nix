@@ -30,7 +30,11 @@ let
       ''
   ) profiles;
 
-  waylandSessions = pkgs.runCommand "hikari-wayland-sessions" { } ''
+  waylandSessions = pkgs.runCommand "hikari-wayland-sessions" {
+    passthru.providedSessions = lib.attrNames (
+      lib.filterAttrs (_: p: p.kind == "wayland") profiles
+    );
+  } ''
     mkdir -p "$out/share/wayland-sessions"
     ${lib.concatStringsSep "\n" (
       lib.mapAttrsToList (
@@ -45,7 +49,11 @@ let
     )}
   '';
 
-  xsessions = pkgs.runCommand "hikari-xsessions" { } ''
+  xsessions = pkgs.runCommand "hikari-xsessions" {
+    passthru.providedSessions = lib.attrNames (
+      lib.filterAttrs (_: p: p.kind == "x11") profiles
+    );
+  } ''
     mkdir -p "$out/share/xsessions"
     ${lib.concatStringsSep "\n" (
       lib.mapAttrsToList (
