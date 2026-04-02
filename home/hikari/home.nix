@@ -48,6 +48,14 @@ in
 
   home = {
     activation = {
+      # Firefox HM кладёт json в ~/.mozilla/native-messaging-hosts/; если там был файл — mkdir падает.
+      fixMozillaNativeMessagingHosts = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
+        nmh="${config.home.homeDirectory}/.mozilla/native-messaging-hosts"
+        if [ -e "$nmh" ] && [ ! -d "$nmh" ]; then
+          $DRY_RUN_CMD rm -f "$nmh"
+        fi
+      '';
+
       installConfig = ''
         if [ ! -d "${config.home.homeDirectory}/.config/nvim" ]; then
           ${pkgs.git}/bin/git clone --depth 1 https://github.com/chadcat7/kodo ${config.home.homeDirectory}/.config/nvim
@@ -76,7 +84,8 @@ in
       libdbusmenu-gtk3
       xdg-desktop-portal
       imagemagick
-      jetbrains.idea-community
+      # см. https://blog.jetbrains.com/idea/2025/07/intellij-idea-unified-distribution-plan/
+      jetbrains.idea-oss
       xev
       procps
       obsidian
