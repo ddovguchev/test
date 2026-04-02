@@ -1,4 +1,4 @@
-# niri + waybar + вспомогательные пакеты (адаптация example/niku-main, без ссылок на example).
+# niri + waybar + утилиты Wayland.
 { config, pkgs, lib, ... }:
 
 let

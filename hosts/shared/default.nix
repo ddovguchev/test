@@ -1,6 +1,5 @@
-{ pkgs, outputs, lib, inputs, ... }:
+{ pkgs, lib, ... }:
 let
-  flake-compat = builtins.fetchTarball "https://github.com/edolstra/flake-compat/archive/master.tar.gz";
   my-python-packages = ps: with ps; [
     material-color-utilities
     numpy
@@ -36,9 +35,11 @@ in
 
   services.openssh = {
     enable = true;
+    openFirewall = true;
     settings = {
       PasswordAuthentication = true;
       KbdInteractiveAuthentication = true;
+      PubkeyAuthentication = true;
       PermitRootLogin = "no";
     };
   };
@@ -149,13 +150,11 @@ in
     xdotool
     spotify
     simplescreenrecorder
-    brightnessctl
     pamixer
     dmenu
     nix-prefetch-git
     brillo
     wmctrl
-    slop
     ripgrep
     imv
     element-desktop
