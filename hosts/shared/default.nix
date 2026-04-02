@@ -202,10 +202,8 @@ in
 
   services.printing.enable = true;
 
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
+  # Пустой variant = "" даёт (WW) Option "xkb_variant" requires a string value в Xorg/SDDM.
+  services.xserver.xkb.layout = "us";
 
   security.polkit.enable = true;
 

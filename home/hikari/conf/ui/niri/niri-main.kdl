@@ -22,7 +22,8 @@ input {
 
 layout {
     gaps 5
-    background-color "transparent"
+    // Не transparent: сразу тёмная заливка после старта композитора (меньше «пустоты» до swww).
+    background-color "#0d0d12"
     center-focused-column "never"
     preset-column-widths {
         proportion 0.33333
@@ -165,15 +166,15 @@ hotkey-overlay {
     skip-at-startup
 }
 
+// Обои первыми — меньше пустого экрана после логина (без sleep перед первым кадром).
+spawn-at-startup "swww-daemon"
+spawn-sh-at-startup "sh -c 'exec swww img \"$HOME/.wallpapers/ghost.jpg\" --transition-type grow --transition-duration 1.5'"
 spawn-sh-at-startup "wl-paste --type text --watch cliphist store"
 spawn-sh-at-startup "wl-paste --type image --watch cliphist store"
 spawn-sh-at-startup "wl-clip-persist --clipboard regular"
 spawn-sh-at-startup "wl-clip-persist --clipboard primary"
 spawn-sh-at-startup "@POLKIT@ &"
 spawn-at-startup "wlsunset"
-// Обои Wayland: пакет swww (~/.wallpapers/ — линк из home-manager на home/images/walls).
-spawn-at-startup "swww-daemon"
-spawn-sh-at-startup "sh -c 'sleep 0.5; exec swww img \"$HOME/.wallpapers/ghost.jpg\" --transition-type grow --transition-duration 1.5'"
 spawn-at-startup "waybar"
 
 binds {

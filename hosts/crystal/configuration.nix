@@ -21,6 +21,10 @@ let
         unset DISPLAY WAYLAND_DISPLAY WAYLAND_SOCKET XAUTHORITY
         export XDG_SESSION_TYPE=wayland
         cd "''${HOME:-/}"
+        # niri-session завершится с кодом 1, если user niri.service уже active (остаток TTY,
+        # «замороженная» сессия после паузы DRM и т.д.) — SDDM тогда даёт чёрный экран.
+        ${pkgs.systemd}/bin/systemctl --user stop niri.service 2>/dev/null || true
+        ${pkgs.systemd}/bin/systemctl --user reset-failed 2>/dev/null || true
         exec ${pkgs.niri}/bin/niri-session
       ''
     else
@@ -105,6 +109,11 @@ in
   networking.hostName = "crystal";
 
   boot.blacklistedKernelModules = [ "nouveau" ];
+
+  # Плимут: спиннер/заставка при загрузке (initrd → multi-user). Промежуток после ввода пароля
+  # SDDM → первый кадр niri по-прежнему DRM-handoff; его plymouth не перекрывает — см. niri фон + swww.
+  boot.plymouth.enable = true;
+  boot.plymouth.theme = "breeze";
 
   hardware.nvidia = {
     modesetting.enable = true;
