@@ -3,7 +3,6 @@ FLAKE := $(ROOT)
 HOST := crystal
 USER := hikari
 
-# Ключи верхнего уровня из profiles/default.nix: "  id = {"
 PROFILES := $(shell grep -E '^  [a-zA-Z0-9_-]+ = \{' '$(FLAKE)/profiles/default.nix' | sed 's/^  \([^ ]*\).*/\1/')
 
 .PHONY: help apply switch home clean gc refresh profiles

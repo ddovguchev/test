@@ -1,8 +1,6 @@
-# Профили сессий: переменные из /etc задаёт greetd; здесь — обёртки и niri.conf.
+# Профили сессий: переменные из /etc задаёт greetd; niri см. conf/ui/niri.
 { lib, pkgs, profiles ? { }, ... }:
 {
-  xdg.configFile."niri/config.kdl".text = import ./niri-config.nix { };
-
   home.packages = [
     pkgs.fuzzel
     (pkgs.writeShellScriptBin "hikari-terminal" ''

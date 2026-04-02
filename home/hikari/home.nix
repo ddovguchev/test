@@ -99,6 +99,7 @@ in
 
   imports = [
     ./profiles-module.nix
+    ./conf/ui/niri
 
     # Importing Configutations
     (import ../shared/xresources.nix { inherit colors; })
