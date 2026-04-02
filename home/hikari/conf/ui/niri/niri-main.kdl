@@ -1,5 +1,11 @@
 prefer-no-csd
 
+// Xiaomi Mi 30 UW на DP-4 — макс. Hz из `niri msg outputs` (иначе выбирается «preferred» 60 Hz).
+output "DP-4" {
+    mode "2560x1080@200.000"
+    scale 1
+}
+
 input {
     keyboard {
         xkb {

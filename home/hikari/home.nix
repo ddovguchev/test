@@ -76,6 +76,7 @@ in
       libdbusmenu-gtk3
       xdg-desktop-portal
       imagemagick
+      jetbrains.idea-community
       xev
       procps
       obsidian
