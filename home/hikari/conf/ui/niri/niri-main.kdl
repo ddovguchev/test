@@ -4,6 +4,7 @@ prefer-no-csd
 output "DP-4" {
     mode "2560x1080@200.000"
     scale 1
+    transform "180"
 }
 
 input {
@@ -22,8 +23,8 @@ input {
 
 layout {
     gaps 5
-    // Не transparent: сразу тёмная заливка после старта композитора (меньше «пустоты» до swww).
-    background-color "#0d0d12"
+    // Прозрачный фон — картинку даёт swww (см. backdrop). Сплошной тёмный цвет без swww выглядит как «чёрный стол».
+    background-color "transparent"
     center-focused-column "never"
     preset-column-widths {
         proportion 0.33333
@@ -166,9 +167,8 @@ hotkey-overlay {
     skip-at-startup
 }
 
-// Обои первыми — меньше пустого экрана после логина (без sleep перед первым кадром).
-spawn-at-startup "swww-daemon"
-spawn-sh-at-startup "sh -c 'exec swww img \"$HOME/.wallpapers/ghost.jpg\" --transition-type grow --transition-duration 1.5'"
+// Один процесс: демон + пауза, иначе swww img часто стартует раньше сокета — обои не появляются.
+spawn-sh-at-startup "sh -c 'swww-daemon & sleep 0.35; exec swww img \"$HOME/.wallpapers/ghost.jpg\" --transition-type grow --transition-duration 1.5'"
 spawn-sh-at-startup "wl-paste --type text --watch cliphist store"
 spawn-sh-at-startup "wl-paste --type image --watch cliphist store"
 spawn-sh-at-startup "wl-clip-persist --clipboard regular"
